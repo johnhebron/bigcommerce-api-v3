@@ -22,7 +22,19 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+A Client is created with a Configuration object. If one is not passed in, it will generate one at initialization.
+
+```ruby
+client = Bigcommerce::V3::Client.new(store_hash: 'je762fs7d', 
+                                     access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t')
+```
+or
+```ruby
+config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
+                                            access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t')
+
+client = Bigcommerce::V3::Client.new(config: config)
+```
 
 ## Development
 
