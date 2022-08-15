@@ -36,6 +36,16 @@ config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
 client = Bigcommerce::V3::Client.new(config: config)
 ```
 
+At this point, you can make requests to the BigCommerce API as follows
+```ruby
+client = Bigcommerce::V3::Client.new(store_hash: 'je762fs7d', 
+                                     access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t')
+
+response = client.conn.get('catalog/products') # no leading or trailing slash
+products = response.body['data']
+products.count
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

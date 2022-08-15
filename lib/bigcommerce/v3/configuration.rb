@@ -3,8 +3,8 @@
 module Bigcommerce
   module V3
     class Configuration
-      BASE_API_PATH = 'https://api.bigcommerce.com/stores/'
-      V3_API_PATH = 'v3/'
+      BASE_API_PATH = "https://api.bigcommerce.com/stores/"
+      V3_API_PATH = "v3/"
 
       attr_reader :store_hash, :access_token,
                   :full_api_path, :http_headers
@@ -25,15 +25,16 @@ module Bigcommerce
 
       def create_http_headers
         {
-          'Content-Type' => 'application/json',
-          'X-Auth-Token' => @access_token
+          "Content-Type" => "application/json",
+          "Accept" => "application/json",
+          "X-Auth-Token" => @access_token
         }
       end
 
       def validate_params
-        if (@store_hash.nil? || @access_token.nil? || @store_hash.empty? || @access_token.empty?)
-          raise ::Bigcommerce::V3::Error, 'Store_hash and access_token are required'
-        end
+        return unless @store_hash.nil? || @access_token.nil? || @store_hash.empty? || @access_token.empty?
+
+        raise ::Bigcommerce::V3::Error, "Store_hash and access_token are required"
       end
     end
   end

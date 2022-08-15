@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rspec'
-require 'bigcommerce/v3'
+require "rspec"
+require "bigcommerce/v3"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
