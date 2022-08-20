@@ -52,7 +52,7 @@ GEM
     unicode-display_width (2.2.0)
 
 PLATFORMS
-  x86_64-darwin-19
+  ruby
 
 DEPENDENCIES
   bigcommerce-v3!
