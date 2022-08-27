@@ -36,8 +36,8 @@ describe "Bigcommerce::V3::Client" do
     context "without either a store_hash/access_token or Configuration object" do
       let(:client) { Bigcommerce::V3::Client.new }
 
-      it "should raise an error" do
-        expect { client }.to raise_error(Bigcommerce::V3::Error)
+      it "should raise a ClientConfigError" do
+        expect { client }.to raise_error(Bigcommerce::V3::Client::ClientConfigError)
       end
     end
   end
