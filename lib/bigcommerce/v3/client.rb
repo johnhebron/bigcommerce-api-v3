@@ -10,7 +10,7 @@ module Bigcommerce
 
       attr_reader :config, :conn
 
-      def initialize(store_hash: '', access_token: '', config: nil)
+      def initialize(store_hash: '', access_token: '', config: nil, logger: false)
         if config.nil?
           validate_params(store_hash: store_hash, access_token: access_token)
           @config = Configuration.new(store_hash: store_hash, access_token: access_token)
@@ -18,14 +18,15 @@ module Bigcommerce
           @config = config
         end
 
-        @conn = create_connection
+        @conn = create_connection(logger: logger)
       end
 
-      def create_connection
+      def create_connection(logger:)
         Faraday.new(url: @config.full_api_path) do |conn|
           conn.headers = @config.http_headers
           conn.request :json
           conn.response :json
+          conn.response :logger if logger
         end
       end
 

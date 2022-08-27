@@ -10,9 +10,12 @@ module Bigcommerce
     # Docs:     https://developer.bigcommerce.com/api-reference/c98cfd443b0a0-customers-v3
     ##
     class CustomersResource < Resource
-      def list
-        Collection.from_response response: get_request(url: 'customers'),
-                                 object_type: Bigcommerce::V3::Customer
+      def list(params: {}, per_page: nil, page: nil)
+        Collection.from_response(response: get_request(url: 'customers',
+                                                       params: params,
+                                                       per_page: per_page,
+                                                       page: page),
+                                 object_type: Bigcommerce::V3::Customer)
       end
     end
   end
