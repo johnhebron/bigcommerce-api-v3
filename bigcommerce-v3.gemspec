@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
-require_relative "lib/bigcommerce/v3/version"
+require_relative 'lib/bigcommerce/v3/version'
 
 Gem::Specification.new do |spec|
-  spec.name = "bigcommerce-v3"
+  spec.name = 'bigcommerce-v3'
   spec.version = Bigcommerce::V3::VERSION
-  spec.authors = ["bc-johnhebron"]
-  spec.email = ["john.hebron@bigcommerce.com"]
+  spec.authors = ['bc-johnhebron']
+  spec.email = ['john.hebron@bigcommerce.com']
 
-  spec.summary = "Ruby Gem for working with the BigCommerce REST API V3."
-  spec.description = "For more information about the BigCommerce REST API V3, please see https://developer.bigcommerce.com/docs/97b76565d4269-big-commerce-ap-is-quick-start#rest-api"
-  spec.homepage = "https://developer.bigcommerce.com"
-  spec.license = "MIT"
-  spec.required_ruby_version = ">= 2.6.0"
+  spec.summary = 'Ruby Gem for working with the BigCommerce REST API V3.'
+  spec.description = 'For more information about the BigCommerce REST API V3, please see https://developer.bigcommerce.com/docs/97b76565d4269-big-commerce-ap-is-quick-start#rest-api'
+  spec.homepage = 'https://developer.bigcommerce.com'
+  spec.license = 'MIT'
+  spec.required_ruby_version = '>= 2.6.0'
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
@@ -27,14 +27,18 @@ Gem::Specification.new do |spec|
       (f == __FILE__) || f.match(%r{\A(?:(?:bin|test|spec|features)/|\.(?:git|travis|circleci)|appveyor)})
     end
   end
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
-  spec.add_dependency "faraday", "~> 2.5.2"
-  spec.add_dependency "rake", "~> 13.0"
+  spec.add_dependency 'faraday', '~> 2.5.2'
+  spec.add_dependency 'rake', '~> 13.0'
 
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "rubocop", "~> 1.21"
+  spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_development_dependency 'rubocop', '~> 1.21'
+  spec.add_development_dependency 'rubocop-performance'
+  spec.add_development_dependency 'rubocop-rspec', '~> 2.12'
+  spec.add_development_dependency 'rubocop-thread_safety'
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end

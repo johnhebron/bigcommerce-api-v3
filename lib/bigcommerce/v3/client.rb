@@ -2,12 +2,15 @@
 
 module Bigcommerce
   module V3
+    ##
+    # HTTP client for interacting with the BigCommerce HTTP API
+    ##
     class Client
       class ClientConfigError < Error; end
 
       attr_reader :config, :conn
 
-      def initialize(store_hash: "", access_token: "", config: nil)
+      def initialize(store_hash: '', access_token: '', config: nil)
         if config.nil?
           validate_params(store_hash: store_hash, access_token: access_token)
           @config = Configuration.new(store_hash: store_hash, access_token: access_token)
@@ -39,7 +42,7 @@ module Bigcommerce
       def validate_params(store_hash:, access_token:)
         return unless store_hash.empty? || access_token.empty?
 
-        raise ClientConfigError, "Valid Configuration object or store_hash/access_token required"
+        raise ClientConfigError, 'Valid Configuration object or store_hash/access_token required'
       end
     end
   end

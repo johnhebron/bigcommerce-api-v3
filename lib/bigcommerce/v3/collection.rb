@@ -2,14 +2,17 @@
 
 module Bigcommerce
   module V3
+    ##
+    # Base object for holding one or more resource objects
+    ##
     class Collection
       attr_reader :data, :total, :count, :per_page,
                   :current_page, :total_pages, :current_page_link,
                   :previous_page_link, :next_page_link
 
       def self.from_response(response:, object_type:)
-        response_data = response.body["data"]
-        pagination_data = response.body["meta"]["pagination"]
+        response_data = response.body['data']
+        pagination_data = response.body['meta']['pagination']
         new(
           data: response_data.map { |record| object_type.new(record) },
           pagination_data: pagination_data
@@ -18,14 +21,14 @@ module Bigcommerce
 
       def initialize(data:, pagination_data:)
         @data = data
-        @total = pagination_data["total"]
-        @count = pagination_data["count"]
-        @per_page = pagination_data["per_page"]
-        @current_page = pagination_data["current_page"]
-        @total_pages = pagination_data["total_pages"]
-        @current_page_link = value_or_nil(value: pagination_data.dig("links", "current"))
-        @previous_page_link = value_or_nil(value: pagination_data.dig("links", "previous"))
-        @next_page_link = value_or_nil(value: pagination_data.dig("links", "next"))
+        @total = pagination_data['total']
+        @count = pagination_data['count']
+        @per_page = pagination_data['per_page']
+        @current_page = pagination_data['current_page']
+        @total_pages = pagination_data['total_pages']
+        @current_page_link = value_or_nil(value: pagination_data.dig('links', 'current'))
+        @previous_page_link = value_or_nil(value: pagination_data.dig('links', 'previous'))
+        @next_page_link = value_or_nil(value: pagination_data.dig('links', 'next'))
       end
 
       private
