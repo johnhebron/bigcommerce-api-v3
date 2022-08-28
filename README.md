@@ -40,11 +40,14 @@ config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
 client = Bigcommerce::V3::Client.new(config: config)
 ```
 
-The client also takes an optional `logger:` parameter, defaulted to `false`, which controls turning on the Faraday::Logger for each HTTP request.
+The Configuration object has additional parameters to turn on Faraday logging or set a custom Faraday adapter.
 ```ruby
-client = Bigcommerce::V3::Client.new(store_hash: 'je762fs7d', 
-                                     access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t',
-                                     logger: true)
+config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
+                                            access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t',
+                                            logger: true,
+                                            adapter: :net_http)
+
+client = Bigcommerce::V3::Client.new(config: config)
 ```
 
 ### Using the Gem
@@ -73,6 +76,18 @@ pages.current_page_link
 # => "?page=1&limit=50"
 ```
 
+When using certain methods, like `.list`, you are able to pass in URL parameters for your request.
+
+```ruby
+# You can use the keywords `per_page:` and `page:` to specify the `limit` and `page` parameters respectively.
+pages = client.pages.list(per_page: 1, page: 2)
+# => #<Bigcommerce::V3::Collection>
+
+# Or you can pass your params in a hash.
+pages = client.pages.list(params: {limit: 1, page: 2})
+# => #<Bigcommerce::V3::Collection>
+```
+
 To access a resource that has not yet been modeled, you can send a "raw" request directly from the client.
 
 ```ruby
@@ -84,18 +99,6 @@ products.data
 # => [Hash#<OpenStruct>]
 products.data[0]
 # => #<OpenStruct>
-```
-
-When using certain methods, like `.list`, you are able to pass in URL parameters for your request.
-
-```ruby
-# You can use the keywords `per_page:` and `page:` to specify the `limit` and `page` parameters respectively.
-pages = client.pages.list(per_page: 1, page: 2)
-# => #<Bigcommerce::V3::Collection>
-
-# Or you can pass your params in a hash.
-pages = client.pages.list(params: {limit: 1, page: 2})
-# => #<Bigcommerce::V3::Collection>
 ```
 
 ## Development

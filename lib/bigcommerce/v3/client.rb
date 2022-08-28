@@ -10,7 +10,7 @@ module Bigcommerce
 
       attr_reader :config, :conn
 
-      def initialize(store_hash: '', access_token: '', config: nil, logger: false)
+      def initialize(store_hash: nil, access_token: nil, config: nil)
         if config.nil?
           validate_params(store_hash: store_hash, access_token: access_token)
           @config = Configuration.new(store_hash: store_hash, access_token: access_token)
@@ -18,18 +18,25 @@ module Bigcommerce
           @config = config
         end
 
-        @conn = create_connection(logger: logger)
+        @conn = create_connection
       end
 
-      def create_connection(logger:)
+      def create_connection
         Faraday.new(url: @config.full_api_path) do |conn|
           conn.headers = @config.http_headers
           conn.request :json
           conn.response :json
-          if logger
+          conn.response :raise_error
+          if @config.logger
             conn.response :logger do |logger|
               logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
             end
+          end
+          # Adapter must be last
+          if @config.adapter && @config.stubs
+            conn.adapter @config.adapter.to_sym, @config.stubs
+          elsif @config.adapter
+            conn.adapter @config.adapter.to_sym
           end
         end
       end
@@ -57,9 +64,9 @@ module Bigcommerce
       private
 
       def validate_params(store_hash:, access_token:)
-        return unless store_hash.empty? || access_token.empty?
+        return unless store_hash.nil? || access_token.nil? || store_hash.empty? || access_token.empty?
 
-        raise ClientConfigError, 'Valid Configuration object or store_hash/access_token required'
+        raise ClientConfigError, 'Valid Configuration object or store_hash/access_token required.'
       end
     end
   end

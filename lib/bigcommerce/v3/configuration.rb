@@ -7,15 +7,20 @@ module Bigcommerce
     # for an HTTP client to connect to the BigCommerce v3 HTTP API
     ##
     class Configuration
+      class ConfigError < Error; end
+
       BASE_API_PATH = 'https://api.bigcommerce.com/stores/'
       V3_API_PATH = 'v3/'
 
-      attr_reader :store_hash, :access_token,
+      attr_reader :store_hash, :access_token, :logger, :adapter, :stubs,
                   :full_api_path, :http_headers
 
-      def initialize(store_hash:, access_token:)
+      def initialize(store_hash:, access_token:, logger: nil, adapter: nil, stubs: nil)
         @store_hash = store_hash
         @access_token = access_token
+        @logger = logger
+        @adapter = adapter
+        @stubs = stubs
 
         validate_params
 
@@ -35,10 +40,12 @@ module Bigcommerce
         }
       end
 
+      private
+
       def validate_params
         return unless @store_hash.nil? || @access_token.nil? || @store_hash.empty? || @access_token.empty?
 
-        raise ::Bigcommerce::V3::Error, 'Store_hash and access_token are required'
+        raise ConfigError, 'Store_hash and access_token are required.'
       end
     end
   end
