@@ -13,8 +13,13 @@ module Bigcommerce
       end
 
       def get_request(url:, params: {}, per_page: nil, page: nil, headers: {})
-        merged_params = merge_params(params: params, per_page: per_page, page: page)
-        client.conn.get(url, merged_params, headers)
+        params.merge!(
+          {
+            limit: per_page.nil? ? nil : per_page.to_s,
+            page: page.nil? ? nil : page.to_s
+          }.compact
+        )
+        client.conn.get(url, params, headers)
       end
 
       def post_request(url:, body:, headers: {})
@@ -27,14 +32,6 @@ module Bigcommerce
 
       def delete_request(url:, params: {}, headers: {})
         client.conn.delete(url, params, headers)
-      end
-
-      private
-
-      def merge_params(params: {}, per_page: nil, page: nil)
-        params[:limit] = per_page.to_s unless per_page.nil?
-        params[:page] = page.to_s unless page.nil?
-        params
       end
     end
   end

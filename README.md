@@ -22,28 +22,80 @@ Or install it yourself as:
 
 ## Usage
 
+### Creating a Client
+
 A Client is created with a Configuration object. If one is not passed in, it will generate one at initialization from a passed in `store_hash` and `access_token`.
 
 ```ruby
+# Without passing in a Configuration object
 client = Bigcommerce::V3::Client.new(store_hash: 'je762fs7d', 
                                      access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t')
 ```
 or
 ```ruby
+# With a Configuration object
 config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
                                             access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t')
 
 client = Bigcommerce::V3::Client.new(config: config)
 ```
 
-At this point, you can make requests to the BigCommerce API as follows
+The client also takes an optional `logger:` parameter, defaulted to `false`, which controls turning on the Faraday::Logger for each HTTP request.
 ```ruby
 client = Bigcommerce::V3::Client.new(store_hash: 'je762fs7d', 
-                                     access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t')
+                                     access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t',
+                                     logger: true)
+```
 
-response = client.conn.get('catalog/products') # no leading or trailing slash
-products = response.body['data']
-products.count
+### Using the Gem
+
+So far, only `Pages` and `Customers` are set up as resources/objects. You can utilize them as follows:
+
+```ruby
+# retrieve all pages
+pages = client.pages.list
+# => #<Bigcommerce::V3::Collection>
+
+# access the individual page objects within .data
+pages.data
+# => [Hash#<Bigcommerce::V3::Page>]
+pages.data[0]
+# => #<Bigcommerce::V3::Page>
+
+# access pagination data (examples)
+pages.per_page
+# => 50
+pages.current_page
+# => 1
+pages.total_pages
+# => 3
+pages.current_page_link
+# => "?page=1&limit=50"
+```
+
+To access a resource that has not yet been modeled, you can send a "raw" request directly from the client.
+
+```ruby
+products = client.raw_request(verb: :get, url: 'catalog/products') # no leading or trailing slash
+# => #<Bigcommerce::V3::Collection>
+
+# access the individual objects within .data
+products.data
+# => [Hash#<OpenStruct>]
+products.data[0]
+# => #<OpenStruct>
+```
+
+When using certain methods, like `.list`, you are able to pass in URL parameters for your request.
+
+```ruby
+# You can use the keywords `per_page:` and `page:` to specify the `limit` and `page` parameters respectively.
+pages = client.pages.list(per_page: 1, page: 2)
+# => #<Bigcommerce::V3::Collection>
+
+# Or you can pass your params in a hash.
+pages = client.pages.list(params: {limit: 1, page: 2})
+# => #<Bigcommerce::V3::Collection>
 ```
 
 ## Development

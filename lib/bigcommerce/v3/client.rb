@@ -26,8 +26,24 @@ module Bigcommerce
           conn.headers = @config.http_headers
           conn.request :json
           conn.response :json
-          conn.response :logger if logger
+          if logger
+            conn.response :logger do |logger|
+              logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
+            end
+          end
         end
+      end
+
+      def raw_request(verb:, url:, params: {}, per_page: nil, page: nil)
+        params.merge!(
+          {
+            limit: per_page.nil? ? nil : per_page.to_s,
+            page: page.nil? ? nil : page.to_s
+          }.compact
+        )
+
+        Collection.from_response(response: @conn.send(verb.downcase.to_sym, url, params),
+                                 object_type: OpenStruct)
       end
 
       def customers
