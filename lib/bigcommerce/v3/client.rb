@@ -21,18 +21,6 @@ module Bigcommerce
         @conn = create_connection
       end
 
-      def create_connection
-        Faraday.new(url: @config.full_api_path) do |conn|
-          conn.headers = @config.http_headers
-          conn.request :json
-          conn.response :json
-          conn = configure_logger(conn)
-          # Adapter must be last
-          conn = configure_adapter(conn)
-          conn
-        end
-      end
-
       def raw_request(verb:, url:, params: {}, per_page: nil, page: nil)
         params.merge!(
           {
@@ -53,6 +41,18 @@ module Bigcommerce
       end
 
       private
+
+      def create_connection
+        Faraday.new(url: @config.full_api_path) do |conn|
+          conn.headers = @config.http_headers
+          conn.request :json
+          conn.response :json
+          conn = configure_logger(conn)
+          # Adapter must be last
+          conn = configure_adapter(conn)
+          conn
+        end
+      end
 
       def validate_params(store_hash:, access_token:)
         return unless store_hash.nil? || access_token.nil? || store_hash.empty? || access_token.empty?

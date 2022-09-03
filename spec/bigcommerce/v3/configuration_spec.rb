@@ -5,8 +5,8 @@ require './spec/spec_helper'
 describe 'Bigcommerce::V3::Configuration' do
   subject(:config) { Bigcommerce::V3::Configuration.new(store_hash: store_hash, access_token: access_token) }
 
-  let(:store_hash) { 'd84jfkd' }
-  let(:access_token) { 'uu44hhr8837dghf84u' }
+  let(:store_hash) { SecureRandom.alphanumeric(7) }
+  let(:access_token) { SecureRandom.alphanumeric(31) }
 
   describe '#initialize' do
     context 'with a valid store_hash and access_token' do
@@ -15,7 +15,7 @@ describe 'Bigcommerce::V3::Configuration' do
       end
     end
 
-    context 'without a nil store_hash or access_token' do
+    context 'with a nil store_hash or access_token' do
       subject(:config) { Bigcommerce::V3::Configuration.new(store_hash: nil, access_token: nil) }
 
       it 'raises an error' do
@@ -23,7 +23,7 @@ describe 'Bigcommerce::V3::Configuration' do
       end
     end
 
-    context 'without an empty store_hash or access_token' do
+    context 'with an empty store_hash or access_token' do
       subject(:config) { Bigcommerce::V3::Configuration.new(store_hash: '', access_token: '') }
 
       it 'raises a ConfigurationError error' do
@@ -50,7 +50,7 @@ describe 'Bigcommerce::V3::Configuration' do
       }
     end
 
-    it 'returns correct http headers hash with api_token' do
+    it 'returns correct http_headers hash with access_token' do
       expect(config.http_headers).to eq(http_headers)
     end
   end

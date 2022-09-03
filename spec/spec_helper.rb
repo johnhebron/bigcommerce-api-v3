@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rspec'
+require 'securerandom'
 require 'bigcommerce/v3'
 
 RSpec.configure do |config|
