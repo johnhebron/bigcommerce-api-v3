@@ -12,7 +12,7 @@ module Bigcommerce
 
       def self.from_response(response:, object_type:)
         response_data = response.body['data']
-        pagination_data = response.body['meta']['pagination']
+        pagination_data = response.body.dig('meta', 'pagination')
         new(
           data: response_data.map { |record| object_type.new(record) },
           pagination_data: pagination_data

@@ -26,7 +26,6 @@ module Bigcommerce
           conn.headers = @config.http_headers
           conn.request :json
           conn.response :json
-          conn.response :raise_error
           if @config.logger
             conn.response :logger do |logger|
               logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
@@ -49,8 +48,13 @@ module Bigcommerce
           }.compact
         )
 
-        Collection.from_response(response: @conn.send(verb.downcase.to_sym, url, params),
-                                 object_type: OpenStruct)
+        response = @conn.send(verb.downcase.to_sym, url, params)
+        case response.status
+        when 200..399
+          Collection.from_response(response: response, object_type: OpenStruct)
+        else
+          raise Error, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
+        end
       end
 
       def customers
