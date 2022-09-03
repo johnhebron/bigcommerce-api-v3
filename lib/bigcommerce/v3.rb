@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+##
+# Load dotenv only in development or test environment
+if %w[development test].include? ENV['BIGCOMMERCE_V3_ENV']
+  require 'dotenv/load'
+  Dotenv.require_keys('STORE_HASH', 'ACCESS_TOKEN')
+end
+
 require 'faraday'
 
 require 'bigcommerce/v3/version'
