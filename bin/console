@@ -1,15 +1,35 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# Set BIGCOMMERCE_V3_ENV so that dotenv is initialized
+ENV['BIGCOMMERCE_V3_ENV'] = 'development'
+
 require 'bundler/setup'
 require 'bigcommerce/v3'
-
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
-
-# (If you use this, don't forget to add pry to your Gemfile!)
-# require "pry"
-# Pry.start
-
 require 'irb'
+
+# Create a Bigcommerce::V3::Configuration object with .env variables
+@config = Bigcommerce::V3::Configuration.new(store_hash: ENV.fetch('STORE_HASH', nil),
+                                             access_token: ENV.fetch('ACCESS_TOKEN', nil),
+                                             logger: true)
+
+# Create a Bigcommerce::V3::Client
+@client = Bigcommerce::V3::Client.new(config: @config)
+
+# Print to console
+puts '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+puts 'BigCommerce V3 HTTP API Client Console'
+puts "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
+puts 'Variables:'
+puts '~~~~~~~~~~'
+puts "- ENV['BIGCOMMERCE_V3_ENV']: #{ENV.fetch('BIGCOMMERCE_V3_ENV', nil)}"
+puts "- ENV['STORE_HASH']: #{ENV.fetch('STORE_HASH', nil)}"
+puts "- ENV['ACCESS_TOKEN']: [REDACTED]"
+puts "- @client = Bigcommerce::V3::Client\n\n"
+puts 'Example usage:'
+puts '~~~~~~~~~~~~~~'
+puts "@client.customers.list\n  # Returns first page of Customers"
+puts "@client.pages.list\n  # Returns first page of Pages\n\n"
+
+# Start IRB
 IRB.start(__FILE__)
