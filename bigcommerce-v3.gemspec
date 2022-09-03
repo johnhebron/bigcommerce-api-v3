@@ -38,6 +38,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop-performance'
   spec.add_development_dependency 'rubocop-rspec', '~> 2.12'
   spec.add_development_dependency 'rubocop-thread_safety'
+  spec.add_development_dependency 'simplecov'
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
