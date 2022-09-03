@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require 'simplecov'
 require 'rspec'
 require 'securerandom'
 require 'bigcommerce/v3'
+
+SimpleCov.start
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
