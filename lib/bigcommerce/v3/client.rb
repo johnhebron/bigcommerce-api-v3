@@ -26,17 +26,10 @@ module Bigcommerce
           conn.headers = @config.http_headers
           conn.request :json
           conn.response :json
-          if @config.logger
-            conn.response :logger do |logger|
-              logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
-            end
-          end
+          conn = configure_logger(conn)
           # Adapter must be last
-          if @config.adapter && @config.stubs
-            conn.adapter @config.adapter.to_sym, @config.stubs
-          elsif @config.adapter
-            conn.adapter @config.adapter.to_sym
-          end
+          conn = configure_adapter(conn)
+          conn
         end
       end
 
@@ -48,13 +41,7 @@ module Bigcommerce
           }.compact
         )
 
-        response = @conn.send(verb.downcase.to_sym, url, params)
-        case response.status
-        when 200..399
-          Collection.from_response(response: response, object_type: OpenStruct)
-        else
-          raise Error, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
-        end
+        handle_response @conn.send(verb.downcase.to_sym, url, params)
       end
 
       def customers
@@ -71,6 +58,33 @@ module Bigcommerce
         return unless store_hash.nil? || access_token.nil? || store_hash.empty? || access_token.empty?
 
         raise ClientConfigError, 'Valid Configuration object or store_hash/access_token required.'
+      end
+
+      def handle_response(response)
+        case response.status
+        when 200..399
+          Collection.from_response(response: response, object_type: OpenStruct)
+        else
+          raise Error, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
+        end
+      end
+
+      def configure_logger(conn)
+        return conn unless @config.logger
+
+        conn.response :logger do |logger|
+          logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
+        end
+      end
+
+      def configure_adapter(conn)
+        return conn unless @config.adapter
+
+        if @config.stubs
+          conn.adapter @config.adapter.to_sym, @config.stubs
+        else
+          conn.adapter @config.adapter.to_sym
+        end
       end
     end
   end

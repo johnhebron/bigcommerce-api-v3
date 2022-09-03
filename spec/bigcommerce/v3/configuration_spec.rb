@@ -42,13 +42,14 @@ describe 'Bigcommerce::V3::Configuration' do
   end
 
   describe '.create_http_headers' do
-    let(:http_headers) {
+    let(:http_headers) do
       {
         'Content-Type' => 'application/json',
         'Accept' => 'application/json',
         'X-Auth-Token' => access_token
       }
-    }
+    end
+
     it 'returns correct http headers hash with api_token' do
       expect(config.http_headers).to eq(http_headers)
     end
