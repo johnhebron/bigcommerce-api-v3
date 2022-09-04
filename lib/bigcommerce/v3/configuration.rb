@@ -7,8 +7,6 @@ module Bigcommerce
     # for an HTTP client to connect to the BigCommerce v3 HTTP API
     ##
     class Configuration
-      class ConfigError < Error; end
-
       BASE_API_PATH = 'https://api.bigcommerce.com/stores/'
       V3_API_PATH = 'v3/'
 
@@ -19,7 +17,7 @@ module Bigcommerce
         @store_hash = store_hash
         @access_token = access_token
         @logger = logger
-        @adapter = adapter
+        @adapter = adapter || Faraday.default_adapter
         @stubs = stubs
 
         validate_params
@@ -45,7 +43,7 @@ module Bigcommerce
       def validate_params
         return unless @store_hash.nil? || @access_token.nil? || @store_hash.empty? || @access_token.empty?
 
-        raise ConfigError, 'Store_hash and access_token are required.'
+        raise Error::ConfigurationError, 'Store_hash and access_token are required.'
       end
     end
   end

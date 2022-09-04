@@ -29,7 +29,7 @@ describe 'Bigcommerce::V3::Client' do
       subject(:client) { Bigcommerce::V3::Client.new }
 
       it 'raises a ClientConfigError' do
-        expect { client }.to raise_error(Bigcommerce::V3::Client::ClientConfigError)
+        expect { client }.to raise_error(Bigcommerce::V3::Error::ClientConfigError)
       end
     end
   end

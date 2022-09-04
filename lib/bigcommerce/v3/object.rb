@@ -6,13 +6,11 @@ module Bigcommerce
     # Base entity for individual resource objects to inherit from
     ##
     class Object
-      class InvalidArguments < Error; end
-
       attr_reader :attributes
 
       def initialize(attributes = nil)
         unless valid?(attributes)
-          raise InvalidArguments, "Attributes must be of type Hash or nil, '#{attributes.class}' provided"
+          raise Error::InvalidArguments, "Attributes must be of type Hash or nil, '#{attributes.class}' provided"
         end
 
         @attributes = OpenStruct.new(attributes)

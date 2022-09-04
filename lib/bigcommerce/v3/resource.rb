@@ -6,8 +6,6 @@ module Bigcommerce
     # Base entity for individual resource actions to inherit from
     ##
     class Resource
-      class HttpError < Error; end
-
       attr_reader :client
 
       def initialize(client:)
@@ -41,7 +39,7 @@ module Bigcommerce
       def handle_response(response)
         case response.status
         when 400..599
-          raise HttpError, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
+          raise Error::HttpError, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
         else
           response
         end

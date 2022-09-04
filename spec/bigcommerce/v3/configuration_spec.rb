@@ -7,6 +7,7 @@ describe 'Bigcommerce::V3::Configuration' do
 
   let(:store_hash) { SecureRandom.alphanumeric(7) }
   let(:access_token) { SecureRandom.alphanumeric(31) }
+  let(:error) { 'Store_hash and access_token are required.' }
 
   describe '#initialize' do
     context 'with a valid store_hash and access_token' do
@@ -19,7 +20,7 @@ describe 'Bigcommerce::V3::Configuration' do
       subject(:config) { Bigcommerce::V3::Configuration.new(store_hash: nil, access_token: nil) }
 
       it 'raises an error' do
-        expect { config }.to raise_error(Bigcommerce::V3::Error)
+        expect { config }.to raise_error(Bigcommerce::V3::Error::ConfigurationError, error)
       end
     end
 
@@ -27,7 +28,7 @@ describe 'Bigcommerce::V3::Configuration' do
       subject(:config) { Bigcommerce::V3::Configuration.new(store_hash: '', access_token: '') }
 
       it 'raises a ConfigurationError error' do
-        expect { config }.to raise_error(Bigcommerce::V3::Configuration::ConfigError)
+        expect { config }.to raise_error(Bigcommerce::V3::Error::ConfigurationError, error)
       end
     end
   end

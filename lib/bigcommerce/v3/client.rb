@@ -6,8 +6,6 @@ module Bigcommerce
     # HTTP client for interacting with the BigCommerce HTTP API
     ##
     class Client
-      class ClientConfigError < Error; end
-
       attr_reader :config, :conn
 
       def initialize(store_hash: nil, access_token: nil, config: nil)
@@ -49,15 +47,14 @@ module Bigcommerce
           conn.response :json
           conn = configure_logger(conn)
           # Adapter must be last
-          conn = configure_adapter(conn)
-          conn
+          conn.adapter @config.adapter, @config.stubs
         end
       end
 
       def validate_params(store_hash:, access_token:)
         return unless store_hash.nil? || access_token.nil? || store_hash.empty? || access_token.empty?
 
-        raise ClientConfigError, 'Valid Configuration object or store_hash/access_token required.'
+        raise Error::ClientConfigError, 'Valid Configuration object or store_hash/access_token required.'
       end
 
       def handle_response(response)
@@ -65,7 +62,7 @@ module Bigcommerce
         when 200..399
           Collection.from_response(response: response, object_type: OpenStruct)
         else
-          raise Error, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
+          raise Error::HTTPError, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
         end
       end
 
@@ -74,16 +71,6 @@ module Bigcommerce
 
         conn.response :logger do |logger|
           logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
-        end
-      end
-
-      def configure_adapter(conn)
-        return conn unless @config.adapter
-
-        if @config.stubs
-          conn.adapter @config.adapter.to_sym, @config.stubs
-        else
-          conn.adapter @config.adapter.to_sym
         end
       end
     end

@@ -33,7 +33,7 @@ describe 'Bigcommerce::V3::Object' do
       let(:error_message) { "Attributes must be of type Hash or nil, '#{attributes.class}' provided" }
 
       it 'raises an exception' do
-        expect { object }.to raise_error(Bigcommerce::V3::Object::InvalidArguments, error_message)
+        expect { object }.to raise_error(Bigcommerce::V3::Error::InvalidArguments, error_message)
       end
     end
   end
