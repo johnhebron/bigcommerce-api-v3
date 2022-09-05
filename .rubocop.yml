@@ -13,6 +13,9 @@ Layout/LineLength:
 RSpec/NestedGroups:
   Max: 4
 
+RSpec/MultipleMemoizedHelpers:
+   Enabled: false
+
 # Currently using OpenStructs until resources are built out
 Style/OpenStructUse:
   Enabled: false

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'simplecov'
+require 'support/helpers'
 require 'rspec'
 require 'securerandom'
 require 'bigcommerce/v3'
@@ -20,4 +21,6 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.include Helpers
 end

@@ -39,7 +39,7 @@ module Bigcommerce
       def handle_response(response)
         case response.status
         when 400..599
-          raise Error::HttpError, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
+          raise Error::HTTPError, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
         else
           response
         end

@@ -45,7 +45,7 @@ module Bigcommerce
           conn.headers = @config.http_headers
           conn.request :json
           conn.response :json
-          conn = configure_logger(conn)
+          configure_logger(conn)
           # Adapter must be last
           conn.adapter @config.adapter, @config.stubs
         end
@@ -67,7 +67,7 @@ module Bigcommerce
       end
 
       def configure_logger(conn)
-        return conn unless @config.logger
+        return unless @config.logger
 
         conn.response :logger do |logger|
           logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
