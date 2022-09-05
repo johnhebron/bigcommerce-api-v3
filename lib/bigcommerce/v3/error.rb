@@ -7,6 +7,7 @@ module Bigcommerce
       class ConfigurationError < Error; end
       class HTTPError < Error; end
       class InvalidArguments < Error; end
+      class PaginationDataMissing < Error; end
     end
   end
 end
