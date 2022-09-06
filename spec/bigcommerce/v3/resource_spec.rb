@@ -13,8 +13,8 @@ describe 'Bigcommerce::V3::Resource' do
   let(:fixture) { 'resource/get_url200' }
   let(:status) { 200 }
 
-  let(:response) { stub_response(fixture: fixture, status: status) }
-  let(:stubs) { stub_request(path: url, response: response) }
+  let(:stubbed_response) { stub_response(fixture: fixture, status: status) }
+  let(:stubs) { stub_request(path: url, response: stubbed_response) }
 
   let(:config) do
     Bigcommerce::V3::Configuration.new(store_hash: store_hash, access_token: access_token, adapter: :test, stubs: stubs)
@@ -44,6 +44,71 @@ describe 'Bigcommerce::V3::Resource' do
       it 'contains a body' do
         expect(resource.get_request(url: url).body).to be_a_kind_of(Hash)
       end
+
+      context 'with per_page parameter' do
+        let(:fixture) { 'resource/get_with_per_page_url200' }
+        let(:status) { 200 }
+        let(:per_page) { 42 }
+        let(:limit_matcher) { { 'limit' => per_page.to_s } }
+        let(:response) { resource.get_request(url: url, per_page: per_page) }
+
+        it 'constructs the appropriate url with per_page' do
+          expect(response.env.params).to match(limit_matcher)
+        end
+
+        it 'returns the appropriate pagination_data with per_page' do
+          expect(response.body.dig('meta', 'pagination', 'per_page').to_i).to eq(per_page)
+        end
+
+        it 'returns a 200 response' do
+          expect(response.status).to eq(status)
+        end
+      end
+
+      context 'with page parameter' do
+        let(:fixture) { 'resource/get_with_page_url200' }
+        let(:status) { 200 }
+        let(:page) { 42 }
+        let(:limit_matcher) { { 'page' => page.to_s } }
+        let(:response) { resource.get_request(url: url, page: page) }
+
+        it 'constructs the appropriate url with page' do
+          expect(response.env.params).to match(limit_matcher)
+        end
+
+        it 'returns the appropriate pagination_data with page' do
+          expect(response.body.dig('meta', 'pagination', 'current_page').to_i).to eq(page)
+        end
+
+        it 'returns a 200 response' do
+          expect(response.status).to eq(status)
+        end
+      end
+
+      context 'with page & per_page parameters' do
+        let(:fixture) { 'resource/get_with_page_and_per_page_url200' }
+        let(:status) { 200 }
+        let(:page) { 42 }
+        let(:per_page) { 42 }
+        let(:limit_matcher) { { 'page' => page.to_s, 'limit' => per_page.to_s } }
+        let(:response) { resource.get_request(url: url, page: page, per_page: per_page) }
+
+        it 'constructs the appropriate url with page' do
+          expect(response.env.params).to match(limit_matcher)
+        end
+
+        it 'returns the appropriate pagination_data with page' do
+          expect(response.body.dig('meta', 'pagination', 'current_page').to_i).to eq(page)
+        end
+
+        it 'returns the appropriate pagination_data with per_page' do
+          expect(response.body.dig('meta', 'pagination', 'per_page').to_i).to eq(per_page)
+        end
+
+        it 'returns a 200 response' do
+          expect(response.status).to eq(status)
+        end
+      end
     end
 
     context 'when passed a URL that 404s' do
@@ -70,7 +135,7 @@ describe 'Bigcommerce::V3::Resource' do
   end
 
   describe '.post_request' do
-    let(:stubs) { stub_request(path: url, response: response, verb: :post, body: body) }
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: body) }
 
     context 'when passed a valid URL and body' do
       let(:url) { "/stores/#{store_hash}/v3/content/pages" }
@@ -125,7 +190,7 @@ describe 'Bigcommerce::V3::Resource' do
   end
 
   describe '.put_request' do
-    let(:stubs) { stub_request(path: url, response: response, verb: :put, body: body) }
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: body) }
 
     context 'when passed a valid URL and body' do
       let(:url) { "/stores/#{store_hash}/v3/content/pages/1" }
@@ -169,7 +234,7 @@ describe 'Bigcommerce::V3::Resource' do
   end
 
   describe '.delete_request' do
-    let(:stubs) { stub_request(path: url, response: response, verb: :delete) }
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
 
     context 'when passed a valid URL' do
       let(:url) { "/stores/#{store_hash}/v3/content/pages/1" }

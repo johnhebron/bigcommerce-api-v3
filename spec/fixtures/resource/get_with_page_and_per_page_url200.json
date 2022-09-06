@@ -1,0 +1,15 @@
+{
+  "data": {},
+  "meta": {
+    "pagination": {
+      "total": 3,
+      "count": 3,
+      "per_page": 42,
+      "current_page": 42,
+      "total_pages": 1,
+      "links": {
+        "current": "?page=42&limit=42"
+      }
+    }
+  }
+}
