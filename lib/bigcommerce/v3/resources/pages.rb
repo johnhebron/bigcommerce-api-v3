@@ -26,26 +26,57 @@ module Bigcommerce
       end
 
       def create(params:)
+        raise Error::ParamError, "Params must be of type Hash, #{params.class} provided." unless params.is_a?(Hash)
+
+        bulk_create(params: [params]).data.first
+      end
+
+      def bulk_create(params:)
+        raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
+
         url = RESOURCE_URL
-        Bigcommerce::V3::Page.new(post_request(url: url, body: params).body['data'])
+        Bigcommerce::V3::Collection.from_response(response: post_request(url: url, body: params),
+                                                  object_type: Bigcommerce::V3::Page)
       end
 
       def retrieve(page_id:)
+        raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
+
         url = "#{RESOURCE_URL}/#{page_id}"
         Bigcommerce::V3::Page.new(get_request(url: url).body['data'])
       end
 
       def update(page_id:, params:)
+        raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
+        raise Error::ParamError, "Params must be of type Hash, #{params.class} provided." unless params.is_a?(Hash)
+
         url = "#{RESOURCE_URL}/#{page_id}"
         Bigcommerce::V3::Page.new(put_request(url: url, body: params).body['data'])
       end
 
+      def bulk_update(params:)
+        raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
+
+        url = RESOURCE_URL
+        Bigcommerce::V3::Page.new(put_request(url: url, body: params).body['data'])
+      end
+
+      def delete(page_id:)
+        raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
+
+        url = "#{RESOURCE_URL}/#{page_id}"
+        delete_request(url: url)
+        true
+      end
+
       ##
-      # Available query parameters for 'delete'
+      # Available query parameters for 'bulk_delete'
       # https://developer.bigcommerce.com/api-reference/d74089ee212a2-delete-pages#Query-Parameters
       ##
-      def delete(page_id:)
-        url = "#{RESOURCE_URL}/#{page_id}"
+      def bulk_delete(params:)
+        raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
+
+        url = RESOURCE_URL
         delete_request(url: url)
         true
       end

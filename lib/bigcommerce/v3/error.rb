@@ -8,6 +8,7 @@ module Bigcommerce
       class HTTPError < Error; end
       class InvalidArguments < Error; end
       class PaginationDataMissing < Error; end
+      class ParamError < Error; end
       class RecordNotFound < Error; end
     end
   end

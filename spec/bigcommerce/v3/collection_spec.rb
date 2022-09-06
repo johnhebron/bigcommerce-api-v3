@@ -14,15 +14,6 @@ describe 'Bigcommerce::V3::Collection' do
         expect(collection).to be_a_kind_of(Bigcommerce::V3::Collection)
       end
     end
-
-    context 'with missing pagination_data' do
-      let(:pagination_data) { { 'total' => 1, 'count' => 1, 'per_page' => 1, 'current_page' => 1 } }
-      let(:error) { "Collection failed creation. Error(s): 'total_pages' missing." }
-
-      it 'raises an error' do
-        expect { collection }.to raise_error(Bigcommerce::V3::Error::PaginationDataMissing, error)
-      end
-    end
   end
 
   describe '.from_response' do
