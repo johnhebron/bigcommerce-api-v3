@@ -12,6 +12,10 @@ module Bigcommerce
     class CustomersResource < Resource
       RESOURCE_URL = 'customers'
 
+      ##
+      # Available query parameters for 'list'
+      # https://developer.bigcommerce.com/api-reference/761ec193054b6-get-all-customers#Query-Parameters
+      ##
       def list(params: {}, per_page: nil, page: nil)
         url = RESOURCE_URL
         Collection.from_response(response: get_request(url: url,
@@ -27,8 +31,12 @@ module Bigcommerce
       end
 
       def retrieve(customer_id:)
-        url = "#{RESOURCE_URL}/#{customer_id}"
-        Bigcommerce::V3::Customer.new(get_request(url: url).body['data'])
+        params = { 'id:in' => customer_id }
+        customer = list(params: params).data.first
+
+        return customer unless customer.nil?
+
+        raise Error::RecordNotFound, "Customer with the 'id' of '#{customer_id}' not found."
       end
 
       def update(customer_id:, params:)
@@ -36,6 +44,10 @@ module Bigcommerce
         Bigcommerce::V3::Customer.new(put_request(url: url, body: params).body['data'])
       end
 
+      ##
+      # Available query parameters for 'delete'
+      # https://developer.bigcommerce.com/api-reference/e6bb04315e2a7-delete-customers#Query-Parameters
+      ##
       def delete(customer_id:)
         url = "#{RESOURCE_URL}/#{customer_id}"
         delete_request(url: url)

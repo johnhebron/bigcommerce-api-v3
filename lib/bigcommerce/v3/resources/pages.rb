@@ -12,6 +12,10 @@ module Bigcommerce
     class PagesResource < Resource
       RESOURCE_URL = 'content/pages'
 
+      ##
+      # Available query parameters for 'list'
+      # https://developer.bigcommerce.com/api-reference/831028b2a1c70-get-pages#Query-Parameters
+      ##
       def list(params: {}, per_page: nil, page: nil)
         url = RESOURCE_URL
         Collection.from_response(response: get_request(url: url,
@@ -36,6 +40,10 @@ module Bigcommerce
         Bigcommerce::V3::Page.new(put_request(url: url, body: params).body['data'])
       end
 
+      ##
+      # Available query parameters for 'delete'
+      # https://developer.bigcommerce.com/api-reference/d74089ee212a2-delete-pages#Query-Parameters
+      ##
       def delete(page_id:)
         url = "#{RESOURCE_URL}/#{page_id}"
         delete_request(url: url)
