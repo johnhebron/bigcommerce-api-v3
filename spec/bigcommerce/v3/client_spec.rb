@@ -23,6 +23,22 @@ describe 'Bigcommerce::V3::Client' do
       it 'is of type Bigcommerce::V3::Client' do
         expect(client).to be_a_kind_of(Bigcommerce::V3::Client)
       end
+
+      context 'with logger set to true' do
+        let(:config) { Bigcommerce::V3::Configuration.new(store_hash: store_hash, access_token: access_token, logger: true) }
+
+        it 'contains the Faraday::Response::Logger' do
+          expect(client.conn.builder.handlers).to include(Faraday::Response::Logger)
+        end
+      end
+
+      context 'with logger set to false' do
+        let(:config) { Bigcommerce::V3::Configuration.new(store_hash: store_hash, access_token: access_token) }
+
+        it 'does not contain the Faraday::Response::Logger' do
+          expect(client.conn.builder.handlers).not_to include(Faraday::Response::Logger)
+        end
+      end
     end
 
     context 'without either a store_hash/access_token or Configuration object' do
@@ -35,7 +51,7 @@ describe 'Bigcommerce::V3::Client' do
   end
 
   describe '.conn' do
-    it 'returns a Faraday object' do
+    it 'returns a Faraday::Connection object' do
       expect(client.conn).to be_a_kind_of(Faraday::Connection)
     end
   end

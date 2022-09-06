@@ -39,10 +39,19 @@ module Bigcommerce
       def handle_response(response)
         case response.status
         when 400..599
-          raise Error::HTTPError, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
+          raise Error::HTTPError, build_error_message(response)
         else
           response
         end
+      end
+
+      def build_error_message(response)
+        error_message = []
+        error_message << "[HTTP #{response.status}] Request failed."
+        error_message << "Title: #{response.body['title']}" if response.body['title']
+        error_message << "Detail: #{response.body['detail']}" if response.body['detail']
+        error_message << "Errors: #{response.body['errors'].flatten.join(' ')}" if response.body['errors']
+        error_message.join(' ')
       end
     end
   end

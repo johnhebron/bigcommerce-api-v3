@@ -62,7 +62,9 @@ module Bigcommerce
         when 200..399
           Collection.from_response(response: response, object_type: OpenStruct)
         else
-          raise Error::HTTPError, "[HTTP #{response.status}] Request failed with message: #{response.body['title']}"
+          title = response.body['title']
+          detail = response.body['detail']
+          raise Error::HTTPError, "[HTTP #{response.status}] Request failed with message: #{title} #{detail}"
         end
       end
 

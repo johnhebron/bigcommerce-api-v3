@@ -50,7 +50,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/content/pages/bad-id" }
       let(:fixture) { 'resource/get_url404' }
       let(:status) { 404 }
-      let(:error) { '[HTTP 404] Request failed with message: 404 Page Not Found' }
+      let(:error) { '[HTTP 404] Request failed. Title: 404 Page Not Found' }
 
       it 'raises an error' do
         expect { resource.get_request(url: url) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)
@@ -61,7 +61,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/server-bad" }
       let(:fixture) { 'resource/get_url500' }
       let(:status) { 500 }
-      let(:error) { '[HTTP 500] Request failed with message: Boom!' }
+      let(:error) { '[HTTP 500] Request failed. Title: Boom!' }
 
       it 'raises an error' do
         expect { resource.get_request(url: url) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)
@@ -94,7 +94,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/content/pages/bad-id" }
       let(:fixture) { 'resource/post_url404' }
       let(:status) { 404 }
-      let(:error) { '[HTTP 404] Request failed with message: 404 Page Not Found' }
+      let(:error) { '[HTTP 404] Request failed. Title: 404 Page Not Found' }
 
       it 'raises an error' do
         expect { resource.post_request(url: url, body: body) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)
@@ -105,7 +105,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/content/pages" }
       let(:fixture) { 'resource/post_url422' }
       let(:status) { 422 }
-      let(:error) { '[HTTP 422] Request failed with message: string' }
+      let(:error) { '[HTTP 422] Request failed. Title: string Errors: property1 string property2 string' }
 
       it 'raises an error' do
         expect { resource.post_request(url: url, body: body) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)
@@ -116,7 +116,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/server-bad" }
       let(:fixture) { 'resource/post_url500' }
       let(:status) { 500 }
-      let(:error) { '[HTTP 500] Request failed with message: Boom!' }
+      let(:error) { '[HTTP 500] Request failed. Title: Boom!' }
 
       it 'raises an error' do
         expect { resource.post_request(url: url, body: body) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)
@@ -149,7 +149,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/content/pages/2" }
       let(:fixture) { 'resource/put_url404' }
       let(:status) { 404 }
-      let(:error) { '[HTTP 404] Request failed with message: 404 Page Not Found' }
+      let(:error) { '[HTTP 404] Request failed. Title: 404 Page Not Found' }
 
       it 'raises an error' do
         expect { resource.put_request(url: url, body: body) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)
@@ -160,7 +160,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/server-bad" }
       let(:fixture) { 'resource/put_url500' }
       let(:status) { 500 }
-      let(:error) { '[HTTP 500] Request failed with message: Boom!' }
+      let(:error) { '[HTTP 500] Request failed. Title: Boom!' }
 
       it 'raises an error' do
         expect { resource.put_request(url: url, body: body) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)
@@ -193,7 +193,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/content/pages/bad-id" }
       let(:fixture) { 'resource/get_url404' }
       let(:status) { 404 }
-      let(:error) { '[HTTP 404] Request failed with message: 404 Page Not Found' }
+      let(:error) { '[HTTP 404] Request failed. Title: 404 Page Not Found' }
 
       it 'raises an error' do
         expect { resource.delete_request(url: url) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)
@@ -204,7 +204,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:url) { "/stores/#{store_hash}/v3/server-bad" }
       let(:fixture) { 'resource/delete_url500' }
       let(:status) { 500 }
-      let(:error) { '[HTTP 500] Request failed with message: Boom!' }
+      let(:error) { '[HTTP 500] Request failed. Title: Boom!' }
 
       it 'raises an error' do
         expect { resource.delete_request(url: url) }.to raise_error(Bigcommerce::V3::Error::HTTPError, error)

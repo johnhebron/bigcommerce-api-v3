@@ -10,12 +10,36 @@ module Bigcommerce
     # Docs:     https://developer.bigcommerce.com/api-reference/16c5ea267cfec-pages-v3
     ##
     class PagesResource < Resource
+      RESOURCE_URL = 'content/pages'
+
       def list(params: {}, per_page: nil, page: nil)
-        Collection.from_response(response: get_request(url: 'content/pages',
+        url = RESOURCE_URL
+        Collection.from_response(response: get_request(url: url,
                                                        params: params,
                                                        per_page: per_page,
                                                        page: page),
                                  object_type: Bigcommerce::V3::Page)
+      end
+
+      def create(params:)
+        url = RESOURCE_URL
+        Bigcommerce::V3::Page.new(post_request(url: url, body: params).body['data'])
+      end
+
+      def retrieve(page_id:)
+        url = "#{RESOURCE_URL}/#{page_id}"
+        Bigcommerce::V3::Page.new(get_request(url: url).body['data'])
+      end
+
+      def update(page_id:, params:)
+        url = "#{RESOURCE_URL}/#{page_id}"
+        Bigcommerce::V3::Page.new(put_request(url: url, body: params).body['data'])
+      end
+
+      def delete(page_id:)
+        url = "#{RESOURCE_URL}/#{page_id}"
+        delete_request(url: url)
+        true
       end
     end
   end
