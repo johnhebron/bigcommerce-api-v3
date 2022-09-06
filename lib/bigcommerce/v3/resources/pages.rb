@@ -58,7 +58,8 @@ module Bigcommerce
         raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
 
         url = RESOURCE_URL
-        Bigcommerce::V3::Page.new(put_request(url: url, body: params).body['data'])
+        Bigcommerce::V3::Collection.from_response(response: put_request(url: url, body: params),
+                                                  object_type: Bigcommerce::V3::Page)
       end
 
       def delete(page_id:)
@@ -73,11 +74,11 @@ module Bigcommerce
       # Available query parameters for 'bulk_delete'
       # https://developer.bigcommerce.com/api-reference/d74089ee212a2-delete-pages#Query-Parameters
       ##
-      def bulk_delete(params:)
-        raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
+      def bulk_delete(page_ids:)
+        raise Error::ParamError, "Params must be of type Array, #{page_ids.class} provided." unless page_ids.is_a?(Array)
 
         url = RESOURCE_URL
-        delete_request(url: url)
+        delete_request(url: url, params: { 'id:in' => page_ids.join(',') })
         true
       end
     end
