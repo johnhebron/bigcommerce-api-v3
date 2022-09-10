@@ -101,6 +101,21 @@ products.data[0]
 # => #<OpenStruct>
 ```
 
+## Current API Coverage
+
+While still in active development, please use this chart to identify what actions are fully supported by the gem so far.
+
+|                                 | list   | retrieve | create | update | delete | bulk_create | bulk_update | bulk_delete |
+|---------------------------------|--------|----------|--------|--------|--------|-------------|-------------|-------------|
+| Abandoned Carts                 | --     | coming   | --     | --     | --     | --          | --          | --          |
+| Abandoned Cart Settings         | coming | --       | --     | coming | --     | --          | --          | --          |
+| Channel Abandoned Cart Settings | coming | --       | --     | coming | --     | --          | --          | --          |
+| Customers                       | ✅      | ✅        | ✅      | ✅      | ✅      | coming      | coming      | coming      |
+| Email Templates                 | coming | coming   | --     | coming | coming | --          | --          | --          |
+| Pages                           | ✅      | ✅        | ✅      | ✅      | ✅      | ✅           | ✅           | ✅           |
+
+* '--' denotes that the particular action is not available in the Bigcommerce API. 
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/rspec` to run the tests.
