@@ -98,8 +98,8 @@ new_pages_array = [
 begin
   pages = @client.pages.bulk_create(params: new_pages_array)
 
-  pages.data.each do |page|
-    puts "New page created with ID: '#{page.id}' and Name: '#{page.name}'"
+  pages.data.each do |page_record|
+    puts "New page created with ID: '#{page_record.id}' and Name: '#{page_record.name}'"
   end
 rescue Bigcommerce::V3::Error::HTTPError => e
   puts "Creating the pages encountered an error: #{e}"
@@ -170,14 +170,14 @@ updated_pages_array = [
 begin
   pages = @client.pages.list(params: { 'id:in': '2,3' })
 
-  pages.data.each do |page|
-    puts "The page with ID: '#{page.id}' has Name: '#{page.name}'"
+  pages.data.each do |page_record|
+    puts "The page with ID: '#{page_record.id}' has Name: '#{page_record.name}'"
   end
 
   pages = @client.pages.bulk_update(params: updated_pages_array)
 
-  pages.data.each do |page|
-    puts "The *updated* page with ID: '#{page.id}' now has Name: '#{page.name}'"
+  pages.data.each do |page_record|
+    puts "The *updated* page with ID: '#{page_record.id}' now has Name: '#{page_record.name}'"
   end
 rescue Bigcommerce::V3::Error::HTTPError => e
   puts "Creating the Pages encountered an error: #{e}"
