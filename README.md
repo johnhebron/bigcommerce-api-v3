@@ -22,16 +22,17 @@ Or install it yourself as:
 
 ## Usage
 
-### Creating a Client
+### 1. Creating a Client
 
 A Client is created with a Configuration object. If one is not passed in, it will generate one at initialization from a passed in `store_hash` and `access_token`.
 
+#### Basic Setup: Client with only store_hash and access_token
 ```ruby
 # Without passing in a Configuration object
 client = Bigcommerce::V3::Client.new(store_hash: 'je762fs7d', 
                                      access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t')
 ```
-or
+#### Advanced Setup: Client with Configuration object
 ```ruby
 # With a Configuration object
 config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
@@ -40,19 +41,67 @@ config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
 client = Bigcommerce::V3::Client.new(config: config)
 ```
 
-The Configuration object has additional parameters to turn on Faraday logging or set a custom Faraday adapter.
+Passing in a Configuration object allows you to pass in additional configuration options for the client, such as turning on Faraday logging, setting a custom Faraday adapter, or even passing in Faraday stubs for testing.
 ```ruby
+@stubs = Faraday::Adapter::Test::Stubs.new
 config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
                                             access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t',
                                             logger: true,
-                                            adapter: :net_http)
+                                            adapter: :net_http,
+                                            stubs: @stubs)
 
 client = Bigcommerce::V3::Client.new(config: config)
 ```
 
-### Using the Gem
+### 2. Interacting with the API via the `client`
 
-So far, only `Pages` and `Customers` are set up as resources/objects. You can utilize them as follows:
+*[Note]* So far, only `Pages` and `Customers` are set up for use as resources/objects.
+
+#### Basic Request Syntax
+The gem is set up so that:
+* The client has resources (ex. `client.pages`)
+  * which correspond to BigCommerce API endpoints (ex. `/content/pages` for Pages)
+* those resources have actions (sometimes with parameters) (ex. `client.pages.list(params: { limit: 2, page: 1 })`)
+  * which correspond to API HTTP methods and parameters (ex. [GET] and `?limit=2&page=1`)
+
+```ruby
+pages = client.pages.list(params: { page: 1 })
+```
+
+The above performs an HTTP [GET] request to
+```
+https://api.bigcommerce.com/stores/store_hash/v3/content/pages?limit=2&page=1
+```
+
+#### Returned Values
+Once the action (HTTP request) is complete, it will return either a single Object record or a Collection of Object records, depending on the context.
+
+**Ex. `.list` returns a Collection of Page objects**
+
+The `.list` action performs a GET request for all Pages for the store.
+This request will return 0+ Page records from BigCommerce.
+As such, the results are returned in a Collection where the `.data` field contains an array of the 0+ Page objects.
+
+```ruby
+pages = client.pages.list(params: { page: 1 })
+# => #<Bigcommerce::V3::Collection>
+pages.data[0].name
+# => "Contact Page"
+```
+
+**Ex. `.create` returns a Page object**
+
+The `.create` action performs a POST request for a single Page to the store.
+This request will return the single Page record from BigCommerce if successful.
+As such, the result is returned as a single Page object, not a Collection.
+```ruby
+page = client.pages.create(params: { type: 'page', name: 'Our History' })
+# => #<Bigcommerce::V3::Page>
+page.name
+# => "Our History"
+```
+
+#### Example Pages Resource
 
 ```ruby
 # retrieve all pages
@@ -88,6 +137,8 @@ pages = client.pages.list(params: {limit: 1, page: 2})
 # => #<Bigcommerce::V3::Collection>
 ```
 
+### Accessing resources not yet modeled
+
 To access a resource that has not yet been modeled, you can send a "raw" request directly from the client.
 
 ```ruby
@@ -99,6 +150,20 @@ products.data
 # => [Hash#<OpenStruct>]
 products.data[0]
 # => #<OpenStruct>
+```
+
+## Future Goals
+I would love to make the process of building an HTTP request more "natural" by introducing chainability to the Resources/Objects in some way, along with awareness of the available filters for each endpoint.
+
+Ideally, a request might look like:
+```ruby
+@client.pages.where(channel_id: 1, name_like: 'history').page(1).limit(10).list
+# => https://api.bigcommerce.com/stores/store_hash/v3/content/pages?channel_id=1&name:like=history&page=1&limit=10
+```
+Or even
+```ruby
+@client.pages.channel_id(1).name_like('history').page(1).limit(1).list
+# => https://api.bigcommerce.com/stores/store_hash/v3/content/pages?channel_id=1&name:like=history&page=1&limit=10
 ```
 
 ## Development
