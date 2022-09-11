@@ -8,23 +8,13 @@ module Bigcommerce
     class Object
       attr_reader :attributes
 
-      def initialize(attributes = nil)
+      def initialize(attributes = {})
         unless valid?(attributes)
           raise Error::InvalidArguments, "Attributes must be of type Hash or nil, '#{attributes.class}' provided"
         end
 
         attributes = resource_attributes.merge(attributes) if attributes.is_a?(Hash)
-
-        @attributes = OpenStruct.new(attributes)
-      end
-
-      def method_missing(method, *args, &block)
-        attribute = @attributes.send(method, *args, &block)
-        attribute.is_a?(Hash) ? Object.new(attribute) : attribute
-      end
-
-      def respond_to_missing?(_method, _include_private = false)
-        true
+        assign_attributes(attributes)
       end
 
       def valid?(attributes)
@@ -42,6 +32,20 @@ module Bigcommerce
           hash[attribute] = nil
         end
         hash
+      end
+
+      def assign_attributes(attributes)
+        return unless attributes.is_a?(Hash)
+
+        attributes.each do |name, value|
+          instance_variable_set("@#{name}", value)
+
+          define_singleton_method(name) { value }
+
+          define_singleton_method("#{name}=") do |val|
+            instance_variable_set("@#{name}", val)
+          end
+        end
       end
     end
   end
