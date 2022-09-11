@@ -6,46 +6,77 @@ module Bigcommerce
     # Base entity for individual resource objects to inherit from
     ##
     class Object
-      attr_reader :attributes
+      VALIDATION_TYPES = {
+        integer: Integer,
+        string: String,
+        boolean: [TrueClass, FalseClass]
+      }.freeze
+
+      attr_reader :errors
 
       def initialize(attributes = {})
-        unless valid?(attributes)
-          raise Error::InvalidArguments, "Attributes must be of type Hash or nil, '#{attributes.class}' provided"
-        end
+        @errors = []
+        return if valid_format?(attributes)
 
-        attributes = resource_attributes.merge(attributes) if attributes.is_a?(Hash)
-        assign_attributes(attributes)
+        raise Error::InvalidArguments,
+              "Attributes must be of type Hash or nil, '#{attributes.class}' provided"
       end
 
-      def valid?(attributes)
+      def valid_format?(attributes)
         attributes.nil? || attributes.is_a?(Hash)
       end
 
-      private
+      def valid?(context)
+        return false unless defined?(self.class::SCHEMA)
 
-      def resource_attributes
-        attributes = defined?(self.class::RESOURCE_ATTRIBUTES) ? self.class::RESOURCE_ATTRIBUTES : nil
-        return {} if attributes.nil? || attributes.empty?
+        clear_errors
 
-        hash = {}
-        attributes.map do |attribute|
-          hash[attribute] = nil
+        schema = self.class::SCHEMA
+
+        schema.each do |attribute, rules|
+          value = instance_variable_get("@#{attribute}")
+          result = check_attribute_against_rules(attribute, rules, value)
+          @errors.concat(result) unless result.empty?
         end
-        hash
+
+        @errors.empty?
       end
 
-      def assign_attributes(attributes)
-        return unless attributes.is_a?(Hash)
+      def check_attribute_against_rules(attribute, rules, value)
+        errors = []
 
-        attributes.each do |name, value|
-          instance_variable_set("@#{name}", value)
-
-          define_singleton_method(name) { value }
-
-          define_singleton_method("#{name}=") do |val|
-            instance_variable_set("@#{name}", val)
+        rules.each do |rule, criteria|
+          case rule
+          when :type
+            errors << validate_type(attribute, criteria, value) if value
+          when :required
+            errors << validate_present(attribute, value) if criteria
           end
         end
+
+        errors
+      end
+
+      def validate_type(attribute, criteria, value)
+        types = Bigcommerce::V3::Object::VALIDATION_TYPES[criteria]
+
+        if types.is_a?(Array)
+          types.each { |type| return if value.is_a?(type) }
+        elsif value.is_a?(types) || value.nil?
+          return
+        end
+
+        "Attribute '#{attribute}' should be of type '#{criteria.capitalize}', '#{value.class}' provided."
+      end
+
+      def validate_present(attribute, value)
+        return unless value.nil? || value.empty?
+
+        "Attribute '#{attribute}' is required."
+      end
+
+      def clear_errors
+        @errors = []
       end
     end
   end
