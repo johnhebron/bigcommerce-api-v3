@@ -18,11 +18,15 @@ module Bigcommerce
     autoload :Client, 'bigcommerce/v3/client'
     autoload :Error, 'bigcommerce/v3/error'
     autoload :Object, 'bigcommerce/v3/object'
+    autoload :ObjectValidator, 'bigcommerce/v3/object_validator'
     autoload :Resource, 'bigcommerce/v3/resource'
 
     # V3 API Objects
     autoload :Customer, 'bigcommerce/v3/objects/customer'
     autoload :Page, 'bigcommerce/v3/objects/page'
+    autoload :CustomerAddress, 'bigcommerce/v3/objects/customer_address'
+    autoload :CustomerAttribute, 'bigcommerce/v3/objects/customer_attribute'
+    autoload :CustomerFormFieldValue, 'bigcommerce/v3/objects/customer_form_field_value'
 
     # Resources
     autoload :CustomersResource, 'bigcommerce/v3/resources/customers'

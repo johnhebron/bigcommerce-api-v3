@@ -38,25 +38,11 @@ describe 'Bigcommerce::V3::Object' do
     end
   end
 
-  describe 'attributes' do
-    let(:custom_attributes) { { bing: 'pow!' } }
+  describe '.valid?' do
+    let(:context) { Bigcommerce::V3::Page.new }
 
-    it 'sets all keys and values of hash to properties' do
-      allow(Bigcommerce::V3::Object).to receive(:RESOURCE_ATTRIBUTES).and_return({})
-
-      attributes.map do |key, value|
-        expect(object.send(key)).to eq(value)
-      end
-    end
-
-    it 'merges RESOURCE_ATTRIBUTES with passed in attributes' do
-      allow(Bigcommerce::V3::Object).to receive(:RESOURCE_ATTRIBUTES).and_return(custom_attributes)
-
-      attributes.merge!(custom_attributes)
-
-      attributes.map do |key, value|
-        expect(object.send(key)).to eq(value)
-      end
+    it 'returns false when passed a context that is not valid' do
+      expect(object.valid?())
     end
   end
 end

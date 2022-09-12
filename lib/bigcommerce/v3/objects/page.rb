@@ -51,10 +51,6 @@ module Bigcommerce
         @search_keywords = attributes['search_keywords']
         @url = attributes['url']
       end
-
-      def valid?
-        super(self)
-      end
     end
   end
 end
