@@ -2,6 +2,10 @@
 
 module Bigcommerce
   module V3
+    ##
+    # Customer Object
+    # https://developer.bigcommerce.com/api-reference/c98cfd443b0a0-customers-v3
+    ##
     class Customer < Object
       RESOURCE_ATTRIBUTES = %i[
         email
