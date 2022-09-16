@@ -149,6 +149,12 @@ module Bigcommerce
         value.each_with_index do |nested_object, index|
           # Recursively call type_validator with the value and the specified Hash attribute type
           response = type_validator("#{attribute_name}[#{index}]", nested_object_type, nested_object)
+          errors.concat(response) unless response.empty?
+
+          if response.empty? && nested_object.is_a?(Bigcommerce::V3::Object)
+            response = validate_nested_object(attribute_name: "#{attribute_name}[#{index}]", object: nested_object)
+          end
+
           errors.concat(response) unless response.nil?
         end
         errors.compact
@@ -182,6 +188,12 @@ module Bigcommerce
 
       def verify_nested_attributes?(type, nested_object_type, value)
         type == Array && nested_object_type && !value.empty?
+      end
+
+      def validate_nested_object(attribute_name:, object:)
+        return if object.valid?
+
+        object.errors.map { |error| "#{attribute_name} #{error}" }
       end
 
       def clear_errors

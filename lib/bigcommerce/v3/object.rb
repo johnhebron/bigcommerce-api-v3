@@ -21,6 +21,26 @@ module Bigcommerce
       def valid_format?(attributes)
         attributes.nil? || attributes.is_a?(Hash)
       end
+
+      def cast_array(array, type)
+        return array unless array.is_a?(Array)
+        return array if array.empty?
+
+        array.map do |element|
+          type.new(element)
+        end
+      end
+
+      def cast(value, type)
+        return value if value.nil?
+
+        case type
+        when DateTime
+          return unless value.is_a?(String)
+
+          DateTime.new(value)
+        end
+      end
     end
   end
 end
