@@ -14,7 +14,7 @@ module Bigcommerce
         boolean: [TrueClass, FalseClass],
         array: [Array],
         hash: [Hash],
-        datetime: [Time], # format yyyy-MM-ddTHH:mm::ss
+        datetime: [DateTime], # format yyyy-MM-ddTHH:mm::ss
         customer_address: [Bigcommerce::V3::CustomerAddress],
         customer_attribute: [Bigcommerce::V3::CustomerAttribute],
         customer_form_field_value: [Bigcommerce::V3::CustomerFormFieldValue]
@@ -36,7 +36,7 @@ module Bigcommerce
         # Validates against the schema and updates @errors if necessary
         validate_schema
 
-        # Returns 'true' if there are @errors
+        # Returns 'true' if there are no errors
         # otherwise returns 'false'
         @errors.empty?
       end
@@ -56,8 +56,10 @@ module Bigcommerce
         schema.each do |attribute_name, rules|
           # Gets the current value of the attribute
           value = instance_variable_get("@#{attribute_name}")
+
           # Checks the attribute's value against the rules defined for that attribute
           result = validate_attribute(attribute_name, rules, value)
+
           # Update @errors if there are any
           errors.concat(result) unless result.empty?
         end
@@ -114,17 +116,17 @@ module Bigcommerce
         errors = []
 
         # Retrieve the array of types allowed for the specified attribute
-        types = Bigcommerce::V3::ObjectValidator::VALIDATION_TYPES[criteria]
+        allowed_types = Bigcommerce::V3::ObjectValidator::VALIDATION_TYPES[criteria]
 
-        # Iterate through each allowed type and compare to the value's class
+        # Optional attribute for Hashes
+        # Specifies the attribute type for the values within the Hash
+        nested_object_type = schema.dig(attribute_name, :elements)
+
+        # Iterate through each allowed type and compare value's class
         # Return when a match is found or if the value is nil or empty(Array)
-        types.each do |type|
-          # Optional attribute for Hashes
-          # Specifies the attribute type for the values within the Hash
-          nested_object_type = schema.dig(attribute_name, :elements)
-
-          # Validate against the given type or
-          # validates all array objects as necessary
+        allowed_types.each do |type|
+          # Validates the value against the given type or validates
+          # all array objects to the given type as necessary
           if verify_nested_attributes?(type, nested_object_type, value)
             # Validate the array values against the nested object type
             result = validate_array_value_types(value, attribute_name, nested_object_type)
