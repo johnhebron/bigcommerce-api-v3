@@ -19,17 +19,6 @@ module Bigcommerce
         @conn = create_connection
       end
 
-      def raw_request(verb:, url:, params: {}, per_page: nil, page: nil)
-        params.merge!(
-          {
-            limit: per_page.nil? ? nil : per_page.to_s,
-            page: page.nil? ? nil : page.to_s
-          }.compact
-        )
-
-        handle_response @conn.send(verb.downcase.to_sym, url, params)
-      end
-
       def customers
         CustomersResource.new(client: self)
       end
@@ -55,17 +44,6 @@ module Bigcommerce
         return unless store_hash.nil? || access_token.nil? || store_hash.empty? || access_token.empty?
 
         raise Error::ClientConfigError, 'Valid Configuration object or store_hash/access_token required.'
-      end
-
-      def handle_response(response)
-        case response.status
-        when 200..399
-          Collection.from_response(response: response, object_type: OpenStruct)
-        else
-          title = response.body['title']
-          detail = response.body['detail']
-          raise Error::HTTPError, "[HTTP #{response.status}] Request failed with message: #{title} #{detail}"
-        end
       end
 
       def configure_logger(conn)

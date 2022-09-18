@@ -21,7 +21,3 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/NestedGroups:
   Max: 4
-
-# Currently using OpenStructs until resources are built out
-Style/OpenStructUse:
-  Enabled: false

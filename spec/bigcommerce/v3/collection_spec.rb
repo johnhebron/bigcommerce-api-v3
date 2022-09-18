@@ -23,7 +23,7 @@ describe 'Bigcommerce::V3::Collection' do
     let(:status) { 200 }
     let(:body) { { 'data' => data, 'meta' => { 'pagination' => pagination_data } } }
     let(:response) { instance_double(Faraday::Response, body: body) }
-    let(:object_type) { OpenStruct }
+    let(:object_type) { Hash }
 
     context 'when providing valid input' do
       it 'returns a Bigcommerce::V3::Collection object' do
