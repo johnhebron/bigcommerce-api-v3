@@ -13,15 +13,18 @@ require 'bigcommerce/v3/version'
 
 module Bigcommerce
   module V3
+    autoload :Client, 'bigcommerce/v3/client'
     autoload :Collection, 'bigcommerce/v3/collection'
     autoload :Configuration, 'bigcommerce/v3/configuration'
-    autoload :Client, 'bigcommerce/v3/client'
     autoload :Error, 'bigcommerce/v3/error'
     autoload :Object, 'bigcommerce/v3/object'
     autoload :Resource, 'bigcommerce/v3/resource'
 
     # V3 API Objects
     autoload :Customer, 'bigcommerce/v3/objects/customer'
+    autoload :CustomerAddress, 'bigcommerce/v3/objects/customer_address'
+    autoload :CustomerAttribute, 'bigcommerce/v3/objects/customer_attribute'
+    autoload :CustomerFormFieldValue, 'bigcommerce/v3/objects/customer_form_field_value'
     autoload :Page, 'bigcommerce/v3/objects/page'
 
     # Resources

@@ -37,38 +37,4 @@ describe 'Bigcommerce::V3::Object' do
       end
     end
   end
-
-  describe '.attributes' do
-    it 'returns an OpenStruct from passed in attributes hash' do
-      expect(object.attributes).to be_a_kind_of(OpenStruct)
-    end
-
-    it 'sets all keys and values of hash to properties' do
-      object.attributes.map do |key, value|
-        expect(object.send(key)).to eq(value)
-      end
-    end
-  end
-
-  describe '.method_missing' do
-    context 'when the method name exists as an attribute' do
-      context 'when the attribute is not a Hash' do
-        it 'returns appropriate value as a string' do
-          expect(object.key_1).to eq('value_1')
-        end
-      end
-
-      context 'when the attribute is a Hash' do
-        let(:attributes) { { 'key_1' => { 'sub_key_1' => 'sub_value_1' } } }
-
-        it 'returns an OpenStruct' do
-          expect(object.key_1).to be_a_kind_of(Bigcommerce::V3::Object)
-        end
-
-        it 'makes the nested keys available as methods' do
-          expect(object.key_1.sub_key_1).to eq('sub_value_1')
-        end
-      end
-    end
-  end
 end
