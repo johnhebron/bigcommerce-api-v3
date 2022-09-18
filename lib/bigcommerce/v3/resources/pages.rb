@@ -78,7 +78,8 @@ module Bigcommerce
         raise Error::ParamError, "Params must be of type Array, #{page_ids.class} provided." unless page_ids.is_a?(Array)
 
         url = RESOURCE_URL
-        delete_request(url: url, params: { 'id:in' => page_ids.join(',') })
+        params = { 'id:in' => page_ids.join(',') }
+        delete_request(url: url, params: params)
         true
       end
     end

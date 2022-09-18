@@ -49,7 +49,7 @@ module Bigcommerce
       def configure_logger(conn)
         return unless @config.logger
 
-        conn.response :logger do |logger|
+        conn.response :logger, nil, { headers: true, bodies: true } do |logger|
           logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
         end
       end
