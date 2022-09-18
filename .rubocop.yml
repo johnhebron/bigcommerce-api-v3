@@ -13,11 +13,14 @@ Layout/LineLength:
 Metrics/AbcSize:
   Enabled: false
 
-RSpec/NestedGroups:
-  Max: 4
+Metrics/MethodLength:
+  AllowedPatterns: ['initialize']
 
 RSpec/MultipleMemoizedHelpers:
    Enabled: false
+
+RSpec/NestedGroups:
+  Max: 4
 
 # Currently using OpenStructs until resources are built out
 Style/OpenStructUse:
