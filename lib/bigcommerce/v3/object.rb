@@ -43,6 +43,10 @@ module Bigcommerce
         end
         hash
       end
+
+      def valid_format?(attributes)
+        attributes.nil? || attributes.is_a?(Hash) || attributes.is_a?(Array)
+      end
     end
   end
 end

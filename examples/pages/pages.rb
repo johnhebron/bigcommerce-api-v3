@@ -205,7 +205,7 @@ begin
   page = @client.pages.update(page_id: page_id, params: updated_page_hash)
   puts "The *updated* Page with ID: '#{page.id}' now has Name: '#{page.name}'"
 rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Creating the Page encountered an error: #{e}"
+  puts "Updating the Page encountered an error: #{e}"
 end
 puts "\n"
 
