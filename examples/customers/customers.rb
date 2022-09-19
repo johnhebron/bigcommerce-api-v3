@@ -89,7 +89,7 @@ params = { 'company:in' => 'bigcommerce,commongood',
            'name:like' => 'Roger',
            'page' => 2,
            'registration_ip_address:in' => '12.345.6.789',
-           'sort' => 'last_name:asc'}
+           'sort' => 'last_name:asc' }
 
 customers = @client.customers.list(params: params)
 
@@ -131,167 +131,172 @@ rescue Bigcommerce::V3::Error::HTTPError => e
 end
 puts "\n"
 
-# ##################################
-# # Bulk Create Pages (.bulk_create)
-# ##################################
-# #
-# # Creates multiple pages
-# # returns the created pages as a Collection of Page objects
-# ##
-# puts '# Bulk Create Pages (.bulk_create)'
-# puts '##################################'
+##################################
+# Bulk Create Customers (.bulk_create)
+##################################
 #
-# new_pages_array = [
-#   {
-#     name: "One More Page Title #{SecureRandom.uuid}",
-#     type: 'page',
-#     body: '<p>some <em>super great</em> html content</p>'
-#   },
-#   {
-#     name: "And Then Another Page Title #{SecureRandom.uuid}",
-#     type: 'page',
-#     body: '<p>some ok html content</p>'
-#   }
-# ]
+# Creates multiple customers
+# returns the created customers as a Collection of Customer objects
+##
+puts '# Bulk Create Customers (.bulk_create)'
+puts '##################################'
+
+new_customers_array = [
+  {
+    last_name: 'Officer',
+    first_name: 'Clemmons',
+    email: 'officer.clemmons@example.com'
+  },
+  {
+    last_name: 'Mister',
+    first_name: 'McFeely',
+    email: 'mister.mcfeely@example.com'
+  }
+]
+
+# wrapping with begin/rescue in case a Page with the same name already exists
+begin
+  customers = @client.customers.bulk_create(params: new_customers_array)
+
+  puts 'New Customers created with params:'
+  pp new_customers_array
+  customers.data.map { |customer_record| created_customer_ids << customer_record.id }
+rescue Bigcommerce::V3::Error::HTTPError => e
+  puts "Creating the Customers encountered an error: #{e}"
+end
+puts "\n"
+
+##################################
+# Retrieve a Customer (.retrieve)
+##################################
 #
-# # wrapping with begin/rescue in case a Page with the same name already exists
-# begin
-#   pages = @client.pages.bulk_create(params: new_pages_array)
+# Retrieves a specific customer by id
+# returns the page as a Customer object
+##
+puts '# Retrieve a Customer (.retrieve)'
+puts '##################################'
+
+# wrapping with begin/rescue in case a Page with the id does not exist
+begin
+  customer_id = created_customer_ids[0] || 1
+  customer = @client.customers.retrieve(customer_id: customer_id)
+
+  puts "Retrieved Customer with ID: '#{customer.id}' and First Name: '#{customer.first_name}'"
+rescue Bigcommerce::V3::Error::HTTPError => e
+  puts "Retrieving the Customer with ID: '#{customer.id}' encountered an error: #{e}"
+end
+puts "\n"
+
+##################################
+# Update a Customer (.update)
+##################################
 #
-#   puts 'New Pages created with params:'
-#   pp new_pages_array
-#   pages.data.map { |page| created_page_ids << page.id }
-# rescue Bigcommerce::V3::Error::HTTPError => e
-#   puts "Creating the Pages encountered an error: #{e}"
-# end
-# puts "\n"
+# Updates a specific customer
+# returns the customer as a Customer object
+##
+puts '# Update a Customer (.update)'
+puts '##################################'
+
+updated_customer_hash = {
+  first_name: 'Mayor',
+  last_name: "Maggie, #{rand(10)}"
+}
+customer_id = created_customer_ids[0] || 1
+
+# wrapping with begin/rescue in case a Page with the same name already exists
+begin
+  customer = @client.customers.retrieve(customer_id: customer_id)
+  puts "The Customer with ID: '#{customer.id}' has Name: '#{customer.first_name} #{customer.last_name}'"
+
+  customer = @client.customers.update(customer_id: customer_id, params: updated_customer_hash)
+  puts "The *updated* Customer with ID: '#{customer.id}' has Name: '#{customer.first_name} #{customer.last_name}'"
+rescue Bigcommerce::V3::Error::HTTPError => e
+  puts "Updating the Customer encountered an error: #{e}"
+end
+puts "\n"
+
+##################################
+# Bulk Update Customers (.bulk_update)
+##################################
 #
-# ##################################
-# # Retrieve a Page (.retrieve)
-# ##################################
-# #
-# # Retrieves a specific page by id
-# # returns the page as a Page object
-# ##
-# puts '# Retrieve a Page (.retrieve)'
-# puts '##################################'
+# Updates an array of Customers
+# Returns the customers as a Collection of Customer objects
+##
+puts '# Bulk Update Customers (.bulk_update)'
+puts '##################################'
+
+updated_customers_array = [
+  {
+    id: created_customer_ids[0] || 1,
+    first_name: 'Handyman',
+    last_name: "Negri, #{rand(10)}"
+  },
+  {
+    id: created_customer_ids[1] || 2,
+    name: 'Chef',
+    last_name: "Brockett, #{rand(10)}"
+  }
+]
+
+# wrapping with begin/rescue in case a Page with the same name already exists
+begin
+  ids = updated_customers_array.map { |customer_record| customer_record[:id] }
+  customers = @client.customers.list(params: { 'id:in': ids.join(',') })
+
+  customers.data.each do |customer_record|
+    full_name = "#{customer_record.first_name} #{customer_record.last_name}"
+    puts "The Customer with ID: '#{customer_record.id}' has Name: '#{full_name}'"
+  end
+
+  customers = @client.customers.bulk_update(params: updated_customers_array)
+
+  customers.data.each do |customer_record|
+    full_name = "#{customer_record.first_name} #{customer_record.last_name}"
+    puts "The *updated* Customer with ID: '#{customer_record.id}' now has Name: '#{full_name}'"
+  end
+rescue Bigcommerce::V3::Error::HTTPError => e
+  puts "Updating the Customers encountered an error: #{e}"
+end
+puts "\n"
+
+##################################
+# Delete a Customer (.delete)
+##################################
 #
-# # wrapping with begin/rescue in case a Page with the id does not exist
-# begin
-#   page_id = created_page_ids[0] || 1
-#   page = @client.pages.retrieve(page_id: page_id)
+# Deletes a specific customer by id
+# returns true on success
+##
+puts '# Delete a Customer (.delete)'
+puts '##################################'
+
+customer_id = created_customer_ids[0] || 1
+
+# wrapping with begin/rescue in case a Page with the id does not exist
+begin
+  response = @client.customers.delete(customer_id: customer_id)
+  created_customer_ids.shift
+  puts "Response was '#{response}'.\n'true' means Customer was deleted successfully."
+rescue Bigcommerce::V3::Error::HTTPError => e
+  puts "Deleting the Customer with ID: '#{customer_id}' encountered an error: #{e}"
+end
+puts "\n"
+
+##################################
+# Bulk Delete Customers (.bulk_delete)
+##################################
 #
-#   puts "Retrieved Page with ID: '#{page.id}' and Name: '#{page.name}'"
-# rescue Bigcommerce::V3::Error::HTTPError => e
-#   puts "Retrieving the Page with ID: '#{page_id}' encountered an error: #{e}"
-# end
-# puts "\n"
-#
-# ##################################
-# # Update a Page (.update)
-# ##################################
-# #
-# # Updates a specific page
-# # returns the page as a Page object
-# ##
-# puts '# Update a Page (.update)'
-# puts '##################################'
-#
-# updated_page_hash = {
-#   name: "An Example Page Title (That's been edited!) #{SecureRandom.uuid}"
-# }
-# page_id = created_page_ids[0] || 1
-#
-# # wrapping with begin/rescue in case a Page with the same name already exists
-# begin
-#   page = @client.pages.retrieve(page_id: page_id)
-#   puts "The Page with ID: '#{page.id}' has Name: '#{page.name}'"
-#
-#   page = @client.pages.update(page_id: page_id, params: updated_page_hash)
-#   puts "The *updated* Page with ID: '#{page.id}' now has Name: '#{page.name}'"
-# rescue Bigcommerce::V3::Error::HTTPError => e
-#   puts "Creating the Page encountered an error: #{e}"
-# end
-# puts "\n"
-#
-# ##################################
-# # Bulk Update Pages (.bulk_update)
-# ##################################
-# #
-# # Updates an array of Pages
-# # Returns the pages as a Collection of Page objects
-# ##
-# puts '# Bulk Update Pages (.bulk_update)'
-# puts '##################################'
-#
-# updated_pages_array = [
-#   {
-#     id: created_page_ids[0] || 1,
-#     name: "An Example Page Title (That's been edited!) #{SecureRandom.uuid}"
-#   },
-#   {
-#     id: created_page_ids[1] || 2,
-#     name: "Another new page title #{SecureRandom.uuid}"
-#   }
-# ]
-#
-# # wrapping with begin/rescue in case a Page with the same name already exists
-# begin
-#   ids = updated_pages_array.map { |page| page[:id] }
-#   pages = @client.pages.list(params: { 'id:in': ids.join(',') })
-#
-#   pages.data.each do |page_record|
-#     puts "The Page with ID: '#{page_record.id}' has Name: '#{page_record.name}'"
-#   end
-#
-#   pages = @client.pages.bulk_update(params: updated_pages_array)
-#
-#   pages.data.each do |page_record|
-#     puts "The *updated* Page with ID: '#{page_record.id}' now has Name: '#{page_record.name}'"
-#   end
-# rescue Bigcommerce::V3::Error::HTTPError => e
-#   puts "Creating the Pages encountered an error: #{e}"
-# end
-# puts "\n"
-#
-# ##################################
-# # Delete a Page (.delete)
-# ##################################
-# #
-# # Deletes a specific page by id
-# # returns true on success
-# ##
-# puts '# Delete a Page (.delete)'
-# puts '##################################'
-#
-# page_id = created_page_ids[0] || 1
-#
-# # wrapping with begin/rescue in case a Page with the id does not exist
-# begin
-#   response = @client.pages.delete(page_id: page_id)
-#   created_page_ids.shift
-#   puts "Response was '#{response}'.\n'true' means Page was deleted successfully."
-# rescue Bigcommerce::V3::Error::HTTPError => e
-#   puts "Deleting the Page with ID: '#{page_id}' encountered an error: #{e}"
-# end
-# puts "\n"
-#
-# ##################################
-# # Bulk Delete Pages (.bulk_delete)
-# ##################################
-# #
-# # Deletes a specific page by id
-# # returns true on success
-# ##
-# puts '# Bulk Delete Pages (.bulk_delete)'
-# puts '##################################'
-#
-# page_ids = created_page_ids.compact || [2, 3]
-#
-# # wrapping with begin/rescue in case a Page with the id does not exist
-# begin
-#   response = @client.pages.bulk_delete(page_ids: page_ids)
-#   puts "Response was '#{response}'.\n'true' means Pages were deleted successfully."
-# rescue Bigcommerce::V3::Error::HTTPError => e
-#   puts "Deleting the Pages encountered an error: #{e}"
-# end
+# Deletes specific customers by an array of ids
+# returns true on success
+##
+puts '# Bulk Delete Customers (.bulk_delete)'
+puts '##################################'
+
+customer_ids = created_customer_ids.compact || [2, 3]
+
+# wrapping with begin/rescue in case a Page with the id does not exist
+begin
+  response = @client.customers.bulk_delete(customer_ids: customer_ids)
+  puts "Response was '#{response}'.\n'true' means Customers were deleted successfully."
+rescue Bigcommerce::V3::Error::HTTPError => e
+  puts "Deleting the Customers encountered an error: #{e}"
+end

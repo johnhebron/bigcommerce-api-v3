@@ -17,7 +17,7 @@ module Bigcommerce
       private
 
       def valid_format?(attributes)
-        attributes.nil? || attributes.is_a?(Hash)
+        attributes.nil? || attributes.is_a?(Hash) || attributes.is_a?(Array)
       end
 
       def cast_array(array, type)

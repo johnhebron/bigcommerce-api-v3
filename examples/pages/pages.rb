@@ -140,7 +140,7 @@ begin
 
   puts 'New Pages created with params:'
   pp new_pages_array
-  pages.data.map { |page| created_page_ids << page.id }
+  pages.data.map { |page_record| created_page_ids << page_record.id }
 rescue Bigcommerce::V3::Error::HTTPError => e
   puts "Creating the Pages encountered an error: #{e}"
 end
@@ -190,7 +190,7 @@ begin
   page = @client.pages.update(page_id: page_id, params: updated_page_hash)
   puts "The *updated* Page with ID: '#{page.id}' now has Name: '#{page.name}'"
 rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Creating the Page encountered an error: #{e}"
+  puts "Updating the Page encountered an error: #{e}"
 end
 puts "\n"
 
@@ -217,7 +217,7 @@ updated_pages_array = [
 
 # wrapping with begin/rescue in case a Page with the same name already exists
 begin
-  ids = updated_pages_array.map { |page| page[:id] }
+  ids = updated_pages_array.map { |page_record| page_record[:id] }
   pages = @client.pages.list(params: { 'id:in': ids.join(',') })
 
   pages.data.each do |page_record|
