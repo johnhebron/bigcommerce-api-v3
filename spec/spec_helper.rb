@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'faker'
+require 'factory_bot'
 require 'simplecov'
 require 'support/helpers'
 require 'rspec'
@@ -20,6 +22,12 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  # FactoryBot Setup
+  config.include FactoryBot::Syntax::Methods
+  config.before(:suite) do
+    FactoryBot.find_definitions
   end
 
   config.include Helpers
