@@ -49,11 +49,11 @@ describe 'Bigcommerce::V3::Resource' do
         let(:fixture) { 'resource/get_with_per_page_url200' }
         let(:status) { 200 }
         let(:per_page) { 42 }
-        let(:limit_matcher) { { 'limit' => per_page.to_s } }
+        let(:params_matcher) { { 'limit' => per_page.to_s } }
         let(:response) { resource.get_request(url: url, per_page: per_page) }
 
         it 'constructs the appropriate url with per_page' do
-          expect(response.env.params).to match(limit_matcher)
+          expect(response.env.params).to match(params_matcher)
         end
 
         it 'returns the appropriate pagination_data with per_page' do
@@ -69,11 +69,11 @@ describe 'Bigcommerce::V3::Resource' do
         let(:fixture) { 'resource/get_with_page_url200' }
         let(:status) { 200 }
         let(:page) { 42 }
-        let(:limit_matcher) { { 'page' => page.to_s } }
+        let(:params_matcher) { { 'page' => page.to_s } }
         let(:response) { resource.get_request(url: url, page: page) }
 
         it 'constructs the appropriate url with page' do
-          expect(response.env.params).to match(limit_matcher)
+          expect(response.env.params).to match(params_matcher)
         end
 
         it 'returns the appropriate pagination_data with page' do
@@ -90,11 +90,11 @@ describe 'Bigcommerce::V3::Resource' do
         let(:status) { 200 }
         let(:page) { 42 }
         let(:per_page) { 42 }
-        let(:limit_matcher) { { 'page' => page.to_s, 'limit' => per_page.to_s } }
+        let(:params_matcher) { { 'page' => page.to_s, 'limit' => per_page.to_s } }
         let(:response) { resource.get_request(url: url, page: page, per_page: per_page) }
 
         it 'constructs the appropriate url with page' do
-          expect(response.env.params).to match(limit_matcher)
+          expect(response.env.params).to match(params_matcher)
         end
 
         it 'returns the appropriate pagination_data with page' do
@@ -103,6 +103,22 @@ describe 'Bigcommerce::V3::Resource' do
 
         it 'returns the appropriate pagination_data with per_page' do
           expect(response.body.dig('meta', 'pagination', 'per_page').to_i).to eq(per_page)
+        end
+
+        it 'returns a 200 response' do
+          expect(response.status).to eq(status)
+        end
+      end
+
+      context 'with params hash' do
+        let(:fixture) { 'resource/get_with_params_hash_url200' }
+        let(:status) { 200 }
+        let(:params) { { page: 1, limit: 2, arbitrary_key: 'arbitrary_value' } }
+        let(:params_matcher) { { 'page' => '1', 'limit' => '2', 'arbitrary_key' => 'arbitrary_value' } }
+        let(:response) { resource.get_request(url: url, params: params) }
+
+        it 'constructs the appropriate url with parameters' do
+          expect(response.env.params).to match(params_matcher)
         end
 
         it 'returns a 200 response' do
