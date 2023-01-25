@@ -5,8 +5,8 @@ require_relative 'lib/bigcommerce/v3/version'
 Gem::Specification.new do |spec|
   spec.name = 'bigcommerce-v3'
   spec.version = Bigcommerce::V3::VERSION
-  spec.authors = ['bc-johnhebron']
-  spec.email = ['john.hebron@bigcommerce.com']
+  spec.authors = ['johnhebron']
+  spec.email = ['johnhebron@gmail.com']
 
   spec.summary = 'Ruby Gem for working with the BigCommerce REST API V3.'
   spec.description = 'For more information about the BigCommerce REST API V3, please see https://developer.bigcommerce.com/docs/97b76565d4269-big-commerce-ap-is-quick-start#rest-api'
