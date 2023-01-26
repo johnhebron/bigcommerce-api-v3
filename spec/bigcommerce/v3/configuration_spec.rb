@@ -12,7 +12,7 @@ describe 'Bigcommerce::V3::Configuration' do
   describe '#initialize' do
     context 'with a valid store_hash and access_token' do
       it 'is of type Bigcommerce::V3::Configuration' do
-        expect(config).to be_a_kind_of(Bigcommerce::V3::Configuration)
+        expect(config).to be_a(Bigcommerce::V3::Configuration)
       end
     end
 

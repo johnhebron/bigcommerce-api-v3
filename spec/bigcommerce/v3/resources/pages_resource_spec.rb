@@ -23,7 +23,7 @@ describe 'Bigcommerce::V3::PagesResource' do
 
   describe '#initialize' do
     it 'is of type Bigcommerce::V3::PagesResource' do
-      expect(pages_resource).to be_a_kind_of(Bigcommerce::V3::PagesResource)
+      expect(pages_resource).to be_a(Bigcommerce::V3::PagesResource)
     end
   end
 
@@ -34,7 +34,7 @@ describe 'Bigcommerce::V3::PagesResource' do
       let(:status) { 200 }
 
       it 'returns a Bigcommerce::V3::Collection' do
-        expect(pages_resource.list).to be_a_kind_of(Bigcommerce::V3::Collection)
+        expect(pages_resource.list).to be_a(Bigcommerce::V3::Collection)
       end
     end
   end

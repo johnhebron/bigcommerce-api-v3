@@ -11,7 +11,7 @@ describe 'Bigcommerce::V3::Client' do
   describe '#initialize' do
     context 'with a store_hash and access_token' do
       it 'is of type Bigcommerce::V3::Client' do
-        expect(client).to be_a_kind_of(Bigcommerce::V3::Client)
+        expect(client).to be_a(Bigcommerce::V3::Client)
       end
     end
 
@@ -21,7 +21,7 @@ describe 'Bigcommerce::V3::Client' do
       let(:config) { Bigcommerce::V3::Configuration.new(store_hash: store_hash, access_token: access_token) }
 
       it 'is of type Bigcommerce::V3::Client' do
-        expect(client).to be_a_kind_of(Bigcommerce::V3::Client)
+        expect(client).to be_a(Bigcommerce::V3::Client)
       end
 
       context 'with logger set to true' do
@@ -52,7 +52,7 @@ describe 'Bigcommerce::V3::Client' do
 
   describe '.conn' do
     it 'returns a Faraday::Connection object' do
-      expect(client.conn).to be_a_kind_of(Faraday::Connection)
+      expect(client.conn).to be_a(Faraday::Connection)
     end
   end
 end

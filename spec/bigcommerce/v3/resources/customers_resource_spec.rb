@@ -23,7 +23,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#initialize' do
     it 'is of type Bigcommerce::V3::Resource' do
-      expect(customers_resource).to be_a_kind_of(Bigcommerce::V3::CustomersResource)
+      expect(customers_resource).to be_a(Bigcommerce::V3::CustomersResource)
     end
   end
 
@@ -34,7 +34,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
       let(:status) { 200 }
 
       it 'returns a Bigcommerce::V3::Collection' do
-        expect(customers_resource.list).to be_a_kind_of(Bigcommerce::V3::Collection)
+        expect(customers_resource.list).to be_a(Bigcommerce::V3::Collection)
       end
     end
   end

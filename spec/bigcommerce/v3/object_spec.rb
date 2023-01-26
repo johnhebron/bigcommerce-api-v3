@@ -9,7 +9,7 @@ describe 'Bigcommerce::V3::Object' do
 
   describe '#initialize' do
     it 'is of type Object' do
-      expect(object).to be_a_kind_of(Bigcommerce::V3::Object)
+      expect(object).to be_a(Bigcommerce::V3::Object)
     end
 
     context 'with an empty hash' do
@@ -40,7 +40,7 @@ describe 'Bigcommerce::V3::Object' do
 
   describe '.attributes' do
     it 'returns an OpenStruct from passed in attributes hash' do
-      expect(object.attributes).to be_a_kind_of(OpenStruct)
+      expect(object.attributes).to be_a(OpenStruct)
     end
 
     it 'sets all keys and values of hash to properties' do
@@ -62,7 +62,7 @@ describe 'Bigcommerce::V3::Object' do
         let(:attributes) { { 'key_1' => { 'sub_key_1' => 'sub_value_1' } } }
 
         it 'returns an OpenStruct' do
-          expect(object.key_1).to be_a_kind_of(Bigcommerce::V3::Object)
+          expect(object.key_1).to be_a(Bigcommerce::V3::Object)
         end
 
         it 'makes the nested keys available as methods' do

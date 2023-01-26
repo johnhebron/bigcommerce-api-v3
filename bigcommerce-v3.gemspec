@@ -32,14 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'faraday', '~> 2.5.2'
   spec.add_dependency 'rake', '~> 13.0'
 
-  spec.add_development_dependency 'dotenv', '~> 2.8'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 1.21'
-  spec.add_development_dependency 'rubocop-performance'
-  spec.add_development_dependency 'rubocop-rspec', '~> 2.12'
-  spec.add_development_dependency 'rubocop-thread_safety'
-  spec.add_development_dependency 'simplecov'
-
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html
   spec.metadata['rubygems_mfa_required'] = 'true'

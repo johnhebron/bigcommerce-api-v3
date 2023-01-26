@@ -23,7 +23,7 @@ describe 'Bigcommerce::V3::Resource' do
 
   describe '#initialize' do
     it 'is of type Resource' do
-      expect(resource).to be_a_kind_of(Bigcommerce::V3::Resource)
+      expect(resource).to be_a(Bigcommerce::V3::Resource)
     end
   end
 
@@ -34,7 +34,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:status) { 200 }
 
       it 'returns a Faraday::Response' do
-        expect(resource.get_request(url: url)).to be_a_kind_of(Faraday::Response)
+        expect(resource.get_request(url: url)).to be_a(Faraday::Response)
       end
 
       it 'returns a 200 response' do
@@ -42,7 +42,7 @@ describe 'Bigcommerce::V3::Resource' do
       end
 
       it 'contains a body' do
-        expect(resource.get_request(url: url).body).to be_a_kind_of(Hash)
+        expect(resource.get_request(url: url).body).to be_a(Hash)
       end
 
       context 'with per_page parameter' do
@@ -143,7 +143,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:status) { 201 }
 
       it 'returns a Faraday::Response' do
-        expect(resource.post_request(url: url, body: body)).to be_a_kind_of(Faraday::Response)
+        expect(resource.post_request(url: url, body: body)).to be_a(Faraday::Response)
       end
 
       it 'returns a 201 response' do
@@ -151,7 +151,7 @@ describe 'Bigcommerce::V3::Resource' do
       end
 
       it 'contains a body' do
-        expect(resource.post_request(url: url, body: body).body).to be_a_kind_of(Hash)
+        expect(resource.post_request(url: url, body: body).body).to be_a(Hash)
       end
     end
 
@@ -198,7 +198,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:status) { 200 }
 
       it 'returns a Faraday::Response' do
-        expect(resource.put_request(url: url, body: body)).to be_a_kind_of(Faraday::Response)
+        expect(resource.put_request(url: url, body: body)).to be_a(Faraday::Response)
       end
 
       it 'returns a 200 response' do
@@ -206,7 +206,7 @@ describe 'Bigcommerce::V3::Resource' do
       end
 
       it 'contains a body' do
-        expect(resource.put_request(url: url, body: body).body).to be_a_kind_of(Hash)
+        expect(resource.put_request(url: url, body: body).body).to be_a(Hash)
       end
     end
 
@@ -242,7 +242,7 @@ describe 'Bigcommerce::V3::Resource' do
       let(:status) { 204 }
 
       it 'returns a Faraday::Response' do
-        expect(resource.delete_request(url: url)).to be_a_kind_of(Faraday::Response)
+        expect(resource.delete_request(url: url)).to be_a(Faraday::Response)
       end
 
       it 'returns a 204 response' do
@@ -250,7 +250,7 @@ describe 'Bigcommerce::V3::Resource' do
       end
 
       it 'contains a body' do
-        expect(resource.delete_request(url: url).body).to be_a_kind_of(Hash)
+        expect(resource.delete_request(url: url).body).to be_a(Hash)
       end
     end
 
