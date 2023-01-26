@@ -55,7 +55,7 @@ client = Bigcommerce::V3::Client.new(config: config)
 
 ### 2. Interacting with the API via the `client`
 
-**(2022-09-17) Note:** Not all Resources/Object have been created yet.
+**(2022-09-17) Note:** Not all Resources/Objects have been created yet.
 
 #### 1. Basic Request Syntax
 The gem is set up so that:

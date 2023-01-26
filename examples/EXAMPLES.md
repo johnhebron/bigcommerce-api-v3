@@ -6,8 +6,5 @@ Detailed examples for using the Bigcommerce::V3 gem to interact with BigCommerce
 
 * Customers
   * [Customers](customers/customers.rb)
-  * Customer Addresses
-  * Customer Attributes
-  * Customer Form Field Values
 * Pages
   * [Pages](pages/pages.rb)

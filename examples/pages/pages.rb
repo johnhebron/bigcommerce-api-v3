@@ -1,5 +1,14 @@
 # frozen_string_literal: true
 
+##################################
+# Setup Examples File to Run Locally
+##################################
+
+# Set BIGCOMMERCE_V3_ENV so that dotenv is initialized
+ENV['BIGCOMMERCE_V3_ENV'] = 'development'
+
+# Require bundler and this gem
+require 'bundler/setup'
 require 'bigcommerce/v3'
 
 ##################################
@@ -21,7 +30,10 @@ pages = @client.pages.list
 
 puts "#{pages.data.count} Page records returned."
 puts "#{pages.total} total Page records"
-puts "First Page record is ID: #{pages.data[0].id}, Name: #{pages.data[0].name}"
+
+# Grab the first page
+page = pages.data.first
+puts "First Page record is ID: #{page.id}, Name: #{page.name}" if page
 
 ##
 # List pages with 'per_page' and 'page' params
@@ -32,7 +44,10 @@ pages = @client.pages.list(per_page: 2, page: 2)
 
 puts "#{pages.data.count} Page records returned."
 puts "Currently on page #{pages.current_page} out of #{pages.total_pages} total pages"
-puts "First Page record is ID: #{pages.data[0].id}, Name: #{pages.data[0].name}"
+
+# Grab the first page
+page = pages.data.first
+puts "First Page record is ID: #{page.id}, Name: #{page.name}" if page
 
 ##
 # List pages with 'params' hash
@@ -50,7 +65,10 @@ params = { 'limit' => 2,
 pages = @client.pages.list(params: params)
 
 puts "#{pages.data.count} Page records returned."
-puts "First Page record is ID: #{pages.data[0].id}, Name: #{pages.data[0].name}" unless pages.data[0].nil?
+
+# Grab the first page
+page = pages.data.first
+puts "First Page record is ID: #{page.id}, Name: #{page.name}" if page
 
 ##################################
 # Create Page (.create)
@@ -60,7 +78,7 @@ puts "First Page record is ID: #{pages.data[0].id}, Name: #{pages.data[0].name}"
 # returns the created page as a Page object
 ##
 new_page_hash = {
-  name: 'An Example Page Title',
+  name: 'An Example Page Title ' + Time.now.to_s,
   type: 'page',
   body: '<p>some <em>great</em> html content</p>'
 }
@@ -83,12 +101,12 @@ end
 ##
 new_pages_array = [
   {
-    name: 'One More Page Title',
+    name: 'One More Page Title ' + Time.now.to_s,
     type: 'page',
     body: '<p>some <em>super great</em> html content</p>'
   },
   {
-    name: 'And Then Another Page Title',
+    name: 'And Then Another Page Title ' + Time.now.to_s,
     type: 'page',
     body: '<p>some ok html content</p>'
   }
@@ -132,7 +150,7 @@ end
 ##
 
 updated_page_hash = {
-  name: 'An Example Page Title (That\'s been edited!)'
+  name: 'An Example Page Title (That\'s been edited!) ' + Time.now.to_s
 }
 page_id = 2
 
@@ -158,11 +176,11 @@ end
 updated_pages_array = [
   {
     id: 2,
-    name: 'An Example Page Title (That\'s been edited!)'
+    name: 'An Example Page Title (That\'s been edited!) '  + Time.now.to_s
   },
   {
     id: 3,
-    name: 'Another new page title'
+    name: 'Another new page title '  + Time.now.to_s
   }
 ]
 
