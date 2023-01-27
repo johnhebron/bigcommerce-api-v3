@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Specify Ruby version
-ruby '3.1.3'
+ruby '>= 3.0', '< 3.3'
 
 # Specify gem sources
 source 'https://rubygems.org'
