@@ -12,10 +12,13 @@ require 'faraday'
 require 'bigcommerce/v3/version'
 
 module Bigcommerce
+  ##
+  # Interacting with the BigCommerce V3 API
+  ##
   module V3
+    autoload :Client, 'bigcommerce/v3/client'
     autoload :Collection, 'bigcommerce/v3/collection'
     autoload :Configuration, 'bigcommerce/v3/configuration'
-    autoload :Client, 'bigcommerce/v3/client'
     autoload :Error, 'bigcommerce/v3/error'
     autoload :Object, 'bigcommerce/v3/object'
     autoload :Resource, 'bigcommerce/v3/resource'

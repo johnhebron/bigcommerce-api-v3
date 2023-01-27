@@ -7,7 +7,11 @@
 /spec/reports/
 /tmp/
 .env
+Gemfile.lock
 
 # rspec failure tracking
 .rspec_status
 coverage
+
+# IDE
+.idea

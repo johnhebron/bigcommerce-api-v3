@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = 'For more information about the BigCommerce REST API V3, please see https://developer.bigcommerce.com/docs/97b76565d4269-big-commerce-ap-is-quick-start#rest-api'
   spec.homepage = 'https://developer.bigcommerce.com'
   spec.license = 'MIT'
-  spec.required_ruby_version = '>= 2.6.0'
+  spec.required_ruby_version = ['>= 3.0', '< 3.3']
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
@@ -31,14 +31,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'faraday', '~> 2.5.2'
   spec.add_dependency 'rake', '~> 13.0'
-
-  spec.add_development_dependency 'dotenv', '~> 2.8'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 1.21'
-  spec.add_development_dependency 'rubocop-performance'
-  spec.add_development_dependency 'rubocop-rspec', '~> 2.12'
-  spec.add_development_dependency 'rubocop-thread_safety'
-  spec.add_development_dependency 'simplecov'
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

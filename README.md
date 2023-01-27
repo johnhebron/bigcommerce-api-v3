@@ -26,13 +26,13 @@ Or install it yourself as:
 
 A Client is created with a Configuration object. If one is not passed in, it will generate one at initialization from a passed in `store_hash` and `access_token`.
 
-#### Basic Setup: Client with only store_hash and access_token
+#### A. Basic Setup: Client with only store_hash and access_token
 ```ruby
 # Without passing in a Configuration object
 client = Bigcommerce::V3::Client.new(store_hash: 'je762fs7d', 
                                      access_token: 'jhg765dcf4r45g9uy6eds24gfv7u89t')
 ```
-#### Advanced Setup: Client with Configuration object
+#### B. Advanced Setup: Client with Configuration object
 ```ruby
 # With a Configuration object
 config = Bigcommerce::V3::Configuration.new(store_hash: 'je762fs7d',
@@ -55,44 +55,48 @@ client = Bigcommerce::V3::Client.new(config: config)
 
 ### 2. Interacting with the API via the `client`
 
-*[Note]* So far, only `Pages` and `Customers` are set up for use as resources/objects.
+**(2022-09-17) Note:** Not all Resources/Objects have been created yet.
 
-#### Basic Request Syntax
+#### 1. Basic Request Syntax
 The gem is set up so that:
 * The client has resources (ex. `client.pages`)
   * which correspond to BigCommerce API endpoints (ex. `/content/pages` for Pages)
 * those resources have actions (sometimes with parameters) (ex. `client.pages.list(params: { limit: 2, page: 1 })`)
   * which correspond to API HTTP methods and parameters (ex. [GET] and `?limit=2&page=1`)
 
+In summary, you could write the following Ruby code...
 ```ruby
 pages = client.pages.list(params: { page: 1 })
 ```
 
-The above performs an HTTP [GET] request to
+...which would perform an HTTP [GET] request to...
 ```
 https://api.bigcommerce.com/stores/store_hash/v3/content/pages?limit=2&page=1
 ```
 
-#### Returned Values
+#### 2. Returned Values
 Once the action (HTTP request) is complete, it will return either a single Object record or a Collection of Object records, depending on the context.
 
-**Ex. `.list` returns a Collection of Page objects**
+**Ex. A Collection of Page objects is returned by `.list`**
 
-The `.list` action performs a GET request for all Pages for the store.
+The `.list` action performs a `GET` request for all Pages for the store.
+
 This request will return 0+ Page records from BigCommerce.
 As such, the results are returned in a Collection where the `.data` field contains an array of the 0+ Page objects.
 
 ```ruby
-pages = client.pages.list(params: { page: 1 })
+pages = client.pages.list()
 # => #<Bigcommerce::V3::Collection>
 pages.data[0].name
 # => "Contact Page"
 ```
 
-**Ex. `.create` returns a Page object**
+**Ex. A Page object is returned by `.create`**
 
 The `.create` action performs a POST request for a single Page to the store.
-This request will return the single Page record from BigCommerce if successful.
+
+This request will return the single Page record from BigCommerce, if successful.
+
 As such, the result is returned as a single Page object, not a Collection.
 ```ruby
 page = client.pages.create(params: { type: 'page', name: 'Our History' })
@@ -101,56 +105,8 @@ page.name
 # => "Our History"
 ```
 
-#### Example Pages Resource
-
-```ruby
-# retrieve all pages
-pages = client.pages.list
-# => #<Bigcommerce::V3::Collection>
-
-# access the individual page objects within .data
-pages.data
-# => [Hash#<Bigcommerce::V3::Page>]
-pages.data[0]
-# => #<Bigcommerce::V3::Page>
-
-# access pagination data (examples)
-pages.per_page
-# => 50
-pages.current_page
-# => 1
-pages.total_pages
-# => 3
-pages.current_page_link
-# => "?page=1&limit=50"
-```
-
-When using certain methods, like `.list`, you are able to pass in URL parameters for your request.
-
-```ruby
-# You can use the keywords `per_page:` and `page:` to specify the `limit` and `page` parameters respectively.
-pages = client.pages.list(per_page: 1, page: 2)
-# => #<Bigcommerce::V3::Collection>
-
-# Or you can pass your params in a hash.
-pages = client.pages.list(params: {limit: 1, page: 2})
-# => #<Bigcommerce::V3::Collection>
-```
-
-### Accessing resources not yet modeled
-
-To access a resource that has not yet been modeled, you can send a "raw" request directly from the client.
-
-```ruby
-products = client.raw_request(verb: :get, url: 'catalog/products') # no leading or trailing slash
-# => #<Bigcommerce::V3::Collection>
-
-# access the individual objects within .data
-products.data
-# => [Hash#<OpenStruct>]
-products.data[0]
-# => #<OpenStruct>
-```
+## Full Examples
+For examples of how to use each resources, please see [EXAMPLES.md](examples/EXAMPLE.md).
 
 ## Future Goals
 I would love to make the process of building an HTTP request more "natural" by introducing chainability to the Resources/Objects in some way, along with awareness of the available filters for each endpoint.

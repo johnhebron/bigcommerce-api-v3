@@ -11,7 +11,7 @@ describe 'Bigcommerce::V3::Collection' do
   describe '#initialize' do
     context 'with valid data and pagination_data' do
       it 'is of type Bigcommerce::V3::Collection' do
-        expect(collection).to be_a_kind_of(Bigcommerce::V3::Collection)
+        expect(collection).to be_a(Bigcommerce::V3::Collection)
       end
     end
   end
@@ -27,7 +27,7 @@ describe 'Bigcommerce::V3::Collection' do
 
     context 'when providing valid input' do
       it 'returns a Bigcommerce::V3::Collection object' do
-        expect(collection).to be_a_kind_of(Bigcommerce::V3::Collection)
+        expect(collection).to be_a(Bigcommerce::V3::Collection)
       end
 
       it 'creates an array from data' do
@@ -36,7 +36,7 @@ describe 'Bigcommerce::V3::Collection' do
 
       it 'creates an array of the specified object types from data' do
         data.each_with_index do |_object, index|
-          expect(collection.data[index]).to be_a_kind_of(object_type)
+          expect(collection.data[index]).to be_a(object_type)
         end
       end
     end
