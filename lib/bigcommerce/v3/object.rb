@@ -13,8 +13,6 @@ module Bigcommerce
           raise Error::InvalidArguments, "Attributes must be of type Hash or nil, '#{attributes.class}' provided"
         end
 
-        attributes = resource_attributes.merge(attributes) if attributes.is_a?(Hash)
-
         @attributes = OpenStruct.new(attributes)
       end
 
@@ -29,23 +27,6 @@ module Bigcommerce
 
       def valid?(attributes)
         attributes.nil? || attributes.is_a?(Hash)
-      end
-
-      private
-
-      def resource_attributes
-        attributes = defined?(self.class::RESOURCE_ATTRIBUTES) ? self.class::RESOURCE_ATTRIBUTES : nil
-        return {} if attributes.nil? || attributes.empty?
-
-        hash = {}
-        attributes.map do |attribute|
-          hash[attribute] = nil
-        end
-        hash
-      end
-
-      def valid_format?(attributes)
-        attributes.nil? || attributes.is_a?(Hash) || attributes.is_a?(Array)
       end
     end
   end
