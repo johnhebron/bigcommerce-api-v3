@@ -6,6 +6,11 @@ module Bigcommerce
     # Base entity for individual resource actions to inherit from
     ##
     class Resource
+      DEFAULTS = {
+        per_page: 50,
+        page: 1
+      }.freeze
+
       attr_reader :client
 
       def initialize(client:)
@@ -15,8 +20,8 @@ module Bigcommerce
       def get_request(url:, params: {}, per_page: nil, page: nil, headers: {})
         params.merge!(
           {
-            limit: per_page.nil? ? nil : per_page.to_s,
-            page: page.nil? ? nil : page.to_s
+            limit: per_page.nil? ? DEFAULTS[:per_page].to_s : per_page.to_s,
+            page: page.nil? ? DEFAULTS[:page].to_s : page.to_s
           }.compact
         )
         handle_response client.conn.get(url, params, headers)
