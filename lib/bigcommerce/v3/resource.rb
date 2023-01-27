@@ -20,10 +20,13 @@ module Bigcommerce
       def get_request(url:, params: {}, per_page: nil, page: nil, headers: {})
         params.merge!(
           {
-            limit: per_page.nil? ? DEFAULTS[:per_page].to_s : per_page.to_s,
-            page: page.nil? ? DEFAULTS[:page].to_s : page.to_s
+            limit: per_page.nil? ? nil : per_page.to_s,
+            page: page.nil? ? nil : page.to_s
           }.compact
         )
+        params[:limit] = DEFAULTS[:per_page] if params[:limit].nil?
+        params[:page] = DEFAULTS[:page] if params[:page].nil?
+
         handle_response client.conn.get(url, params, headers)
       end
 

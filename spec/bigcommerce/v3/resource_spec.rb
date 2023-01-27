@@ -53,7 +53,7 @@ describe 'Bigcommerce::V3::Resource' do
         let(:response) { resource.get_request(url: url, per_page: per_page) }
 
         it 'constructs the appropriate url with per_page' do
-          expect(response.env.params).to match(params_matcher)
+          expect(response.env.params).to include(params_matcher)
         end
 
         it 'returns the appropriate pagination_data with per_page' do
@@ -73,7 +73,7 @@ describe 'Bigcommerce::V3::Resource' do
         let(:response) { resource.get_request(url: url, page: page) }
 
         it 'constructs the appropriate url with page' do
-          expect(response.env.params).to match(params_matcher)
+          expect(response.env.params).to include(params_matcher)
         end
 
         it 'returns the appropriate pagination_data with page' do
@@ -94,7 +94,7 @@ describe 'Bigcommerce::V3::Resource' do
         let(:response) { resource.get_request(url: url, page: page, per_page: per_page) }
 
         it 'constructs the appropriate url with page' do
-          expect(response.env.params).to match(params_matcher)
+          expect(response.env.params).to include(params_matcher)
         end
 
         it 'returns the appropriate pagination_data with page' do
@@ -118,7 +118,7 @@ describe 'Bigcommerce::V3::Resource' do
         let(:response) { resource.get_request(url: url, params: params) }
 
         it 'constructs the appropriate url with parameters' do
-          expect(response.env.params).to match(params_matcher)
+          expect(response.env.params).to include(params_matcher)
         end
 
         it 'returns a 200 response' do

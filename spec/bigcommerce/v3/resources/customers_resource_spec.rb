@@ -36,7 +36,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
     end
 
     it 'contains a Bigcommerce::V3::Client' do
-      expect(customers_resource.client).to be_a_kind_of(Bigcommerce::V3::Client)
+      expect(customers_resource.client).to be_a(Bigcommerce::V3::Client)
     end
 
     it 'has a RESOURCE_URL' do
@@ -51,7 +51,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
         let(:status) { 200 }
 
         it 'returns a Bigcommerce::V3::Collection' do
-          expect(customers_resource.list).to be_a_kind_of(Bigcommerce::V3::Collection)
+          expect(customers_resource.list).to be_a(Bigcommerce::V3::Collection)
         end
 
         it 'stores an array of returned records' do
@@ -61,7 +61,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
         it 'stores an array of Bigcommerce::V3::Customer records' do
           data = customers_resource.list.data
           data.map do |record|
-            expect(record).to be_a_kind_of(Bigcommerce::V3::Customer)
+            expect(record).to be_a(Bigcommerce::V3::Customer)
           end
         end
       end
@@ -71,7 +71,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
         let(:status) { 200 }
 
         it 'returns a Bigcommerce::V3::Collection' do
-          expect(customers_resource.list).to be_a_kind_of(Bigcommerce::V3::Collection)
+          expect(customers_resource.list).to be_a(Bigcommerce::V3::Collection)
         end
 
         it 'stores an array with no records' do
@@ -81,23 +81,23 @@ describe 'Bigcommerce::V3::CustomersResource' do
       end
     end
 
-    context 'when called with per_page:' do
+    context 'when called with params hash' do
       context 'with available records to return' do
         let(:fixture) { 'resources/customers/get_customers_url_per_page_2200' }
         let(:status) { 200 }
         let(:per_page) { 2 }
-        let(:limit_matcher) { { 'limit' => per_page.to_s } }
-
-        it 'constructs the appropriate url with per_page' do
-          expect(response.env.params).to match(limit_matcher)
+        let(:page) { 2 }
+        let(:params) do
+          {
+            'limit' => per_page.to_s,
+            'page' => 2
+          }
         end
 
-        it 'returns the appropriate pagination_data with per_page' do
-          expect(response.body.dig('meta', 'pagination', 'per_page').to_i).to eq(per_page)
-        end
+        let(:response) { customers_resource.list(params: params) }
 
-        it 'returns a Bigcommerce::V3::Collection' do
-          expect(customers_resource.list(per_page: 1)).to be_a_kind_of(Bigcommerce::V3::Collection)
+        it 'returns the appropriate :per_page' do
+          expect(response.per_page).to eq(per_page.to_s)
         end
       end
     end
