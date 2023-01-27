@@ -94,7 +94,7 @@ params = { 'company:in' => 'bigcommerce,commongood',
            'name:like' => 'Roger',
            'page' => 2,
            'registration_ip_address:in' => '12.345.6.789',
-           'sort' => 'last_name:asc'}
+           'sort' => 'last_name:asc' }
 
 customers = @client.customers.list(params: params)
 

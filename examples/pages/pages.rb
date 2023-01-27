@@ -27,7 +27,6 @@ require 'bigcommerce/v3'
                                       access_token: ENV.fetch('ACCESS_TOKEN', nil),
                                       config: @config || nil)
 
-
 ##################################
 # List Pages (.list)
 ##################################
@@ -156,7 +155,7 @@ begin
 
   puts 'New Pages created with params:'
   pp new_pages_array
-  pages.data.map { |page| created_page_ids << page.id }
+  pages.data.map { |page_record| created_page_ids << page_record.id }
 rescue Bigcommerce::V3::Error::HTTPError => e
   puts "Creating the Pages encountered an error: #{e}"
 end
@@ -233,7 +232,7 @@ updated_pages_array = [
 
 # Wrapping with begin/rescue in case a Page with the same name already exists
 begin
-  ids = updated_pages_array.map { |page| page[:id] }
+  ids = updated_pages_array.map { |page_record| page_record[:id] }
   pages = @client.pages.list(params: { 'id:in': ids.join(',') })
 
   pages.data.each do |page_record|
