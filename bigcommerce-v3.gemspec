@@ -5,19 +5,19 @@ require_relative 'lib/bigcommerce/v3/version'
 Gem::Specification.new do |spec|
   spec.name = 'bigcommerce-v3'
   spec.version = Bigcommerce::V3::VERSION
-  spec.authors = ['bc-johnhebron']
-  spec.email = ['john.hebron@bigcommerce.com']
+  spec.authors = ['johnhebron']
+  spec.email = ['johnhebron@gmail.com']
 
   spec.summary = 'Ruby Gem for working with the BigCommerce REST API V3.'
   spec.description = 'For more information about the BigCommerce REST API V3, please see https://developer.bigcommerce.com/docs/97b76565d4269-big-commerce-ap-is-quick-start#rest-api'
-  spec.homepage = 'https://developer.bigcommerce.com'
+  spec.homepage = ''
   spec.license = 'MIT'
   spec.required_ruby_version = ['>= 3.0', '< 3.3']
 
   # spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
 
   # spec.metadata["homepage_uri"] = spec.homepage
-  # spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
+  spec.metadata['source_code_uri'] = 'https://github.com/johnhebron/bigcommerce-api-v3'
   # spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   # Specify which files should be added to the gem when it is released.

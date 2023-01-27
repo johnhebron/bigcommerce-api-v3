@@ -1,6 +1,6 @@
 # Bigcommerce::V3
 
-Official BigCommerce Ruby client for interacting with the BigCommerce Store Management V3 REST API.
+Ruby client for interacting with the BigCommerce Store Management V3 REST API.
 
 For more information about getting started with the BigCommerce V3 REST API, see [developer.bigcommerce.com](https://developer.bigcommerce.com/docs/97b76565d4269-big-commerce-ap-is-quick-start#rest-api).
 
