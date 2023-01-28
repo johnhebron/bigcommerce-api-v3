@@ -18,11 +18,11 @@ module Bigcommerce
       ##
       def list(params: {}, per_page: nil, page: nil)
         url = RESOURCE_URL
-        Collection.from_response(response: get_request(url: url,
-                                                       params: params,
-                                                       per_page: per_page,
-                                                       page: page),
-                                 object_type: Bigcommerce::V3::Page)
+        Bigcommerce::V3::Response.from_response(response: get_request(url: url,
+                                                                      params: params,
+                                                                      per_page: per_page,
+                                                                      page: page),
+                                                object_type: Bigcommerce::V3::Page)
       end
 
       def create(params:)
@@ -35,8 +35,8 @@ module Bigcommerce
         raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
 
         url = RESOURCE_URL
-        Bigcommerce::V3::Collection.from_response(response: post_request(url: url, body: params),
-                                                  object_type: Bigcommerce::V3::Page)
+        Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: params),
+                                                object_type: Bigcommerce::V3::Page)
       end
 
       def retrieve(page_id:)
@@ -58,8 +58,8 @@ module Bigcommerce
         raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
 
         url = RESOURCE_URL
-        Bigcommerce::V3::Collection.from_response(response: put_request(url: url, body: params),
-                                                  object_type: Bigcommerce::V3::Page)
+        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
+                                                object_type: Bigcommerce::V3::Page)
       end
 
       def delete(page_id:)

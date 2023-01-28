@@ -18,11 +18,11 @@ module Bigcommerce
       ##
       def list(params: {}, per_page: nil, page: nil)
         url = RESOURCE_URL
-        Collection.from_response(response: get_request(url: url,
-                                                       params: params,
-                                                       per_page: per_page,
-                                                       page: page),
-                                 object_type: Bigcommerce::V3::Customer)
+        Bigcommerce::V3::Response.from_response(response: get_request(url: url,
+                                                                      params: params,
+                                                                      per_page: per_page,
+                                                                      page: page),
+                                                object_type: Bigcommerce::V3::Customer)
       end
 
       # Convenience method to pass a single hash instead of an array of hashes
@@ -36,8 +36,8 @@ module Bigcommerce
 
         case params
         when Array
-          Bigcommerce::V3::Collection.from_response(response: post_request(url: url, body: params),
-                                                    object_type: Bigcommerce::V3::Customer)
+          Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: params),
+                                                  object_type: Bigcommerce::V3::Customer)
         when Hash
           Bigcommerce::V3::Customer.new(post_request(url: url, body: [params]).body['data'][0])
         else
@@ -68,8 +68,8 @@ module Bigcommerce
 
       def bulk_update(params:)
         url = RESOURCE_URL
-        Bigcommerce::V3::Collection.from_response(response: put_request(url: url, body: params),
-                                                  object_type: Bigcommerce::V3::Customer)
+        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
+                                                object_type: Bigcommerce::V3::Customer)
       end
 
       # Convenience method to pass a single customer id

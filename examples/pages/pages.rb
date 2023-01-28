@@ -171,9 +171,9 @@ puts "\n"
 puts '# Retrieve a Page (.retrieve)'
 puts '##################################'
 
+page_id = created_page_ids[0] || 1
 # wrapping with begin/rescue in case a Page with the id does not exist
 begin
-  page_id = created_page_ids[0] || 1
   page = @client.pages.retrieve(page_id: page_id)
 
   puts "Retrieved Page with ID: '#{page.id}' and Name: '#{page.name}'"

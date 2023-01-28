@@ -32,7 +32,8 @@ require 'bigcommerce/v3'
 ##################################
 #
 # List all customers with optional parameters
-# returns a Collection of Customers
+# returns a Response with an array of Customers as .data
+# and top level meta data
 ##
 puts '# List Customers (.list)'
 puts '##################################'

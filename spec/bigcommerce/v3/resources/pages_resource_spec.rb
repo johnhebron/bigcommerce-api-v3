@@ -33,8 +33,8 @@ describe 'Bigcommerce::V3::PagesResource' do
       let(:fixture) { 'resources/pages/get_pages_url200' }
       let(:status) { 200 }
 
-      it 'returns a Bigcommerce::V3::Collection' do
-        expect(pages_resource.list).to be_a(Bigcommerce::V3::Collection)
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(pages_resource.list).to be_a(Bigcommerce::V3::Response)
       end
     end
   end
