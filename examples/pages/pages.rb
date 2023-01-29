@@ -299,3 +299,18 @@ if response.success?
 else
   print_error(response: response)
 end
+puts "\n"
+
+##################################
+# Error Case Example
+##################################
+#
+puts '# Error Case Example'
+puts '##################################'
+response = @client.pages.create(params: {})
+
+if response.success?
+  puts 'Hmm, how did that happen?'
+else
+  print_error(response: response)
+end

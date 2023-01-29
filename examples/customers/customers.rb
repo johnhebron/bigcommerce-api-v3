@@ -331,6 +331,5 @@ response = @client.customers.create(params: {})
 if response.success?
   puts 'Hmm, how did that happen?'
 else
-  puts "# Prints errors about missing 'email', 'last_name', and 'first_name' fields:\n"
   print_error(response: response)
 end
