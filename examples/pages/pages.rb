@@ -11,6 +11,8 @@ ENV['BIGCOMMERCE_V3_ENV'] = 'development'
 require 'bundler/setup'
 # Require to access the SecureRandom library for unique names in the examples
 require 'securerandom'
+# A few helper methods
+require './examples/shared/example_helpers'
 require 'bigcommerce/v3'
 
 ##################################
@@ -32,20 +34,20 @@ require 'bigcommerce/v3'
 ##################################
 #
 # List all pages with optional parameters
-# returns a Collection of Pages
+# returns a Response with an array of Pages as .data
 ##
 puts '# List Pages (.list)'
 puts '##################################'
-pages = @client.pages.list
+response = @client.pages.list
 
-if pages.data.empty?
-  puts 'Whoops, no Page records were returned.'
-else
-  puts "#{pages.data.count} Page records returned."
-  puts "#{pages.total} total Page records."
+if response.success?
+  puts "#{response.data.count} Page records returned."
+  puts "#{response.total} total Page records."
   # Grab the first page
-  page = pages.data.first
+  page = response.data.first
   puts "First Page record is ID: #{page.id}, Name: #{page.name}" if page
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -56,16 +58,16 @@ puts "# List pages with 'per_page' and 'page' params"
 puts '##################################'
 
 # 'per_page' and 'page' translate to url params 'limit' and 'page', respectively
-pages = @client.pages.list(per_page: 1, page: 2)
+response = @client.pages.list(per_page: 1, page: 2)
 
-if pages.data.empty?
-  puts 'Whoops, no Page records were returned with parameters: per_page=2, page=2.'
-else
-  puts "#{pages.data.count} Page records returned."
-  puts "Currently on page #{pages.current_page} out of #{pages.total_pages} total pages"
+if response.success?
+  puts "#{response.data.count} Page records returned."
+  puts "Currently on page #{response.current_page} out of #{response.total_pages} total pages"
   # Grab the first page
-  page = pages.data.first
+  page = response.data.first
   puts "First Page record is ID: #{page.id}, Name: #{page.name}" if page
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -84,16 +86,15 @@ params = { 'limit' => 2,
            'id:in' => '1,2,3,4,5,6,7',
            'name:like' => 'shipping' }
 
-pages = @client.pages.list(params: params)
+response = @client.pages.list(params: params)
 
-if pages.data.empty?
-  puts 'Whoops, no Page records were returned with parameters:'
-  pp params
-else
-  puts "#{pages.data.count} Page records returned."
+if response.success?
+  puts "#{response.data.count} Page records returned."
   # Grab the first page
-  page = pages.data.first
+  page = response.data.first
   puts "First Page record is ID: #{page.id}, Name: #{page.name}" if page
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -114,15 +115,15 @@ new_page_hash = {
   body: '<p>some <em>great</em> html content</p>'
 }
 
-# Wrapping with begin/rescue in case a Page with the same name already exists
-begin
-  page = @client.pages.create(params: new_page_hash)
-  created_page_ids << page.id
+response = @client.pages.create(params: new_page_hash)
 
-  puts 'New Page created with params:'
-  pp new_page_hash
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Creating the Page encountered an error: #{e}"
+if response.success?
+  created_page_ids << response.data.first.id
+
+  puts 'New Page created.'
+  puts "Page ID: #{response.data.first.id}, Title: #{response.data.first.name}"
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -149,15 +150,16 @@ new_pages_array = [
   }
 ]
 
-# Wrapping with begin/rescue in case a Page with the same name already exists
-begin
-  pages = @client.pages.bulk_create(params: new_pages_array)
+response = @client.pages.bulk_create(params: new_pages_array)
 
-  puts 'New Pages created with params:'
-  pp new_pages_array
-  pages.data.map { |page_record| created_page_ids << page_record.id }
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Creating the Pages encountered an error: #{e}"
+if response.success?
+  puts 'New Pages created'
+  response.data.map do |page_record|
+    created_page_ids << page_record.id
+    puts "Page ID: #{page_record.id}, Title: #{page_record.name}"
+  end
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -172,13 +174,12 @@ puts '# Retrieve a Page (.retrieve)'
 puts '##################################'
 
 page_id = created_page_ids[0] || 1
-# wrapping with begin/rescue in case a Page with the id does not exist
-begin
-  page = @client.pages.retrieve(page_id: page_id)
 
-  puts "Retrieved Page with ID: '#{page.id}' and Name: '#{page.name}'"
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Retrieving the Page with ID: '#{page_id}' encountered an error: #{e}"
+response = @client.pages.retrieve(page_id: page_id)
+if response.success?
+  puts "Retrieved Page with ID: '#{response.data.first.id}' and Name: '#{response.data.first.name}'"
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -197,15 +198,19 @@ updated_page_hash = {
 }
 page_id = created_page_ids[0] || 1
 
-# wrapping with begin/rescue in case a Page with the same name already exists
-begin
-  page = @client.pages.retrieve(page_id: page_id)
-  puts "The Page with ID: '#{page.id}' has Name: '#{page.name}'"
+retrieve_response = @client.pages.retrieve(page_id: page_id)
 
-  page = @client.pages.update(page_id: page_id, params: updated_page_hash)
-  puts "The *updated* Page with ID: '#{page.id}' now has Name: '#{page.name}'"
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Updating the Page encountered an error: #{e}"
+if retrieve_response.success?
+  puts "The Page with ID: '#{retrieve_response.data.first.id}' has Name: '#{retrieve_response.data.first.name}'"
+
+  response = @client.pages.update(page_id: page_id, params: updated_page_hash)
+  if response.success?
+    puts "The *updated* Page with ID: '#{response.data.first.id}' now has Name: '#{response.data.first.name}'"
+  else
+    print_error(response: response)
+  end
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -230,22 +235,24 @@ updated_pages_array = [
   }
 ]
 
-# Wrapping with begin/rescue in case a Page with the same name already exists
-begin
-  ids = updated_pages_array.map { |page_record| page_record[:id] }
-  pages = @client.pages.list(params: { 'id:in': ids.join(',') })
+ids = updated_pages_array.map { |page_record| page_record[:id] }
+retrieve_response = @client.pages.list(params: { 'id:in': ids.join(',') })
 
-  pages.data.each do |page_record|
+if retrieve_response.success?
+  retrieve_response.data.each do |page_record|
     puts "The Page with ID: '#{page_record.id}' has Name: '#{page_record.name}'"
   end
 
-  pages = @client.pages.bulk_update(params: updated_pages_array)
-
-  pages.data.each do |page_record|
-    puts "The *updated* Page with ID: '#{page_record.id}' now has Name: '#{page_record.name}'"
+  response = @client.pages.bulk_update(params: updated_pages_array)
+  if response.success?
+    response.data.each do |page_record|
+      puts "The *updated* Page with ID: '#{page_record.id}' now has Name: '#{page_record.name}'"
+    end
+  else
+    print_error(response: response)
   end
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Creating the Pages encountered an error: #{e}"
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -261,13 +268,14 @@ puts '##################################'
 
 page_id = created_page_ids[0] || 1
 
-# Wrapping with begin/rescue in case a Page with the id does not exist
-begin
-  response = @client.pages.delete(page_id: page_id)
-  created_page_ids.shift
-  puts "Response was '#{response}'.\n'true' means Page was deleted successfully."
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Deleting the Page with ID: '#{page_id}' encountered an error: #{e}"
+response = @client.pages.delete(page_id: page_id)
+created_page_ids.shift
+
+if response.success?
+  puts '`response.success?` confirms successful deletion!'
+  puts "Success: #{response.success?}"
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -283,10 +291,11 @@ puts '##################################'
 
 page_ids = created_page_ids.compact || [2, 3]
 
-# Wrapping with begin/rescue in case a Page with the id does not exist
-begin
-  response = @client.pages.bulk_delete(page_ids: page_ids)
-  puts "Response was '#{response}'.\n'true' means Pages were deleted successfully."
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Deleting the Pages encountered an error: #{e}"
+response = @client.pages.bulk_delete(page_ids: page_ids)
+
+if response.success?
+  puts '`response.success?` confirms successful deletion!'
+  puts "Success: #{response.success?}"
+else
+  print_error(response: response)
 end

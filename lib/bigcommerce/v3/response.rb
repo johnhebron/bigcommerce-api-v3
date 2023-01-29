@@ -22,13 +22,12 @@ module Bigcommerce
       end
 
       def initialize(body:, headers:, status:, object_type:)
-        errors = validate_params(body: body, headers: headers, status: status, object_type: object_type)
+        errors = validate_params(headers: headers, status: status, object_type: object_type)
         raise Error::InvalidArguments, errors.join(', ') if errors
 
-        @body = body
+        @body = body || {}
         @headers = headers
         @status = status.to_i
-
         @data = transform_data(body, object_type)
         transform_pagination_data(body)
         @error = transform_error(body)
@@ -51,9 +50,8 @@ module Bigcommerce
 
       private
 
-      def validate_params(body:, headers:, status:, object_type:)
+      def validate_params(headers:, status:, object_type:)
         errors = []
-        errors << 'body can not be nil' if body.nil?
         errors << 'headers can not be nil' if headers.nil?
         errors << 'status can not be nil' if status.nil?
         errors << "object_type must be a valid object_type, #{object_type.class} provided" unless object_type.is_a?(Class)
@@ -83,15 +81,17 @@ module Bigcommerce
       end
 
       def transform_data(body, object_type)
-        if body.is_a?(Hash)
+        if body.is_a?(Hash) && body['data'].is_a?(Array)
           body['data']&.map { |record| object_type.new(record) }
+        elsif body.is_a?(Hash) && body['data'].is_a?(Hash)
+          [object_type.new(body['data'])]
         else
-          body
+          body['data']
         end
       end
 
       def transform_error(body)
-        return nil unless body['status']
+        return nil unless body.is_a?(Hash) && body['status']
 
         ErrorMessage.new(body['status'], body['title'], body['type'], body['detail'], body['errors'])
       end

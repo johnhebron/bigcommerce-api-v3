@@ -7,22 +7,13 @@
 # Set BIGCOMMERCE_V3_ENV so that dotenv is initialized
 ENV['BIGCOMMERCE_V3_ENV'] = 'development'
 
-# Require to be able to include the bigcommerce/v3 files
+# Ability to include the bigcommerce/v3 files
 require 'bundler/setup'
-# Require to access the SecureRandom library for unique names in the examples
+# Access to the SecureRandom library for unique names in the examples
 require 'securerandom'
+# A few helper methods
+require './examples/shared/example_helpers'
 require 'bigcommerce/v3'
-
-## Helper Methods
-def print_error(response:)
-  error = response.error
-  puts 'Request was not successful.'
-  puts "Status: #{error.status}"
-  puts "Title: #{error.title}"
-  puts "Type: #{error.type}"
-  puts "Detail: #{error.detail}"
-  puts "Errors: #{error.errors}"
-end
 
 ##################################
 # Setup a Client
@@ -44,7 +35,6 @@ end
 #
 # List all customers with optional parameters
 # returns a Response with an array of Customers as .data
-# and top level meta data
 ##
 puts '# List Customers (.list)'
 puts '##################################'
@@ -224,6 +214,9 @@ customer_id = created_customer_ids[0] || 1
 retrieve_response = @client.customers.retrieve(customer_id: customer_id)
 
 if retrieve_response.success?
+  puts "The Customer with ID: '#{retrieve_response.data.first.id}' has "
+  puts "Name: '#{response.data.first.first_name} #{response.data.first.last_name}'"
+
   response = @client.customers.update(customer_id: customer_id, params: updated_customer_hash)
   if response.success?
     puts "The *updated* Customer with ID: '#{response.data.first.id}' has "
@@ -299,6 +292,7 @@ created_customer_ids.shift
 
 if response.success?
   puts '`response.success?` confirms successful deletion!'
+  puts "Success: #{response.success?}"
 else
   print_error(response: response)
 end
@@ -320,6 +314,7 @@ response = @client.customers.bulk_delete(customer_ids: customer_ids)
 
 if response.success?
   puts '`response.success?` confirms successful deletion!'
+  puts "Success: #{response.success?}"
 else
   print_error(response: response)
 end

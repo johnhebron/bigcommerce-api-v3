@@ -28,7 +28,7 @@ module Bigcommerce
       def create(params:)
         raise Error::ParamError, "Params must be of type Hash, #{params.class} provided." unless params.is_a?(Hash)
 
-        bulk_create(params: [params]).data.first
+        bulk_create(params: [params])
       end
 
       def bulk_create(params:)
@@ -42,8 +42,10 @@ module Bigcommerce
       def retrieve(page_id:)
         raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
 
-        url = "#{RESOURCE_URL}/#{page_id}"
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url),
+        params = { 'id:in' => page_id }
+        url = RESOURCE_URL
+        Bigcommerce::V3::Response.from_response(response: get_request(url: url,
+                                                                      params: params),
                                                 object_type: Bigcommerce::V3::Page)
       end
 
@@ -51,7 +53,8 @@ module Bigcommerce
         raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
         raise Error::ParamError, "Params must be of type Hash, #{params.class} provided." unless params.is_a?(Hash)
 
-        url = "#{RESOURCE_URL}/#{page_id}"
+        params['id:in'] = page_id
+        url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
                                                 object_type: Bigcommerce::V3::Page)
       end
@@ -67,10 +70,10 @@ module Bigcommerce
       def delete(page_id:)
         raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
 
-        url = "#{RESOURCE_URL}/#{page_id}"
-        Bigcommerce::V3::Response.from_response(response: delete_request(url: url),
+        url = RESOURCE_URL
+        params = { 'id:in' => page_id }
+        Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
                                                 object_type: Bigcommerce::V3::Page)
-        true
       end
 
       ##
@@ -84,7 +87,6 @@ module Bigcommerce
         params = { 'id:in' => page_ids.join(',') }
         Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
                                                 object_type: Bigcommerce::V3::Page)
-        true
       end
     end
   end
