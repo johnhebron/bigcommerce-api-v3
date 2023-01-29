@@ -53,9 +53,9 @@ module Bigcommerce
         raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
         raise Error::ParamError, "Params must be of type Hash, #{params.class} provided." unless params.is_a?(Hash)
 
-        params['id:in'] = page_id
+        params['id'] = page_id
         url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
+        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: [params]),
                                                 object_type: Bigcommerce::V3::Page)
       end
 
