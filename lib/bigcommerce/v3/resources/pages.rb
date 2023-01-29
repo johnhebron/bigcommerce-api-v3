@@ -43,7 +43,8 @@ module Bigcommerce
         raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
 
         url = "#{RESOURCE_URL}/#{page_id}"
-        Bigcommerce::V3::Page.new(get_request(url: url).body['data'])
+        Bigcommerce::V3::Response.from_response(response: get_request(url: url),
+                                                object_type: Bigcommerce::V3::Page)
       end
 
       def update(page_id:, params:)
@@ -51,7 +52,8 @@ module Bigcommerce
         raise Error::ParamError, "Params must be of type Hash, #{params.class} provided." unless params.is_a?(Hash)
 
         url = "#{RESOURCE_URL}/#{page_id}"
-        Bigcommerce::V3::Page.new(put_request(url: url, body: params).body['data'])
+        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
+                                                object_type: Bigcommerce::V3::Page)
       end
 
       def bulk_update(params:)
@@ -66,7 +68,8 @@ module Bigcommerce
         raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
 
         url = "#{RESOURCE_URL}/#{page_id}"
-        delete_request(url: url)
+        Bigcommerce::V3::Response.from_response(response: delete_request(url: url),
+                                                object_type: Bigcommerce::V3::Page)
         true
       end
 
@@ -79,7 +82,8 @@ module Bigcommerce
 
         url = RESOURCE_URL
         params = { 'id:in' => page_ids.join(',') }
-        delete_request(url: url, params: params)
+        Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
+                                                object_type: Bigcommerce::V3::Page)
         true
       end
     end
