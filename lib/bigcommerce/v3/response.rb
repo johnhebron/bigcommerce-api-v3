@@ -12,7 +12,7 @@ module Bigcommerce
                   :current_page_link, :previous_page_link, :next_page_link
 
       # Simple error message object for http response error
-      ErrorMessage = Struct.new(:status, :title, :type, :detail)
+      ErrorMessage = Struct.new(:status, :title, :type, :detail, :errors)
 
       def self.from_response(response:, object_type:)
         errors = validate_response(response: response)
@@ -27,7 +27,7 @@ module Bigcommerce
 
         @body = body
         @headers = headers
-        @status = status
+        @status = status.to_i
 
         @data = transform_data(body, object_type)
         transform_pagination_data(body)
@@ -35,7 +35,7 @@ module Bigcommerce
       end
 
       def success?
-        return false unless @status.between?(200, 299)
+        @status.between?(200, 299)
       end
 
       def self.validate_response(response:)
@@ -66,7 +66,11 @@ module Bigcommerce
       end
 
       def transform_pagination_data(body)
-        pagination_data = body.dig('meta', 'pagination') || {}
+        pagination_data = if body.is_a?(Hash)
+                            body.dig('meta', 'pagination') || {}
+                          else
+                            {}
+                          end
 
         @total = value_or_nil(value: pagination_data['total'])
         @count = value_or_nil(value: pagination_data['count'])
@@ -79,13 +83,17 @@ module Bigcommerce
       end
 
       def transform_data(body, object_type)
-        body['data']&.map { |record| object_type.new(record) }
+        if body.is_a?(Hash)
+          body['data']&.map { |record| object_type.new(record) }
+        else
+          body
+        end
       end
 
       def transform_error(body)
         return nil unless body['status']
 
-        ErrorMessage.new(body['status'], body['title'], body['type'], body['detail'])
+        ErrorMessage.new(body['status'], body['title'], body['type'], body['detail'], body['errors'])
       end
     end
   end

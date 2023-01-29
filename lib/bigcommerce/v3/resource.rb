@@ -27,31 +27,22 @@ module Bigcommerce
         params[:limit] = DEFAULTS[:per_page] if params[:limit].nil?
         params[:page] = DEFAULTS[:page] if params[:page].nil?
 
-        handle_response client.conn.get(url, params, headers)
+        client.conn.get(url, params, headers)
       end
 
       def post_request(url:, body:, headers: {})
-        handle_response client.conn.post(url, body, headers)
+        client.conn.post(url, body, headers)
       end
 
       def put_request(url:, body:, headers: {})
-        handle_response client.conn.put(url, body, headers)
+        client.conn.put(url, body, headers)
       end
 
       def delete_request(url:, params: {}, headers: {})
-        handle_response client.conn.delete(url, params, headers)
+        client.conn.delete(url, params, headers)
       end
 
       private
-
-      def handle_response(response)
-        case response.status
-        when 400..599
-          raise Error::HTTPError, build_error_message(response)
-        else
-          response
-        end
-      end
 
       def build_error_message(response)
         error_message = []

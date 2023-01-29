@@ -39,7 +39,8 @@ module Bigcommerce
           Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: params),
                                                   object_type: Bigcommerce::V3::Customer)
         when Hash
-          Bigcommerce::V3::Customer.new(post_request(url: url, body: [params]).body['data'][0])
+          Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: [params]),
+                                                  object_type: Bigcommerce::V3::Customer)
         else
           raise Error::InvalidArguments, "Parms must be an Hash or an Array of Hashes, #{params.class} provided."
         end
@@ -49,11 +50,7 @@ module Bigcommerce
       # since the list endpoint supports bulk by default
       def retrieve(customer_id:)
         params = { 'id:in' => customer_id }
-        customer = list(params: params).data.first
-
-        return customer unless customer.nil?
-
-        raise Error::RecordNotFound, "Customer with the 'id' of '#{customer_id}' not found."
+        list(params: params)
       end
 
       # Convenience method to pass a single customer_id and params
@@ -63,7 +60,7 @@ module Bigcommerce
           params[:id] = customer_id
           params = [params]
         end
-        bulk_update(params: params).data.first
+        bulk_update(params: params)
       end
 
       def bulk_update(params:)
@@ -77,8 +74,8 @@ module Bigcommerce
       def delete(customer_id:)
         url = RESOURCE_URL
         params = { 'id:in' => customer_id }
-        delete_request(url: url, params: params)
-        true
+        Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
+                                                object_type: Bigcommerce::V3::Customer)
       end
 
       ##
@@ -90,8 +87,8 @@ module Bigcommerce
 
         url = RESOURCE_URL
         params = { 'id:in' => customer_ids.join(',') }
-        delete_request(url: url, params: params)
-        true
+        Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
+                                                object_type: Bigcommerce::V3::Customer)
       end
     end
   end
