@@ -7,10 +7,12 @@
 # Set BIGCOMMERCE_V3_ENV so that dotenv is initialized
 ENV['BIGCOMMERCE_V3_ENV'] = 'development'
 
-# Require to be able to include the bigcommerce/v3 files
+# Ability to include the bigcommerce/v3 files
 require 'bundler/setup'
-# Require to access the SecureRandom library for unique names in the examples
+# Access to the SecureRandom library for unique names in the examples
 require 'securerandom'
+# A few helper methods
+require './examples/shared/example_helpers'
 require 'bigcommerce/v3'
 
 ##################################
@@ -32,20 +34,20 @@ require 'bigcommerce/v3'
 ##################################
 #
 # List all customers with optional parameters
-# returns a Collection of Customers
+# returns a Response with an array of Customers as .data
 ##
 puts '# List Customers (.list)'
 puts '##################################'
-customers = @client.customers.list
+response = @client.customers.list
 
-if customers.data.empty?
-  puts 'Whoops, no Customer records were returned.'
-else
-  puts "#{customers.data.count} Customer records returned."
-  puts "#{customers.total} total Customer records."
+if response.success?
+  puts "#{response.data.count} Customer records returned."
+  puts "#{response.total} total Customer records."
   # Grab the first customer
-  customer = customers.data.first
+  customer = response.data.first
   puts "First Customer record is ID: #{customer.id}, Name: #{customer.first_name}" if customer
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -56,16 +58,16 @@ puts "# List customers with 'per_page' and 'page' params"
 puts '##################################'
 
 # 'per_page' and 'page' translate to url params 'limit' and 'page', respectively
-customers = @client.customers.list(per_page: 1, page: 2)
+response = @client.customers.list(per_page: 1, page: 2)
 
-if customers.data.empty?
-  puts 'Whoops, no Customer records were returned with parameters: per_page=2, page=2.'
-else
-  puts "#{customers.data.count} Customer records returned."
-  puts "Currently on page #{customers.current_page} out of #{customers.total_pages} total pages."
+if response.success?
+  puts "#{response.data.count} Customer records returned."
+  puts "Currently on page #{response.current_page} out of #{response.total_pages} total pages."
   # Grab the first customer
-  customer = customers.data.first
+  customer = response.data.first
   puts "First Customer record is ID: #{customer.id}, Name: #{customer.first_name}" if customer
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -96,14 +98,14 @@ params = { 'company:in' => 'bigcommerce,commongood',
            'registration_ip_address:in' => '12.345.6.789',
            'sort' => 'last_name:asc' }
 
-customers = @client.customers.list(params: params)
+response = @client.customers.list(params: params)
 
-if customers.data.empty?
-  puts 'Whoops, no Customer records were returned with parameters:'
-  pp params
+if response.success?
+  puts "#{response.data.count} Customer records returned."
+  customer = response.data.first
+  puts "First Customer record is ID: #{customer.id}, Name: #{customer.first_name}" unless customer.nil?
 else
-  puts "#{customers.data.count} Customer records returned."
-  puts "First Customer record is ID: #{customers.data[0].id}, Name: #{customers.data[0].name}" unless customers.data[0].nil?
+  print_error(response: response)
 end
 puts "\n"
 
@@ -124,15 +126,15 @@ new_customer_hash = {
   email: "fred.rogers+#{SecureRandom.uuid}@example.com"
 }
 
-# wrapping with begin/rescue in case a customer with the same email already exists
-begin
-  customer = @client.customers.create(params: new_customer_hash)
-  created_customer_ids << customer.id
+response = @client.customers.create(params: new_customer_hash)
 
-  puts 'New Customer created with params:'
-  pp new_customer_hash
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Creating the Customer encountered an error: #{e}"
+if response.success?
+  created_customer_ids << response.data.first.id
+
+  puts 'New Customer created.'
+  puts "Customer ID: #{response.data.first.id}, First Name: #{response.data.first.first_name}"
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -150,24 +152,25 @@ new_customers_array = [
   {
     last_name: 'Officer',
     first_name: 'Clemmons',
-    email: 'officer.clemmons@example.com'
+    email: "officer.clemmons+#{SecureRandom.uuid}@example.com"
   },
   {
     last_name: 'Mister',
     first_name: 'McFeely',
-    email: 'mister.mcfeely@example.com'
+    email: "mister.mcfeely+#{SecureRandom.uuid}@example.com"
   }
 ]
 
-# wrapping with begin/rescue in case a Page with the same name already exists
-begin
-  customers = @client.customers.bulk_create(params: new_customers_array)
+response = @client.customers.bulk_create(params: new_customers_array)
 
-  puts 'New Customers created with params:'
-  pp new_customers_array
-  customers.data.map { |customer_record| created_customer_ids << customer_record.id }
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Creating the Customers encountered an error: #{e}"
+if response.success?
+  puts 'New Customers created'
+  response.data.map do |customer_record|
+    created_customer_ids << customer_record.id
+    puts "Customer ID: #{customer_record.id}, First Name: #{customer_record.first_name}"
+  end
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -181,14 +184,14 @@ puts "\n"
 puts '# Retrieve a Customer (.retrieve)'
 puts '##################################'
 
-# wrapping with begin/rescue in case a Page with the id does not exist
-begin
-  customer_id = created_customer_ids[0] || 1
-  customer = @client.customers.retrieve(customer_id: customer_id)
+customer_id = created_customer_ids[0] || 1
+response = @client.customers.retrieve(customer_id: customer_id)
 
-  puts "Retrieved Customer with ID: '#{customer.id}' and First Name: '#{customer.first_name}'"
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Retrieving the Customer with ID: '#{customer.id}' encountered an error: #{e}"
+if response.success?
+  puts "Retrieved Customer with ID: '#{response.data.first.id}' "
+  puts "and First Name: '#{response.data.first.first_name}'"
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -208,15 +211,21 @@ updated_customer_hash = {
 }
 customer_id = created_customer_ids[0] || 1
 
-# wrapping with begin/rescue in case a Page with the same name already exists
-begin
-  customer = @client.customers.retrieve(customer_id: customer_id)
-  puts "The Customer with ID: '#{customer.id}' has Name: '#{customer.first_name} #{customer.last_name}'"
+retrieve_response = @client.customers.retrieve(customer_id: customer_id)
 
-  customer = @client.customers.update(customer_id: customer_id, params: updated_customer_hash)
-  puts "The *updated* Customer with ID: '#{customer.id}' has Name: '#{customer.first_name} #{customer.last_name}'"
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Updating the Customer encountered an error: #{e}"
+if retrieve_response.success?
+  puts "The Customer with ID: '#{retrieve_response.data.first.id}' has "
+  puts "Name: '#{response.data.first.first_name} #{response.data.first.last_name}'"
+
+  response = @client.customers.update(customer_id: customer_id, params: updated_customer_hash)
+  if response.success?
+    puts "The *updated* Customer with ID: '#{response.data.first.id}' has "
+    puts "Name: '#{response.data.first.first_name} #{response.data.first.last_name}'"
+  else
+    print_error(response: response)
+  end
+else
+  print_error(response: retrieve_response)
 end
 puts "\n"
 
@@ -243,24 +252,26 @@ updated_customers_array = [
   }
 ]
 
-# wrapping with begin/rescue in case a Page with the same name already exists
-begin
-  ids = updated_customers_array.map { |customer_record| customer_record[:id] }
-  customers = @client.customers.list(params: { 'id:in': ids.join(',') })
+ids = updated_customers_array.map { |customer_record| customer_record[:id] }
+retrieve_response = @client.customers.list(params: { 'id:in': ids.join(',') })
 
-  customers.data.each do |customer_record|
+if retrieve_response.success?
+  retrieve_response.data.each do |customer_record|
     full_name = "#{customer_record.first_name} #{customer_record.last_name}"
     puts "The Customer with ID: '#{customer_record.id}' has Name: '#{full_name}'"
   end
 
-  customers = @client.customers.bulk_update(params: updated_customers_array)
-
-  customers.data.each do |customer_record|
-    full_name = "#{customer_record.first_name} #{customer_record.last_name}"
-    puts "The *updated* Customer with ID: '#{customer_record.id}' now has Name: '#{full_name}'"
+  response = @client.customers.bulk_update(params: updated_customers_array)
+  if response.success?
+    response.data.each do |customer_record|
+      full_name = "#{customer_record.first_name} #{customer_record.last_name}"
+      puts "The *updated* Customer with ID: '#{customer_record.id}' now has Name: '#{full_name}'"
+    end
+  else
+    print_error(response: response)
   end
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Updating the Customers encountered an error: #{e}"
+else
+  print_error(response: retrieve_response)
 end
 puts "\n"
 
@@ -276,13 +287,14 @@ puts '##################################'
 
 customer_id = created_customer_ids[0] || 1
 
-# wrapping with begin/rescue in case a Page with the id does not exist
-begin
-  response = @client.customers.delete(customer_id: customer_id)
-  created_customer_ids.shift
-  puts "Response was '#{response}'.\n'true' means Customer was deleted successfully."
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Deleting the Customer with ID: '#{customer_id}' encountered an error: #{e}"
+response = @client.customers.delete(customer_id: customer_id)
+created_customer_ids.shift
+
+if response.success?
+  puts '`response.success?` confirms successful deletion!'
+  puts "Success: #{response.success?}"
+else
+  print_error(response: response)
 end
 puts "\n"
 
@@ -298,10 +310,26 @@ puts '##################################'
 
 customer_ids = created_customer_ids.compact || [2, 3]
 
-# wrapping with begin/rescue in case a Page with the id does not exist
-begin
-  response = @client.customers.bulk_delete(customer_ids: customer_ids)
-  puts "Response was '#{response}'.\n'true' means Customers were deleted successfully."
-rescue Bigcommerce::V3::Error::HTTPError => e
-  puts "Deleting the Customers encountered an error: #{e}"
+response = @client.customers.bulk_delete(customer_ids: customer_ids)
+
+if response.success?
+  puts '`response.success?` confirms successful deletion!'
+  puts "Success: #{response.success?}"
+else
+  print_error(response: response)
+end
+puts "\n"
+
+##################################
+# Error Case Example
+##################################
+#
+puts '# Error Case Example'
+puts '##################################'
+response = @client.customers.create(params: {})
+
+if response.success?
+  puts 'Hmm, how did that happen?'
+else
+  print_error(response: response)
 end

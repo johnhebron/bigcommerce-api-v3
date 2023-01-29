@@ -13,6 +13,15 @@ Layout/LineLength:
 Metrics/AbcSize:
   Enabled: false
 
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/CyclomaticComplexity:
+  Max: 8
+
+Metrics/PerceivedComplexity:
+  Max: 9
+
 RSpec/NestedGroups:
   Max: 4
 

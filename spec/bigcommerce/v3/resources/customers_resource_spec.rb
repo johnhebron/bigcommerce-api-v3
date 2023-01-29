@@ -50,8 +50,8 @@ describe 'Bigcommerce::V3::CustomersResource' do
         let(:fixture) { 'resources/customers/get_customers_url200' }
         let(:status) { 200 }
 
-        it 'returns a Bigcommerce::V3::Collection' do
-          expect(customers_resource.list).to be_a(Bigcommerce::V3::Collection)
+        it 'returns a Bigcommerce::V3::Response' do
+          expect(customers_resource.list).to be_a(Bigcommerce::V3::Response)
         end
 
         it 'stores an array of returned records' do
@@ -70,8 +70,8 @@ describe 'Bigcommerce::V3::CustomersResource' do
         let(:fixture) { 'resources/customers/get_customers_url_no_records200' }
         let(:status) { 200 }
 
-        it 'returns a Bigcommerce::V3::Collection' do
-          expect(customers_resource.list).to be_a(Bigcommerce::V3::Collection)
+        it 'returns a Bigcommerce::V3::Response' do
+          expect(customers_resource.list).to be_a(Bigcommerce::V3::Response)
         end
 
         it 'stores an array with no records' do
