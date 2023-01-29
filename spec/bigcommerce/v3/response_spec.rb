@@ -96,8 +96,8 @@ describe 'Bigcommerce::V3::Response' do
           expect(response).to be_a(Bigcommerce::V3::Response)
         end
 
-        it 'has a nil .data' do
-          expect(response.data).to be_nil
+        it 'returns the correct .data' do
+          expect(response.data).to eq(body)
         end
 
         it 'has a nil .total' do

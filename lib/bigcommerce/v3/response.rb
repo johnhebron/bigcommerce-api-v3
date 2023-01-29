@@ -85,8 +85,10 @@ module Bigcommerce
           body['data']&.map { |record| object_type.new(record) }
         elsif body.is_a?(Hash) && body['data'].is_a?(Hash)
           [object_type.new(body['data'])]
+        elsif body.nil?
+          {}
         else
-          body['data']
+          body
         end
       end
 
