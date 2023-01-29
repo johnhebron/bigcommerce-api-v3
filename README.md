@@ -55,7 +55,11 @@ client = Bigcommerce::V3::Client.new(config: config)
 
 ### 2. Interacting with the API via the `client`
 
-**(2022-09-17) Note:** Not all Resources/Objects have been created yet.
+**(2023-01-28) Note:** Not all Resources/Objects have been created yet.
+
+Created so far:
+* Customers
+* Pages
 
 #### 1. Basic Request Syntax
 The gem is set up so that:
@@ -66,7 +70,7 @@ The gem is set up so that:
 
 In summary, you could write the following Ruby code...
 ```ruby
-pages = client.pages.list(params: { page: 1 })
+response = client.pages.list(params: { page: 1 })
 ```
 
 ...which would perform an HTTP [GET] request to...
@@ -123,7 +127,7 @@ Or even
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/rspec` to run the tests.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rspec` to run the tests.
 
 To install this gem onto your local machine, run `bundle exec rake install`. 
 
