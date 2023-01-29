@@ -75,9 +75,9 @@ https://api.bigcommerce.com/stores/store_hash/v3/content/pages?limit=2&page=1
 ```
 
 #### 2. Returned Values
-Once the action (HTTP request) is complete, it will return either a single Object record or a Collection of Object records, depending on the context.
+Once the action (HTTP request) is complete, it will create a Response object with the body, headers, and status of the response as well as some helper methods like .data and .success?
 
-**Ex. A Collection of Page objects is returned by `.list`**
+**Ex. A Response object with an array of Page objects is returned by `.list`**
 
 The `.list` action performs a `GET` request for all Pages for the store.
 
@@ -85,23 +85,22 @@ This request will return 0+ Page records from BigCommerce.
 As such, the results are returned in a Collection where the `.data` field contains an array of the 0+ Page objects.
 
 ```ruby
-pages = client.pages.list()
-# => #<Bigcommerce::V3::Collection>
-pages.data[0].name
+response = client.pages.list()
+# => #<Bigcommerce::V3::Response>
+response.data[2].name
 # => "Contact Page"
 ```
 
-**Ex. A Page object is returned by `.create`**
+**Ex. A Response object with an array of one Page object is returned by `.create`**
 
 The `.create` action performs a POST request for a single Page to the store.
 
 This request will return the single Page record from BigCommerce, if successful.
 
-As such, the result is returned as a single Page object, not a Collection.
 ```ruby
-page = client.pages.create(params: { type: 'page', name: 'Our History' })
-# => #<Bigcommerce::V3::Page>
-page.name
+response = client.pages.create(params: { type: 'page', name: 'Our History' })
+# => #<Bigcommerce::V3::Response>
+response.data[0].name
 # => "Our History"
 ```
 
