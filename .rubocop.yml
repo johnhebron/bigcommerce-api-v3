@@ -9,6 +9,8 @@ AllCops:
 
 Layout/LineLength:
   Max: 130
+  Exclude:
+    - spec/bigcommerce/v3/resources/*
 
 Metrics/AbcSize:
   Enabled: false
@@ -26,7 +28,10 @@ RSpec/NestedGroups:
   Max: 4
 
 RSpec/MultipleMemoizedHelpers:
-   Enabled: false
+  Enabled: false
+
+RSpec/RepeatedExampleGroupDescription:
+  Enabled: false
 
 # Currently using OpenStructs until resources are built out
 Style/OpenStructUse:
