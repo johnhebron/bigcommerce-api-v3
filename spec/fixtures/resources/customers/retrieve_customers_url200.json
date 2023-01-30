@@ -1,0 +1,33 @@
+{
+  "data": [
+    {
+      "id": 2,
+      "authentication": {
+        "force_password_reset": false
+      },
+      "company": "",
+      "customer_group_id": 0,
+      "email": "dem.oname@demoname.com",
+      "first_name": "Dem",
+      "last_name": "Brockett, 0",
+      "notes": "",
+      "phone": "4435643434",
+      "registration_ip_address": "",
+      "tax_exempt_category": "",
+      "date_created": "2022-09-11T05:39:18Z",
+      "date_modified": "2023-01-29T00:34:35Z",
+      "accepts_product_review_abandoned_cart_emails": true,
+      "origin_channel_id": 1,
+      "channel_ids": "nil"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 1,
+      "count": 1,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 1
+    }
+  }
+}

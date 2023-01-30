@@ -25,10 +25,10 @@ module Bigcommerce
                                                 object_type: Bigcommerce::V3::Customer)
       end
 
-      # Convenience method to pass a single hash instead of an array of hashes
-      # since the create endpoint supports bulk by default
-      def create(params:)
-        bulk_create(params: params)
+      # Convenience method to pass a single customer_id
+      # since the list endpoint supports bulk by default
+      def retrieve(customer_id:)
+        list(params: { 'id:in' => customer_id })
       end
 
       def bulk_create(params:)
@@ -46,11 +46,10 @@ module Bigcommerce
         end
       end
 
-      # Convenience method to pass a single customer_id
-      # since the list endpoint supports bulk by default
-      def retrieve(customer_id:)
-        params = { 'id:in' => customer_id }
-        list(params: params)
+      # Convenience method to pass a single hash instead of an array of hashes
+      # since the create endpoint supports bulk by default
+      def create(params:)
+        bulk_create(params: [params])
       end
 
       # Convenience method to pass a single customer_id and params

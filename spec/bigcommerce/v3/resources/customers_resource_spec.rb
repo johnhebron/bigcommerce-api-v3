@@ -31,7 +31,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
   let(:client) { Bigcommerce::V3::Client.new(config: config) }
 
   describe '#initialize' do
-    it 'is of type Bigcommerce::V3::Resource' do
+    it 'is of type Bigcommerce::V3::CustomersResource' do
       expect(customers_resource).to be_a(Bigcommerce::V3::CustomersResource)
     end
 
@@ -44,22 +44,23 @@ describe 'Bigcommerce::V3::CustomersResource' do
     end
   end
 
-  describe '.list' do
+  describe '#list' do
     context 'when called with no params' do
+      let(:response) { customers_resource.list }
+
       context 'with available records to return' do
         let(:fixture) { 'resources/customers/get_customers_url200' }
-        let(:status) { 200 }
 
         it 'returns a Bigcommerce::V3::Response' do
-          expect(customers_resource.list).to be_a(Bigcommerce::V3::Response)
+          expect(response).to be_a(Bigcommerce::V3::Response)
         end
 
         it 'stores an array of returned records' do
-          expect(customers_resource.list.data.count).to be > 0
+          expect(response.data.count).to be > 0
         end
 
         it 'stores an array of Bigcommerce::V3::Customer records' do
-          data = customers_resource.list.data
+          data = response.data
           data.map do |record|
             expect(record).to be_a(Bigcommerce::V3::Customer)
           end
@@ -68,36 +69,330 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
       context 'with no available records to return' do
         let(:fixture) { 'resources/customers/get_customers_url_no_records200' }
-        let(:status) { 200 }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(customers_resource.list).to be_a(Bigcommerce::V3::Response)
         end
 
         it 'stores an array with no records' do
-          data = customers_resource.list.data
-          expect(data.count).to eq(0)
+          expect(customers_resource.list.data.count).to eq(0)
         end
       end
     end
 
     context 'when called with params hash' do
-      context 'with available records to return' do
-        let(:fixture) { 'resources/customers/get_customers_url_per_page_2200' }
-        let(:status) { 200 }
-        let(:per_page) { 2 }
-        let(:page) { 2 }
-        let(:params) do
-          {
-            'limit' => per_page.to_s,
-            'page' => 2
-          }
-        end
+      let(:response) { customers_resource.list(params: params) }
+      let(:per_page) { 2 }
+      let(:current_page) { 2 }
+      let(:params) do
+        {
+          'limit' => per_page.to_s,
+          'page' => current_page
+        }
+      end
 
-        let(:response) { customers_resource.list(params: params) }
+      context 'with available records to return' do
+        let(:fixture) { 'resources/customers/get_customers_url_with_params_2200' }
 
         it 'returns the appropriate :per_page' do
           expect(response.per_page).to eq(per_page.to_s)
+        end
+
+        it 'returns the appropriate :page' do
+          expect(response.current_page).to eq(current_page.to_s)
+        end
+
+        it 'returns a Bigcommerce::V3::Response' do
+          expect(response).to be_a(Bigcommerce::V3::Response)
+        end
+
+        it 'stores an array of returned records' do
+          expect(response.data.count).to be > 0
+        end
+
+        it 'stores an array of Bigcommerce::V3::Customer records' do
+          data = response.data
+          data.map do |record|
+            expect(record).to be_a(Bigcommerce::V3::Customer)
+          end
+        end
+      end
+
+      context 'with no available records to return' do
+        let(:fixture) { 'resources/customers/get_customers_url_with_params_no_records200' }
+
+        it 'returns a Bigcommerce::V3::Response' do
+          expect(response).to be_a(Bigcommerce::V3::Response)
+        end
+
+        it 'stores an array with no records' do
+          expect(response.data.count).to eq(0)
+        end
+      end
+
+      context 'when passing invalid parameters' do
+        let(:fixture) { 'resources/customers/get_customers_url_error_case422' }
+        let(:status) { 422 }
+        let(:params) do
+          {
+            'foo' => 'bar'
+          }
+        end
+
+        it 'returns a Bigcommerce::V3::Response' do
+          expect(response).to be_a(Bigcommerce::V3::Response)
+        end
+
+        it 'has an appropriate status' do
+          expect(response.status).to eq(status)
+        end
+
+        it 'has a data payload with a title' do
+          title = 'The filter(s): foo are not valid filter parameter(s).'
+          expect(response.data['title']).to eq(title)
+        end
+
+        it 'has a data payload with a type' do
+          type = 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes'
+          expect(response.data['type']).to eq(type)
+        end
+
+        it 'has a data payload with an errors hash' do
+          errors = {}
+          expect(response.data['errors']).to eq(errors)
+        end
+      end
+    end
+  end
+
+  describe '#retrieve' do
+    let(:response) { customers_resource.retrieve(customer_id: customer_id) }
+
+    context 'when retrieving a valid customer_id' do
+      let(:fixture) { 'resources/customers/retrieve_customers_url200' }
+      let(:customer_id) { 2 }
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'has a .total of 1' do
+        expect(response.total).to eq(1.to_s)
+      end
+
+      it 'stores an array with 1 returned record' do
+        expect(response.data.count).to eq(1)
+      end
+
+      it 'returns the correct customer_id record' do
+        expect(response.data.first.id).to eq(customer_id)
+      end
+    end
+
+    context 'when retrieving an invalid customer_id' do
+      let(:fixture) { 'resources/customers/retrieve_customers_url_no_records200' }
+      let(:customer_id) { 42 }
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'has a .total of 0' do
+        expect(response.total).to eq(0.to_s)
+      end
+
+      it 'stores an array with 0 returned record' do
+        expect(response.data.count).to eq(0)
+      end
+    end
+
+    context 'when passing invalid parameters' do
+      let(:fixture) { 'resources/customers/retrieve_customers_url_error_case422' }
+      let(:status) { 422 }
+      let(:customer_id) { 'hello' }
+      let(:title) { 'Query parameter "id:in" value may contain only integer values. For input string: "hello".' }
+      let(:errors) { {} }
+      let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'has an appropriate status' do
+        expect(response.status).to eq(status)
+      end
+
+      it 'has a data payload with a title' do
+        expect(response.data['title']).to eq(title)
+      end
+
+      it 'has a data payload with a type' do
+        expect(response.data['type']).to eq(type)
+      end
+
+      it 'has a data payload with an errors hash' do
+        expect(response.data['errors']).to eq(errors)
+      end
+    end
+  end
+
+  describe '#bulk_create' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
+    let(:response) { customers_resource.bulk_create(params: params) }
+
+    context 'when passing a valid params Array' do
+      context 'when the customer records do not already exist' do
+        let(:fixture) { 'resources/customers/bulk_create_customers_url200' }
+        let(:params) do
+          [
+            {
+              first_name: 'Bobby',
+              last_name: 'Bob',
+              email: 'bobby.bob@bobberton.co'
+            },
+            {
+              first_name: 'Nina',
+              last_name: 'Ni',
+              email: 'Nina.Ni@nina.co'
+            }
+          ]
+        end
+        let(:stringified_params) do
+          '[{"first_name":"Bobby","last_name":"Bob","email":"bobby.bob@bobberton.co"},{"first_name":"Nina","last_name":"Ni","email":"Nina.Ni@nina.co"}]'
+        end
+
+        it 'returns a Bigcommerce::V3::Response' do
+          expect(response).to be_a(Bigcommerce::V3::Response)
+        end
+
+        it 'is a success' do
+          expect(response).to be_success
+        end
+
+        it 'has a .total of nil records' do
+          # because the .total is pulled from the meta hash
+          # which is not returned on a POST request
+          expect(response.total).to be_nil
+        end
+
+        it 'stores an array with 2 returned records' do
+          # since .total won't be set, .data.count is your bet
+          expect(response.data.count).to eq(2)
+        end
+
+        it 'returns the correct created customer records' do
+          response.data.each_with_index do |customer, index|
+            created_customer = {
+              first_name: customer.first_name,
+              last_name: customer.last_name,
+              email: customer.email
+            }
+            expect(created_customer).to match(params[index])
+          end
+        end
+      end
+
+      context 'when the customer records already exist' do
+        let(:fixture) { 'resources/customers/bulk_create_customers_url422' }
+        let(:status) { 422 }
+        let(:params) do
+          [
+            {
+              first_name: 'Bobby',
+              last_name: 'Bob',
+              email: 'bobby.bob@bobberton.co'
+            },
+            {
+              first_name: 'Nina',
+              last_name: 'Ni',
+              email: 'Nina.Ni@nina.co'
+            }
+          ]
+        end
+        let(:stringified_params) do
+          '[{"first_name":"Bobby","last_name":"Bob","email":"bobby.bob@bobberton.co"},{"first_name":"Nina","last_name":"Ni","email":"Nina.Ni@nina.co"}]'
+        end
+        let(:title) { 'Create customers failed.' }
+        let(:errors) do
+          {
+            '.customer_create' => 'Error creating customers: email bobby.bob@bobberton.co already in use'
+          }
+        end
+        let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
+
+        it 'returns a Bigcommerce::V3::Response' do
+          expect(response).to be_a(Bigcommerce::V3::Response)
+        end
+
+        it 'is not a success' do
+          expect(response).not_to be_success
+        end
+
+        it 'has an appropriate status' do
+          expect(response.status).to eq(status)
+        end
+
+        it 'has a data payload with a title' do
+          expect(response.data['title']).to eq(title)
+        end
+
+        it 'has a data payload with a type' do
+          expect(response.data['type']).to eq(type)
+        end
+
+        it 'has a data payload with an errors hash' do
+          expect(response.data['errors']).to eq(errors)
+        end
+      end
+    end
+
+    context 'when passing a valid params Array' do
+      let(:fixture) { 'resources/customers/bulk_create_customers_url200' }
+      let(:params) do
+        [
+          {
+            first_name: 'Bobby',
+            last_name: 'Bob',
+            email: 'bobby.bob@bobberton.co'
+          },
+          {
+            first_name: 'Nina',
+            last_name: 'Ni',
+            email: 'Nina.Ni@nina.co'
+          }
+        ]
+      end
+      let(:stringified_params) do
+        '[{"first_name":"Bobby","last_name":"Bob","email":"bobby.bob@bobberton.co"},{"first_name":"Nina","last_name":"Ni","email":"Nina.Ni@nina.co"}]'
+      end
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'is a success' do
+        expect(response).to be_success
+      end
+
+      it 'has a .total of nil records' do
+        # because the .total is pulled from the meta hash
+        # which is not returned on a POST request
+        expect(response.total).to be_nil
+      end
+
+      it 'stores an array with 2 returned records' do
+        # since .total won't be set, .data.count is your bet
+        expect(response.data.count).to eq(2)
+      end
+
+      it 'returns the correct created customer records' do
+        response.data.each_with_index do |customer, index|
+          created_customer = {
+            first_name: customer.first_name,
+            last_name: customer.last_name,
+            email: customer.email
+          }
+          expect(created_customer).to match(params[index])
         end
       end
     end

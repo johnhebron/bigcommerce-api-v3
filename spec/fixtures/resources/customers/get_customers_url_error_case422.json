@@ -1,0 +1,6 @@
+{
+  "status": 422,
+  "title": "The filter(s): foo are not valid filter parameter(s).",
+  "type": "https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes",
+  "errors": {}
+}
