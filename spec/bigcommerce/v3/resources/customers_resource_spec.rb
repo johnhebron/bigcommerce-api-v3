@@ -271,46 +271,92 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
     context 'when passing a valid params Array' do
       context 'when the customer records do not already exist' do
-        let(:fixture) { 'resources/customers/bulk_create_customers_url200' }
-        let(:params) do
-          [
+        context 'when creating only one customer' do
+          let(:fixture) { 'resources/customers/bulk_create_customers_singular_url200' }
+          let(:params) do
             {
-              first_name: 'Bobby',
-              last_name: 'Bob',
-              email: 'bobby.bob@bobberton.co'
-            },
-            {
-              first_name: 'Nina',
-              last_name: 'Ni',
-              email: 'Nina.Ni@nina.co'
+              first_name: 'Sally',
+              last_name: 'Smithers',
+              email: 'sally@smithers.org'
             }
-          ]
-        end
-        let(:stringified_params) do
-          '[{"first_name":"Bobby","last_name":"Bob","email":"bobby.bob@bobberton.co"},{"first_name":"Nina","last_name":"Ni","email":"Nina.Ni@nina.co"}]'
+          end
+          let(:stringified_params) do
+            '[{"first_name":"Sally","last_name":"Smithers","email":"sally@smithers.org"}]'
+          end
+          let(:created_customer) do
+            {
+              first_name: response.data.first.first_name,
+              last_name: response.data.first.last_name,
+              email: response.data.first.email
+            }
+          end
+
+          it 'returns a Bigcommerce::V3::Response' do
+            expect(response).to be_a(Bigcommerce::V3::Response)
+          end
+
+          it 'is a success' do
+            expect(response).to be_success
+          end
+
+          it 'has a .total of nil records' do
+            # because the .total is pulled from the meta hash
+            # which is not returned on a POST request
+            expect(response.total).to be_nil
+          end
+
+          it 'stores an array with 1 returned record' do
+            # since .total won't be set, .data.count is your bet
+            expect(response.data.count).to eq(1)
+          end
+
+          it 'returns the correct created customer record' do
+            expect(created_customer).to match(params)
+          end
         end
 
-        it 'returns a Bigcommerce::V3::Response' do
-          expect(response).to be_a(Bigcommerce::V3::Response)
-        end
+        context 'when creating more than one customer' do
+          let(:fixture) { 'resources/customers/bulk_create_customers_url200' }
+          let(:params) do
+            [
+              {
+                first_name: 'Bobby',
+                last_name: 'Bob',
+                email: 'bobby.bob@bobberton.co'
+              },
+              {
+                first_name: 'Nina',
+                last_name: 'Ni',
+                email: 'Nina.Ni@nina.co'
+              }
+            ]
+          end
+          let(:stringified_params) do
+            '[{"first_name":"Bobby","last_name":"Bob","email":"bobby.bob@bobberton.co"},{"first_name":"Nina","last_name":"Ni","email":"Nina.Ni@nina.co"}]'
+          end
 
-        it 'is a success' do
-          expect(response).to be_success
-        end
+          it 'returns a Bigcommerce::V3::Response' do
+            expect(response).to be_a(Bigcommerce::V3::Response)
+          end
 
-        it 'has a .total of nil records' do
-          # because the .total is pulled from the meta hash
-          # which is not returned on a POST request
-          expect(response.total).to be_nil
-        end
+          it 'is a success' do
+            expect(response).to be_success
+          end
 
-        it 'stores an array with 2 returned records' do
-          # since .total won't be set, .data.count is your bet
-          expect(response.data.count).to eq(2)
-        end
+          it 'has a .total of nil records' do
+            # because the .total is pulled from the meta hash
+            # which is not returned on a POST request
+            expect(response.total).to be_nil
+          end
 
-        it 'returns the correct created customer records' do
-          expect(created_customers).to match(params)
+          it 'stores an array with 2 returned records' do
+            # since .total won't be set, .data.count is your bet
+            expect(response.data.count).to eq(2)
+          end
+
+          it 'returns the correct created customer records' do
+            expect(created_customers).to match(params)
+          end
         end
       end
 
@@ -407,6 +453,64 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
       it 'has a data payload with an errors hash' do
         expect(response.error.errors).to eq(errors)
+      end
+    end
+  end
+
+  describe '#create' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
+    let(:response) { customers_resource.create(params: params) }
+    let(:created_customers) do
+      response&.data&.map do |customer|
+        {
+          first_name: customer.first_name,
+          last_name: customer.last_name,
+          email: customer.email
+        }
+      end
+    end
+
+    context 'when passing a valid params Hash' do
+      let(:fixture) { 'resources/customers/create_customers_singular_url200' }
+      let(:params) do
+        {
+          first_name: 'Sally',
+          last_name: 'Smithers',
+          email: 'sally@smithers.org'
+        }
+      end
+      let(:stringified_params) do
+        '[{"first_name":"Sally","last_name":"Smithers","email":"sally@smithers.org"}]'
+      end
+      let(:created_customer) do
+        {
+          first_name: response.data.first.first_name,
+          last_name: response.data.first.last_name,
+          email: response.data.first.email
+        }
+      end
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'is a success' do
+        expect(response).to be_success
+      end
+
+      it 'has a .total of nil records' do
+        # because the .total is pulled from the meta hash
+        # which is not returned on a POST request
+        expect(response.total).to be_nil
+      end
+
+      it 'stores an array with 1 returned record' do
+        # since .total won't be set, .data.count is your bet
+        expect(response.data.count).to eq(1)
+      end
+
+      it 'returns the correct created customer record' do
+        expect(created_customer).to match(params)
       end
     end
   end

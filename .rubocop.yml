@@ -25,7 +25,7 @@ Metrics/PerceivedComplexity:
   Max: 9
 
 RSpec/NestedGroups:
-  Max: 4
+  Max: 5
 
 RSpec/MultipleMemoizedHelpers:
   Enabled: false

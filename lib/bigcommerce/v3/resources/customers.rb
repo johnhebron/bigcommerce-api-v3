@@ -52,6 +52,12 @@ module Bigcommerce
         bulk_create(params: [params])
       end
 
+      def bulk_update(params:)
+        url = RESOURCE_URL
+        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
+                                                object_type: Bigcommerce::V3::Customer)
+      end
+
       # Convenience method to pass a single customer_id and params
       # since the update endpoint supports bulk by default
       def update(customer_id:, params:)
@@ -60,12 +66,6 @@ module Bigcommerce
           params = [params]
         end
         bulk_update(params: params)
-      end
-
-      def bulk_update(params:)
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
-                                                object_type: Bigcommerce::V3::Customer)
       end
 
       # Convenience method to pass a single customer id
