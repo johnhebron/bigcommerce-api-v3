@@ -61,11 +61,17 @@ module Bigcommerce
       # Convenience method to pass a single customer_id and params
       # since the update endpoint supports bulk by default
       def update(customer_id:, params:)
-        if params.is_a?(Hash)
-          params[:id] = customer_id
-          params = [params]
+        unless customer_id.is_a?(Integer)
+          raise Error::InvalidArguments,
+                "customer_id must be an integer, #{customer_id.class} provided."
         end
-        bulk_update(params: params)
+        unless params.is_a?(Hash)
+          raise Error::InvalidArguments,
+                "params must be a Hash, #{params.class} provided."
+        end
+
+        params[:id] = customer_id
+        bulk_update(params: [params])
       end
 
       # Convenience method to pass a single customer id
