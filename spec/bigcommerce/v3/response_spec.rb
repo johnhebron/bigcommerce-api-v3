@@ -96,8 +96,12 @@ describe 'Bigcommerce::V3::Response' do
           expect(response).to be_a(Bigcommerce::V3::Response)
         end
 
+        it 'is not a success' do
+          expect(response).not_to be_success
+        end
+
         it 'returns the correct .data' do
-          expect(response.data).to eq(body)
+          expect(response.data).to eq({})
         end
 
         it 'has a nil .total' do
