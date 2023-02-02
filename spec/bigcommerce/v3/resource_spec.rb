@@ -5,19 +5,28 @@ require './spec/spec_helper'
 describe 'Bigcommerce::V3::Resource' do
   subject(:resource) { Bigcommerce::V3::Resource.new(client: client) }
 
+  # Store Data for Client and URL
   let(:store_hash) { SecureRandom.alphanumeric(7) }
   let(:access_token) { SecureRandom.alphanumeric(31) }
 
-  let(:url) { "/stores/#{store_hash}/v3/content/pages" }
+  # URL, Body (optional), Fixture, and HTTP Status code for stubs
+  let(:base_url) { "/stores/#{store_hash}/v3/" }
+  let(:resource_url) { 'content/pages' }
+  let(:url) { base_url + resource_url }
   let(:body) { '{}' }
   let(:fixture) { 'resource/get_url200' }
   let(:status) { 200 }
 
+  # Stubbed response and request
   let(:stubbed_response) { stub_response(fixture: fixture, status: status) }
   let(:stubs) { stub_request(path: url, response: stubbed_response) }
 
+  # Creating Configuration object with Store data, test adapter, and stubs
   let(:config) do
-    Bigcommerce::V3::Configuration.new(store_hash: store_hash, access_token: access_token, adapter: :test, stubs: stubs)
+    Bigcommerce::V3::Configuration.new(store_hash: store_hash,
+                                       access_token: access_token,
+                                       adapter: :test,
+                                       stubs: stubs)
   end
   let(:client) { Bigcommerce::V3::Client.new(config: config) }
 
@@ -27,7 +36,7 @@ describe 'Bigcommerce::V3::Resource' do
     end
   end
 
-  describe '.get_request' do
+  describe '#get_request' do
     let(:url) { "/stores/#{store_hash}/v3/content/pages" }
     let(:fixture) { 'resource/get_url200' }
     let(:status) { 200 }
@@ -126,10 +135,9 @@ describe 'Bigcommerce::V3::Resource' do
     end
   end
 
-  describe '.post_request' do
+  describe '#post_request' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: body) }
 
-    let(:url) { "/stores/#{store_hash}/v3/content/pages" }
     let(:fixture) { 'resource/post_url201' }
     let(:status) { 201 }
 
@@ -146,7 +154,7 @@ describe 'Bigcommerce::V3::Resource' do
     end
   end
 
-  describe '.put_request' do
+  describe '#put_request' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: body) }
 
     let(:url) { "/stores/#{store_hash}/v3/content/pages/1" }
@@ -166,7 +174,7 @@ describe 'Bigcommerce::V3::Resource' do
     end
   end
 
-  describe '.delete_request' do
+  describe '#delete_request' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
 
     let(:url) { "/stores/#{store_hash}/v3/content/pages/1" }

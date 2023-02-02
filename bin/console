@@ -4,6 +4,7 @@
 # Set BIGCOMMERCE_V3_ENV so that dotenv is initialized
 ENV['BIGCOMMERCE_V3_ENV'] = 'development'
 
+require 'json'
 require 'bundler/setup'
 require 'bigcommerce/v3'
 require 'irb'
