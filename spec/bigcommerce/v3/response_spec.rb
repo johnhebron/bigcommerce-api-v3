@@ -27,52 +27,106 @@ describe 'Bigcommerce::V3::Response' do
   describe '#initialize' do
     context 'when provided valid input' do
       context 'when request is a success' do
-        it 'returns a Bigcommerce::V3::Response object' do
-          expect(response).to be_a(Bigcommerce::V3::Response)
+        context 'when HTTP response has an Array for data' do
+          it 'returns a Bigcommerce::V3::Response object' do
+            expect(response).to be_a(Bigcommerce::V3::Response)
+          end
+
+          it 'contains an array for .data' do
+            expect(response.data).to be_an(Array)
+          end
+
+          it 'contains an array of `object_type`s' do
+            expect(response.data).to all(be_an(object_type))
+          end
+
+          it 'has a .total' do
+            expect(response.total).to eq(pagination_data['total'].to_s)
+          end
+
+          it 'has a .count' do
+            expect(response.count).to eq(pagination_data['count'].to_s)
+          end
+
+          it 'has a .per_page' do
+            expect(response.per_page).to eq(pagination_data['per_page'].to_s)
+          end
+
+          it 'has a .current_page' do
+            expect(response.current_page).to eq(pagination_data['current_page'].to_s)
+          end
+
+          it 'has a .total_pages' do
+            expect(response.total_pages).to eq(pagination_data['total_pages'].to_s)
+          end
+
+          it 'has a .current_page_link' do
+            expect(response.current_page_link).to eq(pagination_data['links']['current'])
+          end
+
+          it 'has a .previous_page_link' do
+            expect(response.previous_page_link).to eq(pagination_data['links']['previous'])
+          end
+
+          it 'has a .next_page_link' do
+            expect(response.next_page_link).to eq(pagination_data['links']['next'])
+          end
+
+          it 'has a nil .error' do
+            expect(response.error).to be_nil
+          end
         end
 
-        it 'contains an array for .data' do
-          expect(response.data).to be_an(Array)
-        end
+        context 'when HTTP response has a Hash for data' do
+          let(:data) { { 'record_1' => 1 } }
 
-        it 'contains an array of `object_type`s' do
-          expect(response.data).to all(be_an(object_type))
-        end
+          it 'returns a Bigcommerce::V3::Response object' do
+            expect(response).to be_a(Bigcommerce::V3::Response)
+          end
 
-        it 'has a .total' do
-          expect(response.total).to eq(pagination_data['total'].to_s)
-        end
+          it 'contains an array for .data' do
+            expect(response.data).to be_an(Array)
+          end
 
-        it 'has a .count' do
-          expect(response.count).to eq(pagination_data['count'].to_s)
-        end
+          it 'contains an array with a `object_type`' do
+            expect(response.data.first).to be_an(object_type)
+          end
 
-        it 'has a .per_page' do
-          expect(response.per_page).to eq(pagination_data['per_page'].to_s)
-        end
+          it 'has a .total' do
+            expect(response.total).to eq(pagination_data['total'].to_s)
+          end
 
-        it 'has a .current_page' do
-          expect(response.current_page).to eq(pagination_data['current_page'].to_s)
-        end
+          it 'has a .count' do
+            expect(response.count).to eq(pagination_data['count'].to_s)
+          end
 
-        it 'has a .total_pages' do
-          expect(response.total_pages).to eq(pagination_data['total_pages'].to_s)
-        end
+          it 'has a .per_page' do
+            expect(response.per_page).to eq(pagination_data['per_page'].to_s)
+          end
 
-        it 'has a .current_page_link' do
-          expect(response.current_page_link).to eq(pagination_data['links']['current'])
-        end
+          it 'has a .current_page' do
+            expect(response.current_page).to eq(pagination_data['current_page'].to_s)
+          end
 
-        it 'has a .previous_page_link' do
-          expect(response.previous_page_link).to eq(pagination_data['links']['previous'])
-        end
+          it 'has a .total_pages' do
+            expect(response.total_pages).to eq(pagination_data['total_pages'].to_s)
+          end
 
-        it 'has a .next_page_link' do
-          expect(response.next_page_link).to eq(pagination_data['links']['next'])
-        end
+          it 'has a .current_page_link' do
+            expect(response.current_page_link).to eq(pagination_data['links']['current'])
+          end
 
-        it 'has a nil .error' do
-          expect(response.error).to be_nil
+          it 'has a .previous_page_link' do
+            expect(response.previous_page_link).to eq(pagination_data['links']['previous'])
+          end
+
+          it 'has a .next_page_link' do
+            expect(response.next_page_link).to eq(pagination_data['links']['next'])
+          end
+
+          it 'has a nil .error' do
+            expect(response.error).to be_nil
+          end
         end
       end
 
