@@ -74,26 +74,38 @@ module Bigcommerce
         bulk_update(params: [params])
       end
 
-      # Convenience method to pass a single customer id
-      # since the delete endpoint supports bulk by default
-      def delete(customer_id:)
-        url = RESOURCE_URL
-        params = { 'id:in' => customer_id }
-        Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
-                                                object_type: Bigcommerce::V3::Customer)
-      end
-
       ##
       # Available query parameters for 'delete'
       # https://developer.bigcommerce.com/api-reference/e6bb04315e2a7-delete-customers#Query-Parameters
       ##
       def bulk_delete(customer_ids:)
-        raise Error::ParamError, "Params must be of type Array, #{customer_ids.class} provided." unless customer_ids.is_a?(Array)
+        unless customer_ids.is_a?(Array)
+          raise Error::InvalidArguments,
+                "customer_ids must be of type Array, #{customer_ids.class} provided."
+        end
+
+        customer_ids.map do |id|
+          unless id.is_a?(Integer)
+            raise Error::InvalidArguments,
+                  "customer_ids Array must contain only Integers, #{id.class} provided."
+          end
+        end
 
         url = RESOURCE_URL
         params = { 'id:in' => customer_ids.join(',') }
         Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
                                                 object_type: Bigcommerce::V3::Customer)
+      end
+
+      # Convenience method to pass a single customer id
+      # since the delete endpoint supports bulk by default
+      def delete(customer_id:)
+        unless customer_id.is_a?(Integer)
+          raise Error::InvalidArguments,
+                "customer_id must be of type Integer, #{customer_id.class} provided."
+        end
+
+        bulk_delete(customer_ids: [customer_id])
       end
     end
   end

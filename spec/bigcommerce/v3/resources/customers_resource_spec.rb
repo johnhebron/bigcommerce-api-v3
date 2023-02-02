@@ -413,46 +413,14 @@ describe 'Bigcommerce::V3::CustomersResource' do
       end
     end
 
-    context 'when passing an invalid params Array' do
-      let(:fixture) { 'resources/customers/bulk_create_customers_url422' }
+    context 'when passing invalid params' do
+      let(:fixture) { '' }
       let(:status) { 422 }
-      let(:params) { [{ first_name: 'Bobby' }, { first_name: 'Nina' }] }
-      let(:stringified_params) do
-        '[{"first_name":"Bobby"},{"first_name":"Nina"}]'
-      end
-      let(:title) { 'Create customers failed.' }
-      let(:errors) { { '.customer_create' => 'Error creating customers: email bobby.bob@bobberton.co already in use' } }
+      let(:params) { 42 }
+      let(:stringified_params) { '42' }
 
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
-
-      it 'is not a success' do
-        expect(response).not_to be_success
-      end
-
-      it 'has a .total of nil records' do
-        expect(response.total).to be_nil
-      end
-
-      it 'has an empty .data' do
-        expect(response.data).to be_empty
-      end
-
-      it 'has an appropriate status' do
-        expect(response.status).to eq(status)
-      end
-
-      it 'has an error with a title' do
-        expect(response.error.title).to eq(title)
-      end
-
-      it 'has an error with a type' do
-        expect(response.error.type).to eq(type)
-      end
-
-      it 'has a data payload with an errors hash' do
-        expect(response.error.errors).to eq(errors)
+      it 'raises an error' do
+        expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
       end
     end
   end
@@ -460,15 +428,6 @@ describe 'Bigcommerce::V3::CustomersResource' do
   describe '#create' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
     let(:response) { customers_resource.create(params: params) }
-    let(:created_customers) do
-      response&.data&.map do |customer|
-        {
-          first_name: customer.first_name,
-          last_name: customer.last_name,
-          email: customer.email
-        }
-      end
-    end
 
     context 'when passing a valid params Hash' do
       let(:fixture) { 'resources/customers/create_customers_singular_url200' }
@@ -515,7 +474,6 @@ describe 'Bigcommerce::V3::CustomersResource' do
     end
   end
 
-  # -- WIP
   describe '#bulk_update' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
     let(:response) { customers_resource.bulk_update(params: params) }
@@ -684,8 +642,8 @@ describe 'Bigcommerce::V3::CustomersResource' do
         expect(response.total).to be_nil
       end
 
-      it 'has an empty .data' do
-        expect(response.data).to be_empty
+      it 'has a nil .data' do
+        expect(response.data).to be_nil
       end
 
       it 'has an appropriate status' do
@@ -762,6 +720,151 @@ describe 'Bigcommerce::V3::CustomersResource' do
       let(:params) { 123 }
       let(:customer_id) { 147 }
       let(:stringified_params) { '[{"id":147}]' }
+
+      it 'raises an error' do
+        expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      end
+    end
+  end
+
+  describe '#bulk_delete' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
+    let(:response) { customers_resource.bulk_delete(customer_ids: params) }
+    let(:fixture) { '' } # successful response body is empty for DELETE request
+
+    context 'when passing a valid customer_ids Array' do
+      context 'when the customer records do exist' do
+        let(:status) { 204 }
+
+        context 'when deleting only one customer' do
+          let(:params) { [42] }
+
+          it 'returns a Bigcommerce::V3::Response' do
+            expect(response).to be_a(Bigcommerce::V3::Response)
+          end
+
+          it 'is a success' do
+            expect(response).to be_success
+          end
+
+          it 'has a .total of nil records' do
+            # because the .total is pulled from the meta hash
+            # which is not returned on a DELETE request
+            expect(response.total).to be_nil
+          end
+
+          it 'has a nil .data' do
+            # since a DELETE request only returns a 204 with no body
+            # the .success? method is the best way to check success
+            expect(response.data).to be_nil
+          end
+        end
+
+        context 'when deleting more than one customer' do
+          let(:fixture) { '' }
+          let(:params) { [147, 145] }
+
+          it 'returns a Bigcommerce::V3::Response' do
+            expect(response).to be_a(Bigcommerce::V3::Response)
+          end
+
+          it 'is a success' do
+            expect(response).to be_success
+          end
+
+          it 'has a .total of nil records' do
+            # because the .total is pulled from the meta hash
+            # which is not returned on a DELETE request
+            expect(response.total).to be_nil
+          end
+
+          it 'has a nil .data' do
+            # since a DELETE request only returns a 204 with no body
+            # the .success? method is the best way to check success
+            expect(response.data).to be_nil
+          end
+        end
+      end
+
+      context 'when the customer records do not exist' do
+        # For the BigCommerce API, a DELETE request for an invalid ID still
+        # returns a 204 success with no body
+        let(:fixture) { '' }
+        let(:status) { 204 }
+        let(:params) { [0] }
+
+        it 'returns a Bigcommerce::V3::Response' do
+          expect(response).to be_a(Bigcommerce::V3::Response)
+        end
+
+        it 'is a success' do
+          expect(response).to be_success
+        end
+
+        it 'has a .total of nil records' do
+          # because the .total is pulled from the meta hash
+          # which is not returned on a DELETE request
+          expect(response.total).to be_nil
+        end
+
+        it 'has a nil .data' do
+          # since a DELETE request only returns a 204 with no body
+          # the .success? method is the best way to check success
+          expect(response.data).to be_nil
+        end
+      end
+    end
+
+    context 'when passing an invalid params Array' do
+      let(:fixture) { '' }
+      let(:params) { %w[string string] }
+
+      it 'raises an error' do
+        expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      end
+    end
+
+    context 'when passing invalid params' do
+      let(:fixture) { '' }
+      let(:params) { '' }
+
+      it 'raises an error' do
+        expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      end
+    end
+  end
+
+  describe '#delete' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
+    let(:response) { customers_resource.delete(customer_id: customer_id) }
+    let(:customer_id) { 42 }
+    let(:fixture) { '' }
+
+    context 'when passing a valid customer_id' do
+      let(:fixture) { '' }
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'is a success' do
+        expect(response).to be_success
+      end
+
+      it 'has a .total of nil records' do
+        # because the .total is pulled from the meta hash
+        # which is not returned on a POST request
+        expect(response.total).to be_nil
+      end
+
+      it 'has a nil .data' do
+        # since .total won't be set, .data.count is your bet
+        expect(response.data).to be_nil
+      end
+    end
+
+    context 'when passing an invalid customer_id' do
+      let(:customer_id) { nil }
 
       it 'raises an error' do
         expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)

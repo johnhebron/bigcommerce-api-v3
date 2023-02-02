@@ -14,9 +14,13 @@ module Helpers
 
   def stub_response(fixture:, status: 200, headers: {})
     headers.merge!(default_headers)
-    fixture_path = "spec/fixtures/#{fixture}.json"
 
-    [status, headers, File.read(fixture_path)]
+    if fixture.nil? || fixture.empty?
+      [status, headers, '']
+    else
+      fixture_path = "spec/fixtures/#{fixture}.json"
+      [status, headers, File.read(fixture_path)]
+    end
   end
 
   def default_headers

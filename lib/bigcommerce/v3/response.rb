@@ -81,12 +81,13 @@ module Bigcommerce
       end
 
       def transform_data(body, object_type)
-        if body.is_a?(Hash) && body['data'].is_a?(Array)
+        return nil unless body.is_a?(Hash) && body['data']
+
+        case body['data']
+        when Array
           body['data']&.map { |record| object_type.new(record) }
-        elsif body.is_a?(Hash) && body['data'].is_a?(Hash)
+        when Hash
           [object_type.new(body['data'])]
-        else
-          {}
         end
       end
 

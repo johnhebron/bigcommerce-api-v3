@@ -11,7 +11,7 @@ describe 'Bigcommerce::V3::Response' do
   end
 
   let(:body) { { 'data' => data, 'meta' => { 'pagination' => pagination_data } } }
-  let(:data) { [{ 'record_1' => {} }, { 'record_2' => {} }] }
+  let(:data) { [{ 'record_1' => 1 }, { 'record_2' => 2 }] }
   let(:pagination_data) do
     {
       'total' => 1, 'count' => 1, 'per_page' => 1, 'current_page' => 1, 'total_pages' => 1,
@@ -23,10 +23,6 @@ describe 'Bigcommerce::V3::Response' do
   let(:headers) { { 'header' => 'header_value' } }
   let(:status) { 200 }
   let(:object_type) { OpenStruct }
-  # let(:http_response) { instance_double(Faraday::Response, body: body) }
-  # before do
-  #   allow(http_response).to receive(:success?).and_return(true)
-  # end
 
   describe '#initialize' do
     context 'when provided valid input' do
@@ -100,8 +96,8 @@ describe 'Bigcommerce::V3::Response' do
           expect(response).not_to be_success
         end
 
-        it 'returns the correct .data' do
-          expect(response.data).to eq({})
+        it 'has a nil .data' do
+          expect(response.data).to be_nil
         end
 
         it 'has a nil .total' do
