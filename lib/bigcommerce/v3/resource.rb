@@ -41,6 +41,12 @@ module Bigcommerce
       def delete_request(url:, params: {}, headers: {})
         client.conn.delete(url, params, headers)
       end
+
+      private
+
+      def params_error(param:, type:)
+        "Param(s) must be of type #{type}, #{param.class} provided."
+      end
     end
   end
 end

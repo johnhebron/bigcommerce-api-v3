@@ -25,68 +25,92 @@ module Bigcommerce
                                                 object_type: Bigcommerce::V3::Page)
       end
 
+      ##
+      # Convenience method to pass a single id
+      # since the list endpoint supports bulk by default
+      ##
+      def retrieve(id:)
+        list(params: { 'id:in' => id })
+      end
+
+      ##
+      # Available params for 'create'
+      # https://developer.bigcommerce.com/api-reference/726d081517f41-create-pages
+      ##
+      def bulk_create(params:)
+        url = RESOURCE_URL
+
+        case params
+        when Array
+          Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: params),
+                                                  object_type: Bigcommerce::V3::Customer)
+        when Hash
+          Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: [params]),
+                                                  object_type: Bigcommerce::V3::Customer)
+        else
+          raise Error::InvalidArguments, params_error(param: params, type: 'Hash or Array')
+        end
+      end
+
+      ##
+      # Convenience method to pass a single hash instead of an array of hashes
+      # since the create endpoint supports bulk by default
+      ##
       def create(params:)
-        raise Error::ParamError, "Params must be of type Hash, #{params.class} provided." unless params.is_a?(Hash)
+        raise Error::ParamError, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
         bulk_create(params: [params])
       end
 
-      def bulk_create(params:)
-        raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
-
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: params),
-                                                object_type: Bigcommerce::V3::Page)
-      end
-
-      def retrieve(page_id:)
-        raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
-
-        params = { 'id:in' => page_id }
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url,
-                                                                      params: params),
-                                                object_type: Bigcommerce::V3::Page)
-      end
-
-      def update(page_id:, params:)
-        raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
-        raise Error::ParamError, "Params must be of type Hash, #{params.class} provided." unless params.is_a?(Hash)
-
-        params['id'] = page_id
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: [params]),
-                                                object_type: Bigcommerce::V3::Page)
-      end
-
+      ##
+      # Available params for 'update'
+      # https://developer.bigcommerce.com/api-reference/649c64eea69de-update-pages
+      ##
       def bulk_update(params:)
-        raise Error::ParamError, "Params must be of type Array, #{params.class} provided." unless params.is_a?(Array)
+        raise Error::ParamError, params_error(param: params, type: 'Array') unless params.is_a?(Array)
 
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
                                                 object_type: Bigcommerce::V3::Page)
       end
 
-      def delete(page_id:)
-        raise Error::ParamError, "Page_id must be an Integer, #{page_id.class} provided." unless page_id.is_a?(Integer)
+      ##
+      # Convenience method to pass a single id and params
+      # since the update endpoint supports bulk by default
+      ##
+      def update(id:, params:)
+        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+        raise Error::InvalidArguments, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
-        url = RESOURCE_URL
-        params = { 'id:in' => page_id }
-        Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
-                                                object_type: Bigcommerce::V3::Page)
+        params[:id] = id
+        bulk_update(params: [params])
       end
 
       ##
       # Available query parameters for 'bulk_delete'
       # https://developer.bigcommerce.com/api-reference/d74089ee212a2-delete-pages#Query-Parameters
       ##
-      def bulk_delete(page_ids:)
-        raise Error::ParamError, "Params must be of type Array, #{page_ids.class} provided." unless page_ids.is_a?(Array)
+      def bulk_delete(ids:)
+        raise Error::InvalidArguments, params_error(param: ids, type: 'Array') unless ids.is_a?(Array)
+
+        ids.map do |id|
+          raise Error::InvalidArguments, params_error(param: id, type: 'Array of Integers') unless id.is_a?(Integer)
+        end
 
         url = RESOURCE_URL
-        params = { 'id:in' => page_ids.join(',') }
+        params = { 'id:in' => ids.join(',') }
         Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
                                                 object_type: Bigcommerce::V3::Page)
+      end
+
+      ##
+      # Convenience method to pass a single id
+      # since the delete endpoint supports bulk by default
+      ##
+      def delete(id:)
+        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+
+        bulk_delete(ids: [id])
       end
     end
   end

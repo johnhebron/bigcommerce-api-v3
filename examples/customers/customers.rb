@@ -185,7 +185,7 @@ puts '# Retrieve a Customer (.retrieve)'
 puts '##################################'
 
 customer_id = created_customer_ids[0] || 1
-response = @client.customers.retrieve(customer_id: customer_id)
+response = @client.customers.retrieve(id: customer_id)
 
 if response.success?
   puts "Retrieved Customer with ID: '#{response.data.first.id}' "
@@ -211,13 +211,13 @@ updated_customer_hash = {
 }
 customer_id = created_customer_ids[0] || 1
 
-retrieve_response = @client.customers.retrieve(customer_id: customer_id)
+retrieve_response = @client.customers.retrieve(id: customer_id)
 
 if retrieve_response.success?
   puts "The Customer with ID: '#{retrieve_response.data.first.id}' has "
   puts "Name: '#{response.data.first.first_name} #{response.data.first.last_name}'"
 
-  response = @client.customers.update(customer_id: customer_id, params: updated_customer_hash)
+  response = @client.customers.update(id: customer_id, params: updated_customer_hash)
   if response.success?
     puts "The *updated* Customer with ID: '#{response.data.first.id}' has "
     puts "Name: '#{response.data.first.first_name} #{response.data.first.last_name}'"
@@ -287,7 +287,7 @@ puts '##################################'
 
 customer_id = created_customer_ids[0] || 1
 
-response = @client.customers.delete(customer_id: customer_id)
+response = @client.customers.delete(id: customer_id)
 created_customer_ids.shift
 
 if response.success?
@@ -310,7 +310,7 @@ puts '##################################'
 
 customer_ids = created_customer_ids.compact || [2, 3]
 
-response = @client.customers.bulk_delete(customer_ids: customer_ids)
+response = @client.customers.bulk_delete(ids: customer_ids)
 
 if response.success?
   puts '`response.success?` confirms successful deletion!'
