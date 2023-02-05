@@ -41,17 +41,6 @@ module Bigcommerce
       def delete_request(url:, params: {}, headers: {})
         client.conn.delete(url, params, headers)
       end
-
-      private
-
-      def build_error_message(response)
-        error_message = []
-        error_message << "[HTTP #{response.status}] Request failed."
-        error_message << "Title: #{response.body['title']}" if response.body['title']
-        error_message << "Detail: #{response.body['detail']}" if response.body['detail']
-        error_message << "Errors: #{response.body['errors'].flatten.join(' ')}" if response.body['errors']
-        error_message.join(' ')
-      end
     end
   end
 end
