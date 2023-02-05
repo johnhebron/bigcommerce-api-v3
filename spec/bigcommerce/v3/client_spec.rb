@@ -50,9 +50,21 @@ describe 'Bigcommerce::V3::Client' do
     end
   end
 
-  describe '.conn' do
+  describe '.conn attribute' do
     it 'returns a Faraday::Connection object' do
       expect(client.conn).to be_a(Faraday::Connection)
+    end
+  end
+
+  describe '.customers Resource' do
+    it 'returns a CustomersResource' do
+      expect(client.customers).to be_a(Bigcommerce::V3::CustomersResource)
+    end
+  end
+
+  describe '.pages Resource' do
+    it 'returns a PagesResource' do
+      expect(client.pages).to be_a(Bigcommerce::V3::PagesResource)
     end
   end
 end
