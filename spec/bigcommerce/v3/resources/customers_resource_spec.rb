@@ -174,7 +174,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#retrieve' do
-    let(:response) { customers_resource.retrieve(customer_id: customer_id) }
+    let(:response) { customers_resource.retrieve(id: customer_id) }
 
     context 'when retrieving a valid customer_id' do
       let(:fixture) { 'resources/customers/retrieve_customers_url200' }
@@ -666,7 +666,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#update' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
-    let(:response) { customers_resource.update(customer_id: customer_id, params: params) }
+    let(:response) { customers_resource.update(id: customer_id, params: params) }
     let(:updated_customer) do
       {
         id: response.data.first.id,
@@ -729,7 +729,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#bulk_delete' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
-    let(:response) { customers_resource.bulk_delete(customer_ids: params) }
+    let(:response) { customers_resource.bulk_delete(ids: params) }
     let(:fixture) { '' } # successful response body is empty for DELETE request
 
     context 'when passing a valid customer_ids Array' do
@@ -836,7 +836,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#delete' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
-    let(:response) { customers_resource.delete(customer_id: customer_id) }
+    let(:response) { customers_resource.delete(id: customer_id) }
     let(:customer_id) { 42 }
     let(:fixture) { '' }
 

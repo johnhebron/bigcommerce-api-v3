@@ -25,12 +25,18 @@ module Bigcommerce
                                                 object_type: Bigcommerce::V3::Customer)
       end
 
-      # Convenience method to pass a single customer_id
+      ##
+      # Convenience method to pass a single customer id
       # since the list endpoint supports bulk by default
-      def retrieve(customer_id:)
-        list(params: { 'id:in' => customer_id })
+      ##
+      def retrieve(id:)
+        list(params: { 'id:in' => id })
       end
 
+      ##
+      # Available params for 'create'
+      # https://developer.bigcommerce.com/api-reference/1cea64e1d698e-create-customers
+      ##
       def bulk_create(params:)
         url = RESOURCE_URL
 
@@ -42,70 +48,69 @@ module Bigcommerce
           Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: [params]),
                                                   object_type: Bigcommerce::V3::Customer)
         else
-          raise Error::InvalidArguments, "Parms must be an Hash or an Array of Hashes, #{params.class} provided."
+          raise Error::InvalidArguments, params_error(param: params, type: 'Hash or Array')
         end
       end
 
+      ##
       # Convenience method to pass a single hash instead of an array of hashes
       # since the create endpoint supports bulk by default
+      ##
       def create(params:)
+        raise Error::ParamError, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
+
         bulk_create(params: [params])
       end
 
+      ##
+      # Available params for 'update'
+      # https://developer.bigcommerce.com/api-reference/595425896c3ec-update-customers
+      ##
       def bulk_update(params:)
+        raise Error::ParamError, params_error(param: params, type: 'Array') unless params.is_a?(Array)
+
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
                                                 object_type: Bigcommerce::V3::Customer)
       end
 
-      # Convenience method to pass a single customer_id and params
+      ##
+      # Convenience method to pass a single id and params
       # since the update endpoint supports bulk by default
-      def update(customer_id:, params:)
-        unless customer_id.is_a?(Integer)
-          raise Error::InvalidArguments,
-                "customer_id must be an integer, #{customer_id.class} provided."
-        end
-        unless params.is_a?(Hash)
-          raise Error::InvalidArguments,
-                "params must be a Hash, #{params.class} provided."
-        end
+      ##
+      def update(id:, params:)
+        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+        raise Error::InvalidArguments, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
-        params[:id] = customer_id
+        params[:id] = id
         bulk_update(params: [params])
       end
 
       ##
-      # Available query parameters for 'delete'
+      # Available query parameters for 'bulk_delete'
       # https://developer.bigcommerce.com/api-reference/e6bb04315e2a7-delete-customers#Query-Parameters
       ##
-      def bulk_delete(customer_ids:)
-        unless customer_ids.is_a?(Array)
-          raise Error::InvalidArguments,
-                "customer_ids must be of type Array, #{customer_ids.class} provided."
-        end
+      def bulk_delete(ids:)
+        raise Error::InvalidArguments, params_error(param: ids, type: 'Array') unless ids.is_a?(Array)
 
-        customer_ids.map do |id|
-          unless id.is_a?(Integer)
-            raise Error::InvalidArguments,
-                  "customer_ids Array must contain only Integers, #{id.class} provided."
-          end
+        ids.map do |id|
+          raise Error::InvalidArguments, params_error(param: id, type: 'Array of Integers') unless id.is_a?(Integer)
         end
 
         url = RESOURCE_URL
-        params = { 'id:in' => customer_ids.join(',') }
+        params = { 'id:in' => ids.join(',') }
         Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
                                                 object_type: Bigcommerce::V3::Customer)
       end
 
-      # Convenience method to pass a single customer id
+      ##
+      # Convenience method to pass a single id
       # since the delete endpoint supports bulk by default
-      def delete(customer_id:)
-        unless customer_id.is_a?(Integer)
-          raise Error::InvalidArguments,
-                "customer_id must be of type Integer, #{customer_id.class} provided."
-        end
+      ##
+      def delete(id:)
+        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
 
-        bulk_delete(customer_ids: [customer_id])
+        bulk_delete(ids: [id])
       end
     end
   end

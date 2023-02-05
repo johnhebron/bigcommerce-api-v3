@@ -175,7 +175,7 @@ puts '##################################'
 
 page_id = created_page_ids[0] || 1
 
-response = @client.pages.retrieve(page_id: page_id)
+response = @client.pages.retrieve(id: page_id)
 if response.success?
   puts "Retrieved Page with ID: '#{response.data.first.id}' and Name: '#{response.data.first.name}'"
 else
@@ -198,12 +198,12 @@ updated_page_hash = {
 }
 page_id = created_page_ids[0] || 1
 
-retrieve_response = @client.pages.retrieve(page_id: page_id)
+retrieve_response = @client.pages.retrieve(id: page_id)
 
 if retrieve_response.success?
   puts "The Page with ID: '#{retrieve_response.data.first.id}' has Name: '#{retrieve_response.data.first.name}'"
 
-  response = @client.pages.update(page_id: page_id, params: updated_page_hash)
+  response = @client.pages.update(id: page_id, params: updated_page_hash)
   if response.success?
     puts "The *updated* Page with ID: '#{response.data.first.id}' now has Name: '#{response.data.first.name}'"
   else
@@ -268,7 +268,7 @@ puts '##################################'
 
 page_id = created_page_ids[0] || 1
 
-response = @client.pages.delete(page_id: page_id)
+response = @client.pages.delete(id: page_id)
 created_page_ids.shift
 
 if response.success?
@@ -291,7 +291,7 @@ puts '##################################'
 
 page_ids = created_page_ids.compact || [2, 3]
 
-response = @client.pages.bulk_delete(page_ids: page_ids)
+response = @client.pages.bulk_delete(ids: page_ids)
 
 if response.success?
   puts '`response.success?` confirms successful deletion!'
