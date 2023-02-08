@@ -24,10 +24,14 @@ module Bigcommerce
     autoload :Response, 'bigcommerce/v3/response'
 
     # V3 API Objects
+    autoload :AbandonedCartEmail, 'bigcommerce/v3/objects/abandoned_cart_email'
+    autoload :AbandonedCartEmailSettings, 'bigcommerce/v3/objects/abandoned_cart_email_settings'
     autoload :Customer, 'bigcommerce/v3/objects/customer'
     autoload :Page, 'bigcommerce/v3/objects/page'
 
     # Resources
+    autoload :AbandonedCartEmailsResource, 'bigcommerce/v3/resources/abandoned_cart_emails'
+    autoload :AbandonedCartEmailSettingsResource, 'bigcommerce/v3/resources/abandoned_cart_email_settings'
     autoload :CustomersResource, 'bigcommerce/v3/resources/customers'
     autoload :PagesResource, 'bigcommerce/v3/resources/pages'
   end

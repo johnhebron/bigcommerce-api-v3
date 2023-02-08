@@ -19,6 +19,14 @@ module Bigcommerce
         @conn = create_connection
       end
 
+      def abandoned_cart_emails
+        AbandonedCartEmailsResource.new(client: self)
+      end
+
+      def abandoned_cart_email_settings
+        AbandonedCartEmailSettingsResource.new(client: self)
+      end
+
       def customers
         CustomersResource.new(client: self)
       end
