@@ -27,9 +27,11 @@ module Bigcommerce
       ##
       # Update Resource
       ##
-      def update(params:)
+      def update(id:, params:)
+        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
         raise Error::InvalidArguments, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
+        params[:channel_id] = id
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
                                                 object_type: Bigcommerce::V3::AbandonedCartEmailSettings)

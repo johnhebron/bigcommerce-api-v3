@@ -62,6 +62,12 @@ describe 'Bigcommerce::V3::Client' do
     end
   end
 
+  describe '.abandoned_cart_email_settings Resource' do
+    it 'returns an AbandonedCartEmailSettingsResource' do
+      expect(client.abandoned_cart_email_settings).to be_a(Bigcommerce::V3::AbandonedCartEmailSettingsResource)
+    end
+  end
+
   describe '.customers Resource' do
     it 'returns a CustomersResource' do
       expect(client.customers).to be_a(Bigcommerce::V3::CustomersResource)
