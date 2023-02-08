@@ -189,19 +189,22 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
       let(:stringified_params) do
         '{"is_active":false,"coupon_code":"","notify_at_minutes":240,"template":{"subject":"Complete your purchase at {{ store.name }}","body":"Complete your purchase.","translations":[{"locale":"en","keys":{"hello_phrase":"Welcome"}}]}}'
       end
+      let(:first_returned_record) do
+        response.data.first
+      end
       let(:created_record) do
         {
-          is_active: response.body.dig('data', 'is_active'),
-          coupon_code: response.body.dig('data', 'coupon_code'),
-          notify_at_minutes: response.body.dig('data', 'notify_at_minutes'),
+          is_active: first_returned_record.is_active,
+          coupon_code: first_returned_record.coupon_code,
+          notify_at_minutes: first_returned_record.notify_at_minutes,
           template: {
-            subject: response.body.dig('data', 'template', 'subject'),
-            body: response.body.dig('data', 'template', 'body'),
+            subject: first_returned_record.template.subject,
+            body: first_returned_record.template.body,
             translations: [
               {
-                locale: response.body.dig('data', 'template', 'translations')[0]['locale'],
+                locale: first_returned_record.template.translations.first.locale,
                 keys: {
-                  hello_phrase: response.body.dig('data', 'template', 'translations')[0].dig('keys', 'hello_phrase')
+                  hello_phrase: first_returned_record.template.translations.first.keys.hello_phrase
                 }
               }
             ]
@@ -234,68 +237,84 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     end
   end
 
-  # describe '#update' do
-  #   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
-  #   let(:response) { customers_resource.update(id: customer_id, params: params) }
-  #   let(:updated_customer) do
-  #     {
-  #       id: response.data.first.id,
-  #       first_name: response.data.first.first_name
-  #     }
-  #   end
-  #
-  #   context 'when passing a valid customer_id and params Hash' do
-  #     let(:fixture) { 'resources/customers/update_customers_singular_url200' }
-  #     let(:customer_id) { 147 }
-  #     let(:params) { { first_name: 'Sal' } }
-  #     let(:stringified_params) do
-  #       '[{"first_name":"Sal","id":147}]'
-  #     end
-  #
-  #     it 'returns a Bigcommerce::V3::Response' do
-  #       expect(response).to be_a(Bigcommerce::V3::Response)
-  #     end
-  #
-  #     it 'is a success' do
-  #       expect(response).to be_success
-  #     end
-  #
-  #     it 'has a .total of nil records' do
-  #       # because the .total is pulled from the meta hash
-  #       # which is not returned on a POST request
-  #       expect(response.total).to be_nil
-  #     end
-  #
-  #     it 'stores an array with 1 returned record' do
-  #       # since .total won't be set, .data.count is your bet
-  #       expect(response.data.count).to eq(1)
-  #     end
-  #
-  #     it 'returns the correct created customer record' do
-  #       expect(updated_customer).to match(params)
-  #     end
-  #   end
-  #
-  #   context 'when passing an invalid customer_id' do
-  #     let(:customer_id) { nil }
-  #     let(:stringified_params) { {} }
-  #     let(:params) { {} }
-  #
-  #     it 'raises an error' do
-  #       expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
-  #     end
-  #   end
-  #
-  #   context 'when passing invalid params' do
-  #     let(:params) { 123 }
-  #     let(:customer_id) { 147 }
-  #     let(:stringified_params) { '[{"id":147}]' }
-  #
-  #     it 'raises an error' do
-  #       expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
-  #     end
-  #   end
-  # end
+  describe '#update' do
+    let(:stubs) { stub_request(path: "#{url}/#{id}", response: stubbed_response, verb: :put, body: stringified_params) }
+    let(:response) { resource.update(id: id, params: params) }
+
+    context 'when passing a valid id and params Hash' do
+      let(:fixture) { 'resources/abandoned_cart_emails/update_abandoned_cart_email_url200' }
+      let(:id) { 147 }
+      let(:params) do
+        {
+          is_active: false,
+          coupon_code: '',
+          notify_at_minutes: 240,
+          template: {
+            subject: 'WooHoo! New Subject~',
+            body: 'With a whole new body and {{hello_phrase}}',
+            translations: [
+              {
+                locale: 'en',
+                keys: {
+                  hello_phrase: 'boom!'
+                }
+              }
+            ]
+          }
+        }
+      end
+      let(:stringified_params) do
+        '{"is_active":false,"coupon_code":"","notify_at_minutes":240,"template":{"subject":"WooHoo! New Subject~","body":"With a whole new body and {{hello_phrase}}","translations":[{"locale":"en","keys":{"hello_phrase":"boom!"}}]}}'
+      end
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'is a success' do
+        expect(response).to be_success
+      end
+
+      it 'has a .total of nil records' do
+        # because the .total is pulled from the meta hash
+        # which is not returned on a POST request
+        expect(response.total).to be_nil
+      end
+
+      it 'stores an array with 1 returned record' do
+        # since .total won't be set, .data.count is your bet
+        expect(response.data.count).to eq(1)
+      end
+
+      it 'returns the correct created record id' do
+        expect(response.data.first.id).to match(id)
+      end
+
+      it 'returns the correct updated record field' do
+        expect(response.data.first.template.subject).to match(params[:template][:subject])
+      end
+    end
+
+    context 'when passing an invalid id' do
+      let(:id) { nil }
+      let(:stringified_params) { {} }
+      let(:params) { {} }
+
+      it 'raises an error' do
+        expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      end
+    end
+
+    context 'when passing invalid params' do
+      let(:params) { 123 }
+      let(:id) { 147 }
+      let(:stringified_params) { '[{"id":147}]' }
+
+      it 'raises an error' do
+        expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      end
+    end
+  end
 
   # describe '#delete' do
   #   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
