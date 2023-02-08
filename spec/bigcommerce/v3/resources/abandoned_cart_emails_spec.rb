@@ -316,41 +316,42 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     end
   end
 
-  # describe '#delete' do
-  #   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
-  #   let(:response) { customers_resource.delete(id: customer_id) }
-  #   let(:customer_id) { 42 }
-  #   let(:fixture) { '' }
-  #
-  #   context 'when passing a valid customer_id' do
-  #     let(:fixture) { '' }
-  #
-  #     it 'returns a Bigcommerce::V3::Response' do
-  #       expect(response).to be_a(Bigcommerce::V3::Response)
-  #     end
-  #
-  #     it 'is a success' do
-  #       expect(response).to be_success
-  #     end
-  #
-  #     it 'has a .total of nil records' do
-  #       # because the .total is pulled from the meta hash
-  #       # which is not returned on a POST request
-  #       expect(response.total).to be_nil
-  #     end
-  #
-  #     it 'has a nil .data' do
-  #       # since .total won't be set, .data.count is your bet
-  #       expect(response.data).to be_nil
-  #     end
-  #   end
-  #
-  #   context 'when passing an invalid customer_id' do
-  #     let(:customer_id) { nil }
-  #
-  #     it 'raises an error' do
-  #       expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
-  #     end
-  #   end
-  # end
+  describe '#delete' do
+    let(:stubs) { stub_request(path: "#{url}/#{id}", response: stubbed_response, verb: :delete) }
+    let(:response) { resource.delete(id: id) }
+    let(:id) { 42 }
+    let(:fixture) { '' }
+    let(:status) { 204 }
+
+    context 'when passing a valid customer_id' do
+      let(:fixture) { '' }
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'is a success' do
+        expect(response).to be_success
+      end
+
+      it 'has a .total of nil records' do
+        # because the .total is pulled from the meta hash
+        # which is not returned on a POST request
+        expect(response.total).to be_nil
+      end
+
+      it 'has a nil .data' do
+        # since .total won't be set, .data.count is your bet
+        expect(response.data).to be_nil
+      end
+    end
+
+    context 'when passing an invalid id' do
+      let(:id) { nil }
+
+      it 'raises an error' do
+        expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      end
+    end
+  end
 end
