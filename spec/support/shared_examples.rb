@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+###########################
+# Resource Shared Examples
+###########################
+
 RSpec.shared_examples 'an instantiable Resource' do
   it 'is of the correct type' do
     expect(resource).to be_a(class_name)
