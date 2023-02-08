@@ -161,55 +161,79 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     end
   end
 
-  # describe '#create' do
-  #   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
-  #   let(:response) { customers_resource.create(params: params) }
-  #
-  #   context 'when passing a valid params Hash' do
-  #     let(:fixture) { 'resources/customers/create_customers_singular_url200' }
-  #     let(:params) do
-  #       {
-  #         first_name: 'Sally',
-  #         last_name: 'Smithers',
-  #         email: 'sally@smithers.org'
-  #       }
-  #     end
-  #     let(:stringified_params) do
-  #       '[{"first_name":"Sally","last_name":"Smithers","email":"sally@smithers.org"}]'
-  #     end
-  #     let(:created_customer) do
-  #       {
-  #         first_name: response.data.first.first_name,
-  #         last_name: response.data.first.last_name,
-  #         email: response.data.first.email
-  #       }
-  #     end
-  #
-  #     it 'returns a Bigcommerce::V3::Response' do
-  #       expect(response).to be_a(Bigcommerce::V3::Response)
-  #     end
-  #
-  #     it 'is a success' do
-  #       expect(response).to be_success
-  #     end
-  #
-  #     it 'has a .total of nil records' do
-  #       # because the .total is pulled from the meta hash
-  #       # which is not returned on a POST request
-  #       expect(response.total).to be_nil
-  #     end
-  #
-  #     it 'stores an array with 1 returned record' do
-  #       # since .total won't be set, .data.count is your bet
-  #       expect(response.data.count).to eq(1)
-  #     end
-  #
-  #     it 'returns the correct created customer record' do
-  #       expect(created_customer).to match(params)
-  #     end
-  #   end
-  # end
-  #
+  describe '#create' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
+    let(:response) { resource.create(params: params) }
+
+    context 'when passing a valid params Hash' do
+      let(:fixture) { 'resources/abandoned_cart_emails/create_abandoned_cart_email_url200' }
+      let(:params) do
+        {
+          is_active: false,
+          coupon_code: '',
+          notify_at_minutes: 240,
+          template: {
+            subject: 'Complete your purchase at {{ store.name }}',
+            body: 'Complete your purchase.',
+            translations: [
+              {
+                locale: 'en',
+                keys: {
+                  hello_phrase: 'Welcome'
+                }
+              }
+            ]
+          }
+        }
+      end
+      let(:stringified_params) do
+        '{"is_active":false,"coupon_code":"","notify_at_minutes":240,"template":{"subject":"Complete your purchase at {{ store.name }}","body":"Complete your purchase.","translations":[{"locale":"en","keys":{"hello_phrase":"Welcome"}}]}}'
+      end
+      let(:created_record) do
+        {
+          is_active: response.body.dig('data', 'is_active'),
+          coupon_code: response.body.dig('data', 'coupon_code'),
+          notify_at_minutes: response.body.dig('data', 'notify_at_minutes'),
+          template: {
+            subject: response.body.dig('data', 'template', 'subject'),
+            body: response.body.dig('data', 'template', 'body'),
+            translations: [
+              {
+                locale: response.body.dig('data', 'template', 'translations')[0]['locale'],
+                keys: {
+                  hello_phrase: response.body.dig('data', 'template', 'translations')[0].dig('keys', 'hello_phrase')
+                }
+              }
+            ]
+          }
+        }
+      end
+
+      it 'returns a Bigcommerce::V3::Response' do
+        expect(response).to be_a(Bigcommerce::V3::Response)
+      end
+
+      it 'is a success' do
+        expect(response).to be_success
+      end
+
+      it 'has a .total of nil records' do
+        # because the .total is pulled from the meta hash
+        # which is not returned on a POST request
+        expect(response.total).to be_nil
+      end
+
+      it 'stores an array with 1 returned record' do
+        # since .total won't be set, .data.count is your bet
+        expect(response.data.count).to eq(1)
+      end
+
+      it 'returns the correct created record' do
+        expect(created_record).to eq(params)
+      end
+    end
+  end
+
   # describe '#update' do
   #   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
   #   let(:response) { customers_resource.update(id: customer_id, params: params) }
@@ -272,7 +296,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
   #     end
   #   end
   # end
-  #
+
   # describe '#delete' do
   #   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
   #   let(:response) { customers_resource.delete(id: customer_id) }

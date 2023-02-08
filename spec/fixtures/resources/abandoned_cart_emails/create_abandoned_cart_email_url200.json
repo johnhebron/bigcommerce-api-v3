@@ -1,0 +1,22 @@
+{
+  "data": {
+    "id": 5,
+    "is_active": false,
+    "sent_num": 0,
+    "coupon_code": "",
+    "notify_at_minutes": 240,
+    "template": {
+      "subject": "Complete your purchase at {{ store.name }}",
+      "body": "Complete your purchase.",
+      "translations": [
+        {
+          "locale": "en",
+          "keys": {
+            "hello_phrase": "Welcome"
+          }
+        }
+      ]
+    }
+  },
+  "meta": {}
+}
