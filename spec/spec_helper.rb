@@ -2,6 +2,8 @@
 
 require 'simplecov'
 require 'support/helpers'
+require 'support/shared_contexts'
+# require 'support/shared_examples'
 require 'rspec'
 require 'securerandom'
 require 'bigcommerce/v3'
