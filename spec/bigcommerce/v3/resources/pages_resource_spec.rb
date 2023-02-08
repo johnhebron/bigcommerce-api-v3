@@ -7,21 +7,12 @@ describe 'Bigcommerce::V3::PagesResource' do
 
   include_context 'when connected to API'
 
+  let(:class_name) { Bigcommerce::V3::PagesResource }
   let(:resource_url) { 'content/pages' }
   let(:fixture) { 'resources/pages/get_pages_url200' }
 
   describe '#initialize' do
-    it 'is of type Bigcommerce::V3::PagesResource' do
-      expect(resource).to be_a(Bigcommerce::V3::PagesResource)
-    end
-
-    it 'contains a Bigcommerce::V3::Client' do
-      expect(resource.client).to be_a(Bigcommerce::V3::Client)
-    end
-
-    it 'has a RESOURCE_URL' do
-      expect(Bigcommerce::V3::PagesResource::RESOURCE_URL).to eq(resource_url)
-    end
+    it_behaves_like 'an instantiable Resource'
   end
 
   describe '.list' do

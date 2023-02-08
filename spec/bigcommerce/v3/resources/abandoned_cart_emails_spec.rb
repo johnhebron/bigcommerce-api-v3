@@ -7,21 +7,12 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
 
   include_context 'when connected to API'
 
+  let(:class_name) { Bigcommerce::V3::AbandonedCartEmailsResource }
   let(:resource_url) { 'marketing/abandoned-cart-emails' }
   let(:fixture) { 'resources/abandoned_cart_emails/get_abandoned_cart_emails_url200' }
 
   describe '#initialize' do
-    it 'is of type Bigcommerce::V3::CustomersResource' do
-      expect(resource).to be_a(Bigcommerce::V3::AbandonedCartEmailsResource)
-    end
-
-    it 'contains a Bigcommerce::V3::Client' do
-      expect(resource.client).to be_a(Bigcommerce::V3::Client)
-    end
-
-    it 'has a RESOURCE_URL' do
-      expect(Bigcommerce::V3::AbandonedCartEmailsResource::RESOURCE_URL).to eq(resource_url)
-    end
+    it_behaves_like 'an instantiable Resource'
   end
 
   describe '#list' do

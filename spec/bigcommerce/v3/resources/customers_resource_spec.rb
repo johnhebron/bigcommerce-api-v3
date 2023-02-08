@@ -3,30 +3,21 @@
 require './spec/spec_helper'
 
 describe 'Bigcommerce::V3::CustomersResource' do
-  subject(:customers_resource) { Bigcommerce::V3::CustomersResource.new(client: client) }
+  subject(:resource) { Bigcommerce::V3::CustomersResource.new(client: client) }
 
   include_context 'when connected to API'
 
+  let(:class_name) { Bigcommerce::V3::CustomersResource }
   let(:resource_url) { 'customers' }
   let(:fixture) { 'resources/customers/get_customers_url200' }
 
   describe '#initialize' do
-    it 'is of type Bigcommerce::V3::CustomersResource' do
-      expect(customers_resource).to be_a(Bigcommerce::V3::CustomersResource)
-    end
-
-    it 'contains a Bigcommerce::V3::Client' do
-      expect(customers_resource.client).to be_a(Bigcommerce::V3::Client)
-    end
-
-    it 'has a RESOURCE_URL' do
-      expect(Bigcommerce::V3::CustomersResource::RESOURCE_URL).to eq(resource_url)
-    end
+    it_behaves_like 'an instantiable Resource'
   end
 
   describe '#list' do
     context 'when called with no params' do
-      let(:response) { customers_resource.list }
+      let(:response) { resource.list }
 
       context 'with available records to return' do
         let(:fixture) { 'resources/customers/get_customers_url200' }
@@ -51,17 +42,17 @@ describe 'Bigcommerce::V3::CustomersResource' do
         let(:fixture) { 'resources/customers/get_customers_url_no_records200' }
 
         it 'returns a Bigcommerce::V3::Response' do
-          expect(customers_resource.list).to be_a(Bigcommerce::V3::Response)
+          expect(resource.list).to be_a(Bigcommerce::V3::Response)
         end
 
         it 'stores an array with no records' do
-          expect(customers_resource.list.data.count).to eq(0)
+          expect(resource.list.data.count).to eq(0)
         end
       end
     end
 
     context 'when called with params hash' do
-      let(:response) { customers_resource.list(params: params) }
+      let(:response) { resource.list(params: params) }
       let(:per_page) { 2 }
       let(:current_page) { 2 }
       let(:params) do
@@ -149,7 +140,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#retrieve' do
-    let(:response) { customers_resource.retrieve(id: customer_id) }
+    let(:response) { resource.retrieve(id: customer_id) }
 
     context 'when retrieving a valid customer_id' do
       let(:fixture) { 'resources/customers/retrieve_customers_url200' }
@@ -233,7 +224,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#bulk_create' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
-    let(:response) { customers_resource.bulk_create(params: params) }
+    let(:response) { resource.bulk_create(params: params) }
     let(:created_customers) do
       response&.data&.map do |customer|
         {
@@ -402,7 +393,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#create' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
-    let(:response) { customers_resource.create(params: params) }
+    let(:response) { resource.create(params: params) }
 
     context 'when passing a valid params Hash' do
       let(:fixture) { 'resources/customers/create_customers_singular_url200' }
@@ -451,7 +442,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#bulk_update' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
-    let(:response) { customers_resource.bulk_update(params: params) }
+    let(:response) { resource.bulk_update(params: params) }
     let(:updated_customers) do
       response&.data&.map do |customer|
         {
@@ -641,7 +632,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#update' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
-    let(:response) { customers_resource.update(id: customer_id, params: params) }
+    let(:response) { resource.update(id: customer_id, params: params) }
     let(:updated_customer) do
       {
         id: response.data.first.id,
@@ -704,7 +695,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#bulk_delete' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
-    let(:response) { customers_resource.bulk_delete(ids: params) }
+    let(:response) { resource.bulk_delete(ids: params) }
     let(:fixture) { '' } # successful response body is empty for DELETE request
 
     context 'when passing a valid customer_ids Array' do
@@ -811,7 +802,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
 
   describe '#delete' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
-    let(:response) { customers_resource.delete(id: customer_id) }
+    let(:response) { resource.delete(id: customer_id) }
     let(:customer_id) { 42 }
     let(:fixture) { '' }
 
