@@ -354,4 +354,25 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
       end
     end
   end
+
+  describe '#default' do
+    let(:stubs) { stub_request(path: "#{url}/default", response: stubbed_response) }
+    let(:response) { resource.default }
+    let(:fixture) { 'resources/abandoned_cart_emails/get_abandoned_cart_emails_url200' }
+
+    it 'returns a Bigcommerce::V3::Response' do
+      expect(response).to be_a(Bigcommerce::V3::Response)
+    end
+
+    it 'stores an array of returned records' do
+      expect(response.data.count).to be > 0
+    end
+
+    it 'stores an array of Bigcommerce::V3::AbandonedCartEmail records' do
+      data = response.data
+      data.map do |record|
+        expect(record).to be_a(Bigcommerce::V3::AbandonedCartEmail)
+      end
+    end
+  end
 end

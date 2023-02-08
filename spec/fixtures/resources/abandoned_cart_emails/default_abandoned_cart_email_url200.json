@@ -1,0 +1,15 @@
+{
+  "data": {
+    "subject": "Default {{{ lang 'subject' store=store.name }}}",
+    "body": "Default Body of the message",
+    "translations": [
+      {
+        "locale": "en",
+        "keys": {
+          "subject": "Complete your purchase at {store}..."
+        }
+      }
+    ]
+  },
+  "meta": {}
+}
