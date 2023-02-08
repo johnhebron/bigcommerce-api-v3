@@ -9,7 +9,9 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
 
   let(:class_name) { Bigcommerce::V3::AbandonedCartEmailSettingsResource }
   let(:resource_url) { 'marketing/abandoned-cart-emails/settings' }
-  let(:fixture) { 'resources/abandoned_cart_email_settings/retrieve_abandoned_cart_email_settings_url200' }
+  let(:fixture_base) { 'resources' }
+  let(:fixture_file) { 'retrieve_abandoned_cart_email_settings_url200' }
+  let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
     it_behaves_like 'an instantiable Resource'
@@ -39,7 +41,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
     end
 
     context 'when retrieving a non-existent id' do
-      let(:fixture) { 'resources/abandoned_cart_email_settings/retrieve_abandoned_cart_email_settings_url422' }
+      let(:fixture_file) { 'retrieve_abandoned_cart_email_settings_url422' }
       let(:id) { 0 }
       let(:status) { 422 }
       let(:title) { 'Unsupported channel ID' }
@@ -79,7 +81,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
     let(:response) { resource.update(id: id, params: params) }
 
     context 'when passing a valid id and params Hash' do
-      let(:fixture) { 'resources/abandoned_cart_email_settings/update_abandoned_cart_email_settings_url200' }
+      let(:fixture_file) { 'update_abandoned_cart_email_settings_url200' }
       let(:id) { 1 }
       let(:params) { { use_global: true } }
       let(:stringified_params) { '{"use_global":true,"channel_id":1}' }

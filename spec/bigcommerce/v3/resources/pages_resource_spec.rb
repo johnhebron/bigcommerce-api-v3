@@ -9,7 +9,9 @@ describe 'Bigcommerce::V3::PagesResource' do
 
   let(:class_name) { Bigcommerce::V3::PagesResource }
   let(:resource_url) { 'content/pages' }
-  let(:fixture) { 'resources/pages/get_pages_url200' }
+  let(:fixture_base) { 'resources' }
+  let(:fixture_file) { 'get_pages_url200' }
+  let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
     it_behaves_like 'an instantiable Resource'
@@ -18,7 +20,7 @@ describe 'Bigcommerce::V3::PagesResource' do
   describe '.list' do
     context 'when called with no params' do
       context 'with available records to return' do
-        let(:fixture) { 'resources/pages/get_pages_url200' }
+        let(:fixture_file) { 'get_pages_url200' }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(resource.list).to be_a(Bigcommerce::V3::Response)
