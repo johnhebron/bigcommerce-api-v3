@@ -5,48 +5,16 @@ require './spec/spec_helper'
 describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
   subject(:resource) { Bigcommerce::V3::AbandonedCartEmailSettingsResource.new(client: client) }
 
-  # Store Data for Client and URL
-  let(:store_hash) { SecureRandom.alphanumeric(7) }
-  let(:access_token) { SecureRandom.alphanumeric(31) }
+  include_context 'when connected to API'
 
-  # URL, Body (optional), Fixture, and HTTP Status code for stubs
-  let(:base_url) { "/stores/#{store_hash}/v3/" }
+  let(:class_name) { Bigcommerce::V3::AbandonedCartEmailSettingsResource }
   let(:resource_url) { 'marketing/abandoned-cart-emails/settings' }
-  let(:url) { base_url + resource_url }
-  let(:body) { '{}' }
-  let(:fixture) { 'resources/abandoned_cart_email_settings/retrieve_abandoned_cart_email_settings_url200' }
-  let(:status) { 200 }
-
-  # Stubbed response and request
-  let(:stubbed_response) { stub_response(fixture: fixture, status: status) }
-  let(:stubs) { stub_request(path: url, response: stubbed_response) }
-
-  # Creating Configuration object with Store data, test adapter, and stubs
-  let(:config) do
-    Bigcommerce::V3::Configuration.new(store_hash: store_hash,
-                                       access_token: access_token,
-                                       adapter: :test,
-                                       stubs: stubs)
-  end
-  let(:client) { Bigcommerce::V3::Client.new(config: config) }
-
-  # Default error values
-  let(:title) { '' }
-  let(:errors) { {} }
-  let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
+  let(:fixture_base) { 'resources' }
+  let(:fixture_file) { 'retrieve_abandoned_cart_email_settings_url200' }
+  let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
-    it 'is of type Bigcommerce::V3::AbandonedCartEmailSettings' do
-      expect(resource).to be_a(Bigcommerce::V3::AbandonedCartEmailSettingsResource)
-    end
-
-    it 'contains a Bigcommerce::V3::Client' do
-      expect(resource.client).to be_a(Bigcommerce::V3::Client)
-    end
-
-    it 'has a RESOURCE_URL' do
-      expect(Bigcommerce::V3::AbandonedCartEmailSettingsResource::RESOURCE_URL).to eq(resource_url)
-    end
+    it_behaves_like 'an instantiable Resource'
   end
 
   describe '#retrieve' do
@@ -73,7 +41,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
     end
 
     context 'when retrieving a non-existent id' do
-      let(:fixture) { 'resources/abandoned_cart_email_settings/retrieve_abandoned_cart_email_settings_url422' }
+      let(:fixture_file) { 'retrieve_abandoned_cart_email_settings_url422' }
       let(:id) { 0 }
       let(:status) { 422 }
       let(:title) { 'Unsupported channel ID' }
@@ -113,7 +81,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
     let(:response) { resource.update(id: id, params: params) }
 
     context 'when passing a valid id and params Hash' do
-      let(:fixture) { 'resources/abandoned_cart_email_settings/update_abandoned_cart_email_settings_url200' }
+      let(:fixture_file) { 'update_abandoned_cart_email_settings_url200' }
       let(:id) { 1 }
       let(:params) { { use_global: true } }
       let(:stringified_params) { '{"use_global":true,"channel_id":1}' }
