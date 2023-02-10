@@ -750,14 +750,15 @@
   ],
   "meta": {
     "pagination": {
-      "total": 208,
-      "count": 208,
-      "per_page": 50,
-      "current_page": 1,
-      "total_pages": 5,
+      "total": 211,
+      "count": 211,
+      "per_page": 2,
+      "current_page": 2,
+      "total_pages": 106,
       "links": {
-        "next": "?channel_id=1&limit=50&page=2",
-        "current": "?channel_id=1&limit=50&page=1"
+        "previous": "?limit=2&page=1",
+        "next": "?limit=2&page=3",
+        "current": "?limit=2&page=2"
       }
     }
   }
