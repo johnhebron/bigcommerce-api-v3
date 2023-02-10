@@ -3,7 +3,9 @@
 require './spec/spec_helper'
 
 describe 'Bigcommerce::V3::Resource' do
-  subject(:resource) { Bigcommerce::V3::Resource.new(client: client) }
+  subject(:resource) do
+    Bigcommerce::V3::Resource.new(client: client, resource_url: resource_url, object_type: Bigcommerce::V3::Object)
+  end
 
   include_context 'when connected to API'
 

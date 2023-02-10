@@ -29,6 +29,21 @@ module Bigcommerce
     autoload :Customer, 'bigcommerce/v3/objects/customer'
     autoload :Page, 'bigcommerce/v3/objects/page'
 
+    # API Action Modules
+    module APIActions
+      # Bulk First API Actions
+      module Bulk
+        autoload :BulkCreate, 'bigcommerce/v3/api_actions/bulk/bulk_create'
+        autoload :BulkDelete, 'bigcommerce/v3/api_actions/bulk/bulk_delete'
+        autoload :BulkUpdate, 'bigcommerce/v3/api_actions/bulk/bulk_update'
+        autoload :Create, 'bigcommerce/v3/api_actions/bulk/create'
+        autoload :Delete, 'bigcommerce/v3/api_actions/bulk/delete'
+        autoload :List, 'bigcommerce/v3/api_actions/bulk/list'
+        autoload :Retrieve, 'bigcommerce/v3/api_actions/bulk/retrieve'
+        autoload :Update, 'bigcommerce/v3/api_actions/bulk/update'
+      end
+    end
+
     # Resources
     autoload :AbandonedCartEmailsResource, 'bigcommerce/v3/resources/abandoned_cart_emails'
     autoload :AbandonedCartEmailSettingsResource, 'bigcommerce/v3/resources/abandoned_cart_email_settings'

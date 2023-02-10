@@ -11,6 +11,13 @@ module Bigcommerce
     ##
     class AbandonedCartEmailSettingsResource < Resource
       RESOURCE_URL = 'marketing/abandoned-cart-emails/settings'
+      OBJECT_TYPE = Bigcommerce::V3::AbandonedCartEmailSettings
+
+      def initialize(client:)
+        super(client: client,
+              resource_url: RESOURCE_URL,
+              object_type: OBJECT_TYPE)
+      end
 
       ##
       # Retrieve Resource
@@ -21,7 +28,7 @@ module Bigcommerce
         params = { channel_id: id }
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmail)
+                                                object_type: Bigcommerce::V3::AbandonedCartEmailSettings)
       end
 
       ##
