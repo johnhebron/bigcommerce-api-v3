@@ -11,10 +11,12 @@ module Bigcommerce
         page: 1
       }.freeze
 
-      attr_reader :client
+      attr_reader :client, :resource_url, :object_type
 
-      def initialize(client:)
+      def initialize(client:, resource_url:, object_type:)
         @client = client
+        @resource_url = resource_url
+        @object_type = object_type
       end
 
       def get_request(url:, params: {}, per_page: nil, page: nil, headers: {})
