@@ -11,18 +11,22 @@ describe 'Bigcommerce::V3::CustomersResource' do
   let(:resource_url) { 'customers' }
   let(:fixture_base) { 'resources' }
   let(:fixture_file) { 'get_customers_url200' }
-  let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
+  let(:fixture) { "#{fixture_base}/#{resource_url}/#{resource_action}/#{fixture_file}" }
 
   describe '#initialize' do
+    let(:fixture) { '' }
+
     it_behaves_like 'an instantiable Resource'
   end
 
   describe '#list' do
+    let(:resource_action) { 'list' }
+
     context 'when called with no params' do
       let(:response) { resource.list }
 
       context 'with available records to return' do
-        let(:fixture_file) { 'get_customers_url200' }
+        let(:fixture_file) { '200' }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(response).to be_a(Bigcommerce::V3::Response)
@@ -32,7 +36,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
           expect(response.data.count).to be > 0
         end
 
-        it 'stores an array of Bigcommerce::V3::Customer records' do
+        it 'stores an array of records' do
           data = response.data
           data.map do |record|
             expect(record).to be_a(Bigcommerce::V3::Customer)
@@ -41,7 +45,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
       end
 
       context 'with no available records to return' do
-        let(:fixture_file) { 'get_customers_url_no_records200' }
+        let(:fixture_file) { 'no_records_200' }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(resource.list).to be_a(Bigcommerce::V3::Response)
@@ -65,7 +69,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
       end
 
       context 'with available records to return' do
-        let(:fixture_file) { 'get_customers_url_with_params_2200' }
+        let(:fixture_file) { 'with_params_200' }
 
         it 'returns the appropriate :per_page' do
           expect(response.per_page).to eq(per_page.to_s)
@@ -83,7 +87,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
           expect(response.data.count).to be > 0
         end
 
-        it 'stores an array of Bigcommerce::V3::Customer records' do
+        it 'stores an array of records' do
           data = response.data
           data.map do |record|
             expect(record).to be_a(Bigcommerce::V3::Customer)
@@ -92,7 +96,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
       end
 
       context 'with no available records to return' do
-        let(:fixture_file) { 'get_customers_url_with_params_no_records200' }
+        let(:fixture_file) { 'with_params_no_records_200' }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(response).to be_a(Bigcommerce::V3::Response)
@@ -104,7 +108,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
       end
 
       context 'when passing invalid parameters' do
-        let(:fixture_file) { 'get_customers_url_error_case422' }
+        let(:fixture_file) { '422' }
         let(:status) { 422 }
         let(:params) do
           {
@@ -142,10 +146,11 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#retrieve' do
+    let(:resource_action) { 'retrieve' }
     let(:response) { resource.retrieve(id: customer_id) }
 
     context 'when retrieving a valid customer_id' do
-      let(:fixture_file) { 'retrieve_customers_url200' }
+      let(:fixture_file) { '200' }
       let(:customer_id) { 2 }
 
       it 'returns a Bigcommerce::V3::Response' do
@@ -164,13 +169,13 @@ describe 'Bigcommerce::V3::CustomersResource' do
         expect(response.data.count).to eq(1)
       end
 
-      it 'returns the correct customer_id record' do
+      it 'returns the correct record' do
         expect(response.data.first.id).to eq(customer_id)
       end
     end
 
-    context 'when retrieving a non-existant customer_id' do
-      let(:fixture_file) { 'retrieve_customers_url_no_records200' }
+    context 'when retrieving a non-existent id' do
+      let(:fixture_file) { 'no_records_200' }
       let(:customer_id) { 42 }
 
       it 'returns a Bigcommerce::V3::Response' do
@@ -191,7 +196,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
     end
 
     context 'when passing invalid parameters' do
-      let(:fixture_file) { 'retrieve_customers_url_error_case422' }
+      let(:fixture_file) { '422' }
       let(:status) { 422 }
       let(:customer_id) { 'hello' }
       let(:title) { 'Query parameter "id:in" value may contain only integer values. For input string: "hello".' }
@@ -225,6 +230,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#bulk_create' do
+    let(:resource_action) { 'bulk_create' }
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
     let(:response) { resource.bulk_create(params: params) }
     let(:created_records) do
@@ -238,9 +244,9 @@ describe 'Bigcommerce::V3::CustomersResource' do
     end
 
     context 'when passing a valid params Array' do
-      context 'when the customer records do not already exist' do
-        context 'when creating only one customer' do
-          let(:fixture_file) { 'bulk_create_customers_singular_url200' }
+      context 'when the records do not already exist' do
+        context 'when creating only one record' do
+          let(:fixture_file) { 'singular_200' }
           let(:params) do
             {
               first_name: 'Sally',
@@ -278,13 +284,13 @@ describe 'Bigcommerce::V3::CustomersResource' do
             expect(response.data.count).to eq(1)
           end
 
-          it 'returns the correct created customer record' do
+          it 'returns the correct created record' do
             expect(created_record).to match(params)
           end
         end
 
-        context 'when creating more than one customer' do
-          let(:fixture_file) { 'bulk_create_customers_url200' }
+        context 'when creating more than one record' do
+          let(:fixture_file) { '200' }
           let(:params) do
             [
               {
@@ -322,14 +328,14 @@ describe 'Bigcommerce::V3::CustomersResource' do
             expect(response.data.count).to eq(2)
           end
 
-          it 'returns the correct created customer records' do
+          it 'returns the correct created records' do
             expect(created_records).to match(params)
           end
         end
       end
 
-      context 'when the customer records already exist' do
-        let(:fixture_file) { 'bulk_create_customers_url422' }
+      context 'when the records already exist' do
+        let(:fixture_file) { '422' }
         let(:status) { 422 }
         let(:params) do
           [
@@ -394,11 +400,12 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#create' do
+    let(:resource_action) { 'create' }
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
     let(:response) { resource.create(params: params) }
 
     context 'when passing a valid params Hash' do
-      let(:fixture_file) { 'create_customers_singular_url200' }
+      let(:fixture_file) { '200' }
       let(:params) do
         {
           first_name: 'Sally',
@@ -436,13 +443,14 @@ describe 'Bigcommerce::V3::CustomersResource' do
         expect(response.data.count).to eq(1)
       end
 
-      it 'returns the correct created customer record' do
+      it 'returns the correct created record' do
         expect(created_record).to match(params)
       end
     end
   end
 
   describe '#bulk_update' do
+    let(:resource_action) { 'bulk_update' }
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
     let(:response) { resource.bulk_update(params: params) }
     let(:updated_records) do
@@ -455,9 +463,9 @@ describe 'Bigcommerce::V3::CustomersResource' do
     end
 
     context 'when passing a valid params Array' do
-      context 'when the customer records do exist' do
-        context 'when updating only one customer' do
-          let(:fixture_file) { 'bulk_update_customers_singular_url200' }
+      context 'when the records do exist' do
+        context 'when updating only one record' do
+          let(:fixture_file) { 'singular_200' }
           let(:params) do
             [
               {
@@ -489,13 +497,13 @@ describe 'Bigcommerce::V3::CustomersResource' do
             expect(response.data.count).to eq(1)
           end
 
-          it 'returns the correct updated customer record' do
+          it 'returns the correct updated record' do
             expect(updated_records).to match(params)
           end
         end
 
-        context 'when updating more than one customer' do
-          let(:fixture_file) { 'bulk_update_customers_url200' }
+        context 'when updating more than one record' do
+          let(:fixture_file) { '200' }
           let(:params) do
             [
               {
@@ -531,14 +539,14 @@ describe 'Bigcommerce::V3::CustomersResource' do
             expect(response.data.count).to eq(2)
           end
 
-          it 'returns the correct updated customer records' do
+          it 'returns the correct updated records' do
             expect(updated_records).to match(params)
           end
         end
       end
 
-      context 'when the customer records do not exist' do
-        let(:fixture_file) { 'bulk_update_customers_url422' }
+      context 'when the records do not exist' do
+        let(:fixture_file) { '422' }
         let(:status) { 422 }
         let(:params) do
           [
@@ -589,14 +597,14 @@ describe 'Bigcommerce::V3::CustomersResource' do
     end
 
     context 'when passing an invalid params Array' do
-      let(:fixture_file) { 'bulk_create_customers_url422' }
+      let(:fixture_file) { 'invalid_params_422' }
       let(:status) { 422 }
       let(:params) { [{ first_name: 'Bobby' }, { first_name: 'Nina' }] }
       let(:stringified_params) do
         '[{"first_name":"Bobby"},{"first_name":"Nina"}]'
       end
-      let(:title) { 'Create customers failed.' }
-      let(:errors) { { '.customer_create' => 'Error creating customers: email bobby.bob@bobberton.co already in use' } }
+      let(:title) { 'JSON data is missing or invalid' }
+      let(:errors) { { 'id' => 'error.path.missing' } }
 
       it 'returns a Bigcommerce::V3::Response' do
         expect(response).to be_a(Bigcommerce::V3::Response)
@@ -633,6 +641,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#update' do
+    let(:resource_action) { 'update' }
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
     let(:response) { resource.update(id: id, params: params) }
     let(:updated_record) do
@@ -642,8 +651,8 @@ describe 'Bigcommerce::V3::CustomersResource' do
       }
     end
 
-    context 'when passing a valid customer_id and params Hash' do
-      let(:fixture_file) { 'update_customers_singular_url200' }
+    context 'when passing a valid id and params Hash' do
+      let(:fixture_file) { '200' }
       let(:id) { 147 }
       let(:params) { { first_name: 'Sal' } }
       let(:stringified_params) do
@@ -669,12 +678,13 @@ describe 'Bigcommerce::V3::CustomersResource' do
         expect(response.data.count).to eq(1)
       end
 
-      it 'returns the correct created customer record' do
+      it 'returns the correct created record' do
         expect(updated_record).to match(params)
       end
     end
 
-    context 'when passing an invalid customer_id' do
+    context 'when passing an invalid id' do
+      let(:fixture) { '' }
       let(:id) { nil }
       let(:stringified_params) { {} }
       let(:params) { {} }
@@ -685,6 +695,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
     end
 
     context 'when passing invalid params' do
+      let(:fixture) { '' }
       let(:params) { 123 }
       let(:id) { 147 }
       let(:stringified_params) { '[{"id":147}]' }
@@ -696,6 +707,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#bulk_delete' do
+    let(:resource_action) { 'bulk_delete' }
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
     let(:response) { resource.bulk_delete(ids: params) }
     let(:fixture) { '' } # successful response body is empty for DELETE request
@@ -728,7 +740,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
           end
         end
 
-        context 'when deleting more than one customer' do
+        context 'when deleting more than one record' do
           let(:fixture) { '' }
           let(:params) { [147, 145] }
 
@@ -754,7 +766,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
         end
       end
 
-      context 'when the customer records do not exist' do
+      context 'when the records do not exist' do
         # For the BigCommerce API, a DELETE request for an invalid ID still
         # returns a 204 success with no body
         let(:fixture) { '' }
@@ -803,13 +815,13 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#delete' do
+    let(:resource_action) { 'delete' }
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
     let(:response) { resource.delete(id: id) }
     let(:id) { 42 }
+    let(:fixture) { '' }
 
     context 'when passing a valid customer_id' do
-      let(:fixture) { '' }
-
       it 'returns a Bigcommerce::V3::Response' do
         expect(response).to be_a(Bigcommerce::V3::Response)
       end
@@ -830,7 +842,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
       end
     end
 
-    context 'when passing an invalid customer_id' do
+    context 'when passing an invalid id' do
       let(:id) { nil }
 
       it 'raises an error' do

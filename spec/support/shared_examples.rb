@@ -17,3 +17,7 @@ RSpec.shared_examples 'an instantiable Resource' do
     expect(class_name::RESOURCE_URL).to eq(resource_url)
   end
 end
+
+RSpec.shared_examples 'a bulk .list endpoint' do
+  # @TODO
+end
