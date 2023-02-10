@@ -21,93 +21,16 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#list' do
-    let(:resource_action) { 'list' }
-
     it_behaves_like 'a bulk .list endpoint'
   end
 
   describe '#retrieve' do
-    let(:resource_action) { 'retrieve' }
-    let(:response) { resource.retrieve(id: customer_id) }
+    let(:retrieve_no_records_status) { 200 } # Outside of Example Group
+    let(:retrieve_invalid_params_status) { 422 } # Outside of Example Group
 
-    context 'when retrieving a valid customer_id' do
-      let(:fixture_file) { '200' }
-      let(:customer_id) { 2 }
+    fail_on_error = true # Outside of Example Group
 
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
-
-      it 'is a success' do
-        expect(response).to be_success
-      end
-
-      it 'has a .total of 1' do
-        expect(response.total).to eq(1.to_s)
-      end
-
-      it 'stores an array with 1 returned record' do
-        expect(response.data.count).to eq(1)
-      end
-
-      it 'returns the correct record' do
-        expect(response.data.first.id).to eq(customer_id)
-      end
-    end
-
-    context 'when retrieving a non-existent id' do
-      let(:fixture_file) { 'no_records_200' }
-      let(:customer_id) { 42 }
-
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
-
-      it 'is a success' do
-        expect(response).to be_success
-      end
-
-      it 'has a .total of 0' do
-        expect(response.total).to eq(0.to_s)
-      end
-
-      it 'stores an array with 0 returned record' do
-        expect(response.data.count).to eq(0)
-      end
-    end
-
-    context 'when passing invalid parameters' do
-      let(:fixture_file) { '422' }
-      let(:status) { 422 }
-      let(:customer_id) { 'hello' }
-      let(:title) { 'Query parameter "id:in" value may contain only integer values. For input string: "hello".' }
-      let(:errors) { {} }
-      let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
-
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
-
-      it 'is not a success' do
-        expect(response).not_to be_success
-      end
-
-      it 'has an appropriate status' do
-        expect(response.status).to eq(status)
-      end
-
-      it 'has an error title' do
-        expect(response.error.title).to eq(title)
-      end
-
-      it 'has an error type' do
-        expect(response.error.type).to eq(type)
-      end
-
-      it 'has a data payload with an errors hash' do
-        expect(response.error.errors).to eq(errors)
-      end
-    end
+    it_behaves_like 'a bulk .retrieve endpoint', fail_on_error
   end
 
   describe '#bulk_create' do

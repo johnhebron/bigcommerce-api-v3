@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples 'a bulk .list endpoint' do
+  let(:resource_action) { 'list' }
+
   context 'when called with no params' do
     let(:response) { resource.list }
 

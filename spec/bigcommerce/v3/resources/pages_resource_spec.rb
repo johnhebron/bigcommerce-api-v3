@@ -21,8 +21,15 @@ describe 'Bigcommerce::V3::PagesResource' do
   end
 
   describe '.list' do
-    let(:resource_action) { 'list' }
-
     it_behaves_like 'a bulk .list endpoint'
+  end
+
+  describe '#retrieve' do
+    let(:retrieve_no_records_status) { 200 } # Outside of Example Group
+    let(:retrieve_invalid_params_status) { 200 } # Outside of Example Group
+
+    fail_on_error = false # Outside of Example Group
+
+    it_behaves_like 'a bulk .retrieve endpoint', fail_on_error
   end
 end
