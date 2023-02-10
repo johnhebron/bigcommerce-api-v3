@@ -10,7 +10,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
   let(:class_name) { Bigcommerce::V3::CustomersResource }
   let(:resource_url) { 'customers' }
   let(:fixture_base) { 'resources' }
-  let(:fixture_file) { 'get_customers_url200' }
+  let(:fixture_file) { '200' }
   let(:fixture) { "#{fixture_base}/#{resource_url}/#{resource_action}/#{fixture_file}" }
 
   describe '#initialize' do
@@ -242,11 +242,12 @@ describe 'Bigcommerce::V3::CustomersResource' do
         }
       end
     end
+    let(:status) { 201 }
 
     context 'when passing a valid params Array' do
       context 'when the records do not already exist' do
         context 'when creating only one record' do
-          let(:fixture_file) { 'singular_200' }
+          let(:fixture_file) { 'singular_201' }
           let(:params) do
             {
               first_name: 'Sally',
@@ -290,7 +291,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
         end
 
         context 'when creating more than one record' do
-          let(:fixture_file) { '200' }
+          let(:fixture_file) { '201' }
           let(:params) do
             [
               {
@@ -403,9 +404,10 @@ describe 'Bigcommerce::V3::CustomersResource' do
     let(:resource_action) { 'create' }
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
     let(:response) { resource.create(params: params) }
+    let(:status) { 201 }
 
     context 'when passing a valid params Hash' do
-      let(:fixture_file) { '200' }
+      let(:fixture_file) { '201' }
       let(:params) do
         {
           first_name: 'Sally',

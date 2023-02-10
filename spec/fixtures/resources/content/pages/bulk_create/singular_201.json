@@ -1,0 +1,21 @@
+{
+  "data": [
+    {
+      "id": 321,
+      "channel_id": 1,
+      "name": "A Whole New Page",
+      "meta_title": "A Whole New Page",
+      "is_visible": false,
+      "parent_id": 0,
+      "sort_order": 0,
+      "meta_keywords": "string",
+      "type": "page",
+      "meta_description": "string",
+      "is_homepage": false,
+      "is_customers_only": false,
+      "search_keywords": "string",
+      "url": "\/a-whole-new-page"
+    }
+  ],
+  "meta": {}
+}

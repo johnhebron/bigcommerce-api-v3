@@ -1,0 +1,8 @@
+{
+  "status": 422,
+  "title": "Invalid Input.",
+  "type": "https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes",
+  "errors": [
+    "bar"
+  ]
+}
