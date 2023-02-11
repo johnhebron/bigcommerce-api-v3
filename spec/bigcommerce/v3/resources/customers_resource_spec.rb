@@ -40,54 +40,7 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#create' do
-    let(:resource_action) { 'create' }
-    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
-    let(:response) { resource.create(params: params) }
-    let(:status) { 201 }
-
-    context 'when passing a valid params Hash' do
-      let(:fixture_file) { '201' }
-      let(:params) do
-        {
-          first_name: 'Sally',
-          last_name: 'Smithers',
-          email: 'sally@smithers.org'
-        }
-      end
-      let(:stringified_params) do
-        '[{"first_name":"Sally","last_name":"Smithers","email":"sally@smithers.org"}]'
-      end
-      let(:created_record) do
-        {
-          first_name: response.data.first.first_name,
-          last_name: response.data.first.last_name,
-          email: response.data.first.email
-        }
-      end
-
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
-
-      it 'is a success' do
-        expect(response).to be_success
-      end
-
-      it 'has a .total of nil records' do
-        # because the .total is pulled from the meta hash
-        # which is not returned on a POST request
-        expect(response.total).to be_nil
-      end
-
-      it 'stores an array with 1 returned record' do
-        # since .total won't be set, .data.count is your bet
-        expect(response.data.count).to eq(1)
-      end
-
-      it 'returns the correct created record' do
-        expect(created_record).to match(params)
-      end
-    end
+    it_behaves_like 'a bulk .create endpoint'
   end
 
   describe '#bulk_update' do
