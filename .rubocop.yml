@@ -10,7 +10,8 @@ AllCops:
 Layout/LineLength:
   Max: 130
   Exclude:
-    - spec/bigcommerce/v3/resources/*
+    - spec/bigcommerce/v3/resources/**/*
+    - spec/support/shared_examples/**/*
 
 Metrics/AbcSize:
   Enabled: false
