@@ -227,4 +227,12 @@ describe 'Bigcommerce::V3::PagesResource' do
 
     it_behaves_like 'a bulk .update endpoint'
   end
+
+  describe '#bulk_delete' do
+    it_behaves_like 'a bulk .bulk_delete endpoint'
+  end
+
+  describe '#delete' do
+    it_behaves_like 'a bulk .delete endpoint'
+  end
 end
