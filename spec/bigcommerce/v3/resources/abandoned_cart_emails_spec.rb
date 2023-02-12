@@ -14,6 +14,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
   let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
+    let(:status) { 200 }
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.list }
 
@@ -25,6 +26,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     let(:response) { resource.list }
 
     context 'with available records to return' do
+      let(:status) { 200 }
       let(:fixture_file) { 'get_abandoned_cart_emails_url200' }
 
       it 'returns a Bigcommerce::V3::Response' do
@@ -44,6 +46,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     end
 
     context 'with no available records to return' do
+      let(:status) { 200 }
       let(:fixture_file) { 'get_abandoned_cart_emails_url_no_records200' }
 
       it 'returns a Bigcommerce::V3::Response' do
@@ -62,6 +65,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     let(:response) { resource.retrieve(id: id) }
 
     context 'when retrieving a valid id' do
+      let(:status) { 200 }
       let(:fixture_file) { 'retrieve_abandoned_cart_email_url200' }
       let(:id) { 2 }
 

@@ -10,9 +10,9 @@ describe 'Bigcommerce::V3::PagesResource' do
   let(:class_name) { Bigcommerce::V3::PagesResource }
   let(:object_type) { Bigcommerce::V3::Page }
   let(:resource_url) { 'content/pages' }
-  let(:status) { 200 }
 
   describe '#initialize' do
+    let(:status) { 200 }
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.list }
     let(:fixture) { '' }
@@ -21,10 +21,13 @@ describe 'Bigcommerce::V3::PagesResource' do
   end
 
   describe '.list' do
+    let(:status) { 200 }
+
     it_behaves_like 'a bulk .list endpoint'
   end
 
   describe '#retrieve' do
+    let(:status) { 200 }
     let(:retrieve_no_records_status) { 200 }
     let(:retrieve_invalid_params_status) { 200 }
 

@@ -5,14 +5,12 @@ RSpec.shared_examples 'a bulk .list endpoint' do
   let(:stubs) { stub_request(path: url, response: stubbed_response) }
 
   context 'when called with no params' do
-    let(:response) { resource.list }
+    subject(:response) { resource.list }
 
     context 'with available records to return' do
-      let(:fixture_file) { '200' }
+      let(:fixture_file) { status.to_s }
 
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
 
       it 'stores an array of returned records' do
         expect(response.data.count).to be > 0
