@@ -13,19 +13,9 @@ RSpec.shared_examples 'a bulk .bulk_create endpoint' do
     context 'when the records do not already exist' do
       context 'when creating only one record' do
         let(:fixture_file) { 'singular_201' }
-        let(:params) do
-          {
-            'first_name' => 'Sally',
-            'last_name' => 'Smithers',
-            'email' => 'sally@smithers.org'
-          }
-        end
-        let(:stringified_params) do
-          '[{"first_name":"Sally","last_name":"Smithers","email":"sally@smithers.org"}]'
-        end
-        let(:created_record) do
-          response&.body&.[]('data')&.first
-        end
+        let(:params) { single_record_params }
+        let(:stringified_params) { single_record_params.to_json }
+        let(:created_record) { response&.body&.[]('data')&.first }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(response).to be_a(Bigcommerce::V3::Response)
@@ -47,29 +37,14 @@ RSpec.shared_examples 'a bulk .bulk_create endpoint' do
         end
 
         it 'returns the correct created record' do
-          expect(response.data.first.to_h).to include(params)
+          expect(response.data.first.to_h).to include(params.first)
         end
       end
 
       context 'when creating more than one record' do
         let(:fixture_file) { '201' }
-        let(:params) do
-          [
-            {
-              first_name: 'Bobby',
-              last_name: 'Bob',
-              email: 'bobby.bob@bobberton.co'
-            },
-            {
-              first_name: 'Nina',
-              last_name: 'Ni',
-              email: 'Nina.Ni@nina.co'
-            }
-          ]
-        end
-        let(:stringified_params) do
-          '[{"first_name":"Bobby","last_name":"Bob","email":"bobby.bob@bobberton.co"},{"first_name":"Nina","last_name":"Ni","email":"Nina.Ni@nina.co"}]'
-        end
+        let(:params) { multiple_record_params }
+        let(:stringified_params) { multiple_record_params.to_json }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(response).to be_a(Bigcommerce::V3::Response)
@@ -92,7 +67,7 @@ RSpec.shared_examples 'a bulk .bulk_create endpoint' do
 
         it 'returns the correct created records' do
           created_records.each_with_index do |record, index|
-            expect(record.send(unique_identifier)).to eq(params[index][unique_identifier.to_sym])
+            expect(record.to_h).to include(params[index])
           end
         end
       end
@@ -101,29 +76,11 @@ RSpec.shared_examples 'a bulk .bulk_create endpoint' do
     context 'when the records already exist' do
       let(:fixture_file) { '422' }
       let(:status) { 422 }
-      let(:params) do
-        [
-          {
-            first_name: 'Bobby',
-            last_name: 'Bob',
-            email: 'bobby.bob@bobberton.co'
-          },
-          {
-            first_name: 'Nina',
-            last_name: 'Ni',
-            email: 'Nina.Ni@nina.co'
-          }
-        ]
-      end
-      let(:stringified_params) do
-        '[{"first_name":"Bobby","last_name":"Bob","email":"bobby.bob@bobberton.co"},{"first_name":"Nina","last_name":"Ni","email":"Nina.Ni@nina.co"}]'
-      end
-      let(:title) { 'Create customers failed.' }
-      let(:errors) do
-        {
-          '.customer_create' => 'Error creating customers: email bobby.bob@bobberton.co already in use'
-        }
-      end
+      let(:params) { existing_record_params }
+      let(:stringified_params) { existing_record_params.to_json }
+      let(:title) { existing_record_title }
+      let(:errors) { existing_record_errors }
+      let(:detail) { existing_record_detail }
 
       it 'returns a Bigcommerce::V3::Response' do
         expect(response).to be_a(Bigcommerce::V3::Response)
@@ -148,14 +105,18 @@ RSpec.shared_examples 'a bulk .bulk_create endpoint' do
       it 'has a data payload with an errors hash' do
         expect(response.error.errors).to eq(errors)
       end
+
+      it 'has a data payload with a details' do
+        expect(response.error.detail).to eq(detail)
+      end
     end
   end
 
   context 'when passing invalid params' do
     let(:fixture) { '' }
     let(:status) { 422 }
-    let(:params) { 42 }
-    let(:stringified_params) { '42' }
+    let(:params) { invalid_params }
+    let(:stringified_params) { invalid_params.to_json }
 
     it 'raises an error' do
       expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)

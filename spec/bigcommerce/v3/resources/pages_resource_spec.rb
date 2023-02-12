@@ -32,4 +32,66 @@ describe 'Bigcommerce::V3::PagesResource' do
 
     it_behaves_like 'a bulk .retrieve endpoint', fail_on_error
   end
+
+  describe '#bulk_create' do
+    let(:unique_identifier) { 'first_name' }
+    let(:single_record_params) do
+      [{
+        'channel_id' => 1,
+        'name' => 'A Whole New Page',
+        'meta_title' => 'A Whole New Page',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/a-whole-new-page'
+      }]
+    end
+    let(:multiple_record_params) do
+      [
+        {
+          'channel_id' => 1,
+          'name' => 'First Page In A Bulk Create',
+          'meta_title' => 'First Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/first-page'
+        },
+        {
+          'channel_id' => 1,
+          'name' => 'Second Page In A Bulk Create',
+          'meta_title' => 'Second Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/second-page'
+        }
+      ]
+    end
+    let(:existing_record_params) { single_record_params }
+    let(:invalid_params) { 42 }
+    let(:existing_record_title) { 'Input is invalid' }
+    let(:existing_record_errors) { nil }
+    let(:existing_record_detail) { "'Name' must be unique" }
+
+    it_behaves_like 'a bulk .bulk_create endpoint'
+  end
 end
