@@ -4,9 +4,7 @@ RSpec.shared_examples 'a bulk .bulk_create endpoint' do
   let(:resource_action) { 'bulk_create' }
   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
   let(:response) { resource.bulk_create(params: params) }
-  let(:created_records) do
-    response&.data
-  end
+  let(:created_records) { response&.data }
   let(:status) { 201 }
 
   context 'when passing a valid params Array' do

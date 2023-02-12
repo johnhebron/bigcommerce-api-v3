@@ -14,7 +14,7 @@
       "is_homepage": false,
       "is_customers_only": false,
       "search_keywords": "string",
-      "url": "\/second-page"
+      "url": "/second-page"
     },
     {
       "id": 322,
@@ -30,7 +30,7 @@
       "is_homepage": false,
       "is_customers_only": false,
       "search_keywords": "string",
-      "url": "\/first-page"
+      "url": "/first-page"
     }
   ],
   "meta": {}

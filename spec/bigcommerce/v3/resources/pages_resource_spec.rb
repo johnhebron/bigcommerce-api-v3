@@ -115,4 +115,93 @@ describe 'Bigcommerce::V3::PagesResource' do
 
     it_behaves_like 'a bulk .create endpoint'
   end
+
+  describe '#bulk_update' do
+    let(:single_record_params) do
+      [
+        {
+          'id' => 323,
+          'channel_id' => 1,
+          'name' => 'Updated With a New Name!',
+          'meta_title' => 'Second Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/second-page'
+        }
+      ]
+    end
+    let(:multiple_record_params) do
+      [
+        {
+          'id' => 323,
+          'channel_id' => 1,
+          'name' => 'Updated With a New Name!',
+          'meta_title' => 'Second Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/second-page'
+        },
+        {
+          'id' => 322,
+          'channel_id' => 1,
+          'name' => 'Whoa, a whole new name!',
+          'meta_title' => 'First Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/first-page'
+        }
+      ]
+    end
+    let(:nonexistant_record_params) do
+      [
+        {
+          'id' => 0o00,
+          'channel_id' => 1,
+          'name' => 'Updated With a New Name!',
+          'meta_title' => 'Second Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/second-page'
+        }
+      ]
+    end
+    let(:nonexistant_record_title) { 'A Page was not found with an id of 000' }
+    let(:nonexistant_record_errors) { nil }
+    let(:nonexistant_record_detail) { nil }
+    let(:nonexistant_record_status) { 404 }
+    let(:invalid_params_array) { [42] }
+    let(:invalid_params_array_title) { 'Input is invalid' }
+    let(:invalid_params_array_errors) { nil }
+    let(:invalid_params_array_detail) { "'Name' must be unique" }
+
+    it_behaves_like 'a bulk .bulk_update endpoint'
+  end
 end

@@ -11,7 +11,8 @@ describe 'Bigcommerce::V3::CustomersResource' do
   let(:object_type) { Bigcommerce::V3::Customer }
   let(:resource_url) { 'customers' }
   let(:fixture_base) { 'resources' }
-  let(:fixture_file) { '200' }
+  let(:status) { 200 }
+  let(:fixture_file) { status.to_s }
   let(:fixture) { "#{fixture_base}/#{resource_url}/#{resource_action}/#{fixture_file}" }
 
   describe '#initialize' do
@@ -34,7 +35,6 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#bulk_create' do
-    let(:unique_identifier) { 'first_name' }
     let(:single_record_params) do
       [
         {
@@ -84,6 +84,47 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#bulk_update' do
+    let(:single_record_params) do
+      [
+        {
+          'id' => 147,
+          'first_name' => 'Samantha'
+        }
+      ]
+    end
+    let(:multiple_record_params) do
+      [
+        {
+          'id' => 147,
+          'first_name' => 'Bert'
+        },
+        {
+          'id' => 145,
+          'first_name' => 'Ernie'
+        }
+      ]
+    end
+    let(:nonexistant_record_params) do
+      [
+        {
+          'id' => 12_345,
+          'first_name' => 'Samantha'
+        },
+        {
+          'id' => 12_346,
+          'first_name' => 'Carter'
+        }
+      ]
+    end
+    let(:nonexistant_record_title) { 'Update customers failed.' }
+    let(:nonexistant_record_errors) { { '0.id' => 'invalid customer ID' } }
+    let(:nonexistant_record_detail) { nil }
+    let(:nonexistant_record_status) { 422 }
+    let(:invalid_params_array) { [42] }
+    let(:invalid_params_array_title) { 'JSON data is missing or invalid' }
+    let(:invalid_params_array_errors) { { 'id' => 'error.path.missing' } }
+    let(:invalid_params_array_detail) { nil }
+
     it_behaves_like 'a bulk .bulk_update endpoint'
   end
 
