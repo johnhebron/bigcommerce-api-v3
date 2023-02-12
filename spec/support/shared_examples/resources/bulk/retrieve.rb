@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples 'a bulk .retrieve endpoint' do |fail_on_error|
+RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
   let(:resource_action) { 'retrieve' }
   let(:response) { resource.retrieve(id: id) }
 
@@ -43,7 +43,7 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fail_on_error|
     end
   end
 
-  context 'when passing invalid parameters', if: fail_on_error do
+  context 'when passing invalid parameters', if: fails_on_error do
     let(:fixture_file) { "bad_params_#{retrieve_invalid_params_status}" }
     let(:status) { retrieve_invalid_params_status }
     let(:id) { 'hello' }
@@ -74,7 +74,7 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fail_on_error|
     end
   end
 
-  context 'when passing invalid parameters', if: !fail_on_error do
+  context 'when passing invalid parameters', if: !fails_on_error do
     let(:fixture_file) { "bad_params_#{retrieve_invalid_params_status}" }
     let(:status) { retrieve_invalid_params_status }
     let(:id) { 'hello' }

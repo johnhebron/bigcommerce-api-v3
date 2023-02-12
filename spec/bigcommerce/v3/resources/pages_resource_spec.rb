@@ -3,16 +3,14 @@
 require './spec/spec_helper'
 
 describe 'Bigcommerce::V3::PagesResource' do
-  subject(:resource) { Bigcommerce::V3::PagesResource.new(client: client) }
+  subject(:resource) { class_name.new(client: client) }
 
   include_context 'when connected to API'
 
   let(:class_name) { Bigcommerce::V3::PagesResource }
   let(:object_type) { Bigcommerce::V3::Page }
   let(:resource_url) { 'content/pages' }
-  let(:fixture_base) { 'resources' }
-  let(:fixture_file) { '200' }
-  let(:fixture) { "#{fixture_base}/#{resource_url}/#{resource_action}/#{fixture_file}" }
+  let(:status) { 200 }
 
   describe '#initialize' do
     let(:fixture) { '' }
@@ -25,12 +23,12 @@ describe 'Bigcommerce::V3::PagesResource' do
   end
 
   describe '#retrieve' do
-    let(:retrieve_no_records_status) { 200 } # Outside of Example Group
-    let(:retrieve_invalid_params_status) { 200 } # Outside of Example Group
+    let(:retrieve_no_records_status) { 200 }
+    let(:retrieve_invalid_params_status) { 200 }
 
-    fail_on_error = false # Outside of Example Group
+    fails_on_error = false
 
-    it_behaves_like 'a bulk .retrieve endpoint', fail_on_error
+    it_behaves_like 'a bulk .retrieve endpoint', fails_on_error
   end
 
   describe '#bulk_create' do

@@ -4,7 +4,6 @@ RSpec.shared_examples 'a bulk .bulk_update endpoint' do
   let(:resource_action) { 'bulk_update' }
   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
   let(:response) { resource.bulk_update(params: params) }
-  let(:updated_records) { response&.data }
   let(:status) { 200 }
 
   context 'when passing a valid params Array' do

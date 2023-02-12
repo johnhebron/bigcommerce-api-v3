@@ -4,7 +4,6 @@ RSpec.shared_examples 'a bulk .update endpoint' do
   let(:resource_action) { 'update' }
   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
   let(:response) { resource.update(id: id, params: params) }
-  let(:updated_record) { response&.data&.first }
 
   context 'when passing a valid id and params Hash' do
     let(:fixture_file) { '200' }

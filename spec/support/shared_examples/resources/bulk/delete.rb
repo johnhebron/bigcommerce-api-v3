@@ -8,6 +8,8 @@ RSpec.shared_examples 'a bulk .delete endpoint' do
   let(:fixture) { '' }
 
   context 'when passing a valid customer_id' do
+    let(:status) { 204 }
+
     it 'returns a Bigcommerce::V3::Response' do
       expect(response).to be_a(Bigcommerce::V3::Response)
     end

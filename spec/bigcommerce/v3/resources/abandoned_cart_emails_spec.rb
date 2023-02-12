@@ -158,7 +158,6 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
       let(:stringified_params) do
         '{"is_active":false,"coupon_code":"","notify_at_minutes":240,"template":{"subject":"Complete your purchase at {{ store.name }}","body":"Complete your purchase.","translations":[{"locale":"en","keys":{"hello_phrase":"Welcome"}}]}}'
       end
-      let(:created_record) { response.data.first }
 
       it 'returns a Bigcommerce::V3::Response' do
         expect(response).to be_a(Bigcommerce::V3::Response)
