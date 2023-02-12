@@ -34,7 +34,6 @@ describe 'Bigcommerce::V3::PagesResource' do
   end
 
   describe '#bulk_create' do
-    let(:unique_identifier) { 'first_name' }
     let(:single_record_params) do
       [{
         'channel_id' => 1,
@@ -93,5 +92,27 @@ describe 'Bigcommerce::V3::PagesResource' do
     let(:existing_record_detail) { "'Name' must be unique" }
 
     it_behaves_like 'a bulk .bulk_create endpoint'
+  end
+
+  describe '#create' do
+    let(:single_record_params) do
+      {
+        'channel_id' => 1,
+        'name' => 'A Whole New Page',
+        'meta_title' => 'A Whole New Page',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/a-whole-new-page'
+      }
+    end
+
+    it_behaves_like 'a bulk .create endpoint'
   end
 end

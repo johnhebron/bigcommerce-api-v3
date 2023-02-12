@@ -2,22 +2,14 @@
 
 RSpec.shared_examples 'a bulk .create endpoint' do
   let(:resource_action) { 'create' }
-  let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: stringified_params) }
+  let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: "[#{stringified_params}]") }
   let(:response) { resource.create(params: params) }
   let(:status) { 201 }
 
   context 'when passing a valid params Hash' do
     let(:fixture_file) { '201' }
-    let(:params) do
-      {
-        first_name: 'Sally',
-        last_name: 'Smithers',
-        email: 'sally@smithers.org'
-      }
-    end
-    let(:stringified_params) do
-      '[{"first_name":"Sally","last_name":"Smithers","email":"sally@smithers.org"}]'
-    end
+    let(:params) { single_record_params }
+    let(:stringified_params) { single_record_params.to_json }
     let(:created_record) { response&.data&.first }
 
     it 'returns a Bigcommerce::V3::Response' do
@@ -40,7 +32,7 @@ RSpec.shared_examples 'a bulk .create endpoint' do
     end
 
     it 'returns the correct created record' do
-      expect(response.data.first.to_h(symbolize_keys: true)).to include(params)
+      expect(response.data.first.to_h).to include(params)
     end
   end
 end

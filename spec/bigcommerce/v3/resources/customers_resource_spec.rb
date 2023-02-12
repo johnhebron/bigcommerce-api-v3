@@ -72,6 +72,14 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#create' do
+    let(:single_record_params) do
+      {
+        'first_name' => 'Sally',
+        'last_name' => 'Smithers',
+        'email' => 'sally@smithers.org'
+      }
+    end
+
     it_behaves_like 'a bulk .create endpoint'
   end
 
