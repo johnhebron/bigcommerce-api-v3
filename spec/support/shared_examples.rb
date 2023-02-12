@@ -4,16 +4,14 @@
 # Resource Shared Examples
 ###########################
 
-RSpec.shared_examples 'an instantiable Resource' do
-  it 'is of the correct type' do
-    expect(resource).to be_a(class_name)
-  end
+require './spec/support/shared_examples/resources/base'
 
-  it 'contains a Bigcommerce::V3::Client' do
-    expect(resource.client).to be_a(Bigcommerce::V3::Client)
-  end
-
-  it 'has a RESOURCE_URL' do
-    expect(class_name::RESOURCE_URL).to eq(resource_url)
-  end
-end
+# Bulk Resources
+require './spec/support/shared_examples/resources/bulk/bulk_create'
+require './spec/support/shared_examples/resources/bulk/bulk_delete'
+require './spec/support/shared_examples/resources/bulk/bulk_update'
+require './spec/support/shared_examples/resources/bulk/create'
+require './spec/support/shared_examples/resources/bulk/delete'
+require './spec/support/shared_examples/resources/bulk/list'
+require './spec/support/shared_examples/resources/bulk/retrieve'
+require './spec/support/shared_examples/resources/bulk/update'

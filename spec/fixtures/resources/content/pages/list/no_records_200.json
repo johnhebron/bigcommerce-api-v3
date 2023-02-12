@@ -1,0 +1,16 @@
+{
+  "data": [],
+  "meta": {
+    "pagination": {
+      "total": 0,
+      "count": 0,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 0,
+      "links": {
+        "next": "?limit=50&page=2",
+        "current": "?limit=50&page=1"
+      }
+    }
+  }
+}

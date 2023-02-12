@@ -1,0 +1,37 @@
+{
+  "data": [
+    {
+      "id": 323,
+      "channel_id": 1,
+      "name": "Updated With a New Name!",
+      "meta_title": "Second Page In A Bulk Create",
+      "is_visible": false,
+      "parent_id": 0,
+      "sort_order": 0,
+      "meta_keywords": "string",
+      "type": "page",
+      "meta_description": "string",
+      "is_homepage": false,
+      "is_customers_only": false,
+      "search_keywords": "string",
+      "url": "/second-page"
+    },
+    {
+      "id": 322,
+      "channel_id": 1,
+      "name": "Whoa, a whole new name!",
+      "meta_title": "First Page In A Bulk Create",
+      "is_visible": false,
+      "parent_id": 0,
+      "sort_order": 0,
+      "meta_keywords": "string",
+      "type": "page",
+      "meta_description": "string",
+      "is_homepage": false,
+      "is_customers_only": false,
+      "search_keywords": "string",
+      "url": "/first-page"
+    }
+  ],
+  "meta": {}
+}

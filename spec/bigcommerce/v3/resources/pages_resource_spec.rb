@@ -3,40 +3,234 @@
 require './spec/spec_helper'
 
 describe 'Bigcommerce::V3::PagesResource' do
-  subject(:resource) { Bigcommerce::V3::PagesResource.new(client: client) }
+  subject(:resource) { class_name.new(client: client) }
 
   include_context 'when connected to API'
 
   let(:class_name) { Bigcommerce::V3::PagesResource }
+  let(:object_type) { Bigcommerce::V3::Page }
   let(:resource_url) { 'content/pages' }
-  let(:fixture_base) { 'resources' }
-  let(:fixture_file) { 'get_pages_url200' }
-  let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
+  let(:status) { 200 }
 
   describe '#initialize' do
+    let(:fixture) { '' }
+
     it_behaves_like 'an instantiable Resource'
   end
 
   describe '.list' do
-    context 'when called with no params' do
-      context 'with available records to return' do
-        let(:fixture_file) { 'get_pages_url200' }
+    it_behaves_like 'a bulk .list endpoint'
+  end
 
-        it 'returns a Bigcommerce::V3::Response' do
-          expect(resource.list).to be_a(Bigcommerce::V3::Response)
-        end
+  describe '#retrieve' do
+    let(:retrieve_no_records_status) { 200 }
+    let(:retrieve_invalid_params_status) { 200 }
 
-        it 'stores an array of returned records' do
-          expect(resource.list.data.count).to be > 0
-        end
+    fails_on_error = false
 
-        it 'stores an array of Bigcommerce::V3::Page records' do
-          data = resource.list.data
-          data.map do |record|
-            expect(record).to be_a(Bigcommerce::V3::Page)
-          end
-        end
-      end
+    it_behaves_like 'a bulk .retrieve endpoint', fails_on_error
+  end
+
+  describe '#bulk_create' do
+    let(:single_record_params) do
+      [{
+        'channel_id' => 1,
+        'name' => 'A Whole New Page',
+        'meta_title' => 'A Whole New Page',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/a-whole-new-page'
+      }]
     end
+    let(:multiple_record_params) do
+      [
+        {
+          'channel_id' => 1,
+          'name' => 'First Page In A Bulk Create',
+          'meta_title' => 'First Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/first-page'
+        },
+        {
+          'channel_id' => 1,
+          'name' => 'Second Page In A Bulk Create',
+          'meta_title' => 'Second Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/second-page'
+        }
+      ]
+    end
+    let(:existing_record_params) { single_record_params }
+    let(:invalid_params) { 42 }
+    let(:existing_record_title) { 'Input is invalid' }
+    let(:existing_record_errors) { nil }
+    let(:existing_record_detail) { "'Name' must be unique" }
+
+    it_behaves_like 'a bulk .bulk_create endpoint'
+  end
+
+  describe '#create' do
+    let(:single_record_params) do
+      {
+        'channel_id' => 1,
+        'name' => 'A Whole New Page',
+        'meta_title' => 'A Whole New Page',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/a-whole-new-page'
+      }
+    end
+
+    it_behaves_like 'a bulk .create endpoint'
+  end
+
+  describe '#bulk_update' do
+    let(:single_record_params) do
+      [
+        {
+          'id' => 323,
+          'channel_id' => 1,
+          'name' => 'Updated With a New Name!',
+          'meta_title' => 'Second Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/second-page'
+        }
+      ]
+    end
+    let(:multiple_record_params) do
+      [
+        {
+          'id' => 323,
+          'channel_id' => 1,
+          'name' => 'Updated With a New Name!',
+          'meta_title' => 'Second Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/second-page'
+        },
+        {
+          'id' => 322,
+          'channel_id' => 1,
+          'name' => 'Whoa, a whole new name!',
+          'meta_title' => 'First Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/first-page'
+        }
+      ]
+    end
+    let(:nonexistant_record_params) do
+      [
+        {
+          'id' => 0o00,
+          'channel_id' => 1,
+          'name' => 'Updated With a New Name!',
+          'meta_title' => 'Second Page In A Bulk Create',
+          'is_visible' => false,
+          'parent_id' => 0,
+          'sort_order' => 0,
+          'meta_keywords' => 'string',
+          'type' => 'page',
+          'meta_description' => 'string',
+          'is_homepage' => false,
+          'is_customers_only' => false,
+          'search_keywords' => 'string',
+          'url' => '/second-page'
+        }
+      ]
+    end
+    let(:nonexistant_record_title) { 'A Page was not found with an id of 000' }
+    let(:nonexistant_record_errors) { nil }
+    let(:nonexistant_record_detail) { nil }
+    let(:nonexistant_record_status) { 404 }
+    let(:invalid_params_array) { [42] }
+    let(:invalid_params_array_title) { 'Input is invalid' }
+    let(:invalid_params_array_errors) { nil }
+    let(:invalid_params_array_detail) { "'Name' must be unique" }
+
+    it_behaves_like 'a bulk .bulk_update endpoint'
+  end
+
+  describe '#update' do
+    let(:single_record_id) { 323 }
+    let(:single_record_params) do
+      {
+        'channel_id' => 1,
+        'name' => 'Updated With a New Name!',
+        'meta_title' => 'Second Page In A Bulk Create',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/second-page'
+      }
+    end
+
+    it_behaves_like 'a bulk .update endpoint'
+  end
+
+  describe '#bulk_delete' do
+    it_behaves_like 'a bulk .bulk_delete endpoint'
+  end
+
+  describe '#delete' do
+    it_behaves_like 'a bulk .delete endpoint'
   end
 end

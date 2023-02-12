@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "id": 2,
+      "channel_id": 1,
+      "name": "Another new page title",
+      "is_visible": true,
+      "parent_id": 0,
+      "sort_order": 4,
+      "type": "blog",
+      "is_homepage": false,
+      "is_customers_only": false,
+      "url": "\/blog\/"
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 208,
+      "count": 1,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 5,
+      "links": {
+        "next": "?id%3Ain=3&limit=50&page=2",
+        "current": "?id%3Ain=3&limit=50&page=1"
+      }
+    }
+  }
+}
