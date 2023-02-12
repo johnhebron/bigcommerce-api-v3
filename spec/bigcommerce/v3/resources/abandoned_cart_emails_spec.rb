@@ -14,10 +14,14 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
   let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:response) { resource.list }
+
     it_behaves_like 'an instantiable Resource'
   end
 
   describe '#list' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.list }
 
     context 'with available records to return' do
@@ -53,6 +57,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
   end
 
   describe '#retrieve' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:url) { "#{base_url}#{resource_url}/#{id}" }
     let(:response) { resource.retrieve(id: id) }
 

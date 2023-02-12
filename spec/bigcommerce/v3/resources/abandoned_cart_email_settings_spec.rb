@@ -14,10 +14,14 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
   let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:response) { resource.list }
+
     it_behaves_like 'an instantiable Resource'
   end
 
   describe '#retrieve' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.retrieve(id: id) }
 
     context 'when retrieving a valid id' do

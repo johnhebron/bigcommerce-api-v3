@@ -13,6 +13,8 @@ describe 'Bigcommerce::V3::CustomersResource' do
   let(:status) { 200 }
 
   describe '#initialize' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:response) { resource.list }
     let(:fixture) { '' }
 
     it_behaves_like 'an instantiable Resource'

@@ -13,7 +13,6 @@ RSpec.shared_context 'when connected to API' do
 
   # Stubbed response and request
   let(:stubbed_response) { stub_response(fixture: fixture, status: status) }
-  let(:stubs) { stub_request(path: url, response: stubbed_response) }
   let(:fixture_base) { 'resources' }
   let(:fixture_file) { status.to_s }
   let(:fixture) { "#{fixture_base}/#{resource_url}/#{resource_action}/#{fixture_file}" }

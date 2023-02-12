@@ -2,6 +2,7 @@
 
 RSpec.shared_examples 'a bulk .list endpoint' do
   let(:resource_action) { 'list' }
+  let(:stubs) { stub_request(path: url, response: stubbed_response) }
 
   context 'when called with no params' do
     let(:response) { resource.list }

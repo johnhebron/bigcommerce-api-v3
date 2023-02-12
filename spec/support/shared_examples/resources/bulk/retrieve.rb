@@ -2,6 +2,7 @@
 
 RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
   let(:resource_action) { 'retrieve' }
+  let(:stubs) { stub_request(path: url, response: stubbed_response) }
   let(:response) { resource.retrieve(id: id) }
 
   context 'when retrieving a valid id' do

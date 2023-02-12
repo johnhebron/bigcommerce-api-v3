@@ -4,22 +4,28 @@ require './spec/spec_helper'
 
 describe 'Bigcommerce::V3::Resource' do
   subject(:resource) do
-    Bigcommerce::V3::Resource.new(client: client, resource_url: resource_url, object_type: Bigcommerce::V3::Object)
+    class_name.new(client: client, resource_url: resource_url, object_type: Bigcommerce::V3::Object)
   end
 
   include_context 'when connected to API'
 
   # Using 'content/pages' as example
   let(:resource_url) { 'content/pages' }
-  let(:fixture) { 'resource/get_url200' }
+
+  let(:class_name) { Bigcommerce::V3::Resource }
 
   describe '#initialize' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:fixture) { "resource/get_url#{status}" }
+    let(:status) { 200 }
+
     it 'is of type Resource' do
       expect(resource).to be_a(Bigcommerce::V3::Resource)
     end
   end
 
   describe '#get_request' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:url) { "/stores/#{store_hash}/v3/content/pages" }
     let(:fixture) { 'resource/get_url200' }
     let(:status) { 200 }
