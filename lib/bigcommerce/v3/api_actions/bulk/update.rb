@@ -19,7 +19,7 @@ module Bigcommerce
                     params_error(param: params, type: 'Hash')
             end
 
-            params[:id] = id
+            params['id'] = id
             bulk_update(params: [params])
           end
         end

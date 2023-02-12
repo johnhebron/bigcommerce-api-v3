@@ -8,11 +8,11 @@ RSpec.shared_examples 'a bulk .update endpoint' do
 
   context 'when passing a valid id and params Hash' do
     let(:fixture_file) { '200' }
-    let(:id) { 147 }
-    let(:params) { { first_name: 'Sal' } }
-    let(:stringified_params) do
-      '[{"first_name":"Sal","id":147}]'
-    end
+    let(:id) { single_record_id }
+    let(:params) { single_record_params }
+    let(:id_param) { { 'id' => id } }
+    let(:combined_params) { params.merge(id_param) }
+    let(:stringified_params) { "[#{combined_params.to_json}]" }
 
     it 'returns a Bigcommerce::V3::Response' do
       expect(response).to be_a(Bigcommerce::V3::Response)
@@ -34,7 +34,7 @@ RSpec.shared_examples 'a bulk .update endpoint' do
     end
 
     it 'returns the correct created record' do
-      expect(response.data.first.to_h(symbolize_keys: true)).to include(params)
+      expect(response.data.first.to_h).to include(params)
     end
   end
 

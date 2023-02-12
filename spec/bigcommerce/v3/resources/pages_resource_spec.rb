@@ -204,4 +204,27 @@ describe 'Bigcommerce::V3::PagesResource' do
 
     it_behaves_like 'a bulk .bulk_update endpoint'
   end
+
+  describe '#update' do
+    let(:single_record_id) { 323 }
+    let(:single_record_params) do
+      {
+        'channel_id' => 1,
+        'name' => 'Updated With a New Name!',
+        'meta_title' => 'Second Page In A Bulk Create',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/second-page'
+      }
+    end
+
+    it_behaves_like 'a bulk .update endpoint'
+  end
 end

@@ -129,6 +129,13 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#update' do
+    let(:single_record_id) { 147 }
+    let(:single_record_params) do
+      {
+        'first_name' => 'Sal'
+      }
+    end
+
     it_behaves_like 'a bulk .update endpoint'
   end
 
