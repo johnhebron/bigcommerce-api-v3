@@ -3,7 +3,7 @@
 RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
   let(:resource_action) { 'bulk_delete' }
   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
-  let(:response) { resource.bulk_delete(ids: params) }
+  let(:response) { resource.bulk_delete(ids: ids) }
   let(:fixture) { '' } # successful response body is empty for DELETE request
 
   context 'when passing a valid customer_ids Array' do
@@ -11,7 +11,7 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
       let(:status) { 204 }
 
       context 'when deleting only one customer' do
-        let(:params) { [42] }
+        let(:ids) { [42] }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(response).to be_a(Bigcommerce::V3::Response)
@@ -36,7 +36,7 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
 
       context 'when deleting more than one record' do
         let(:fixture) { '' }
-        let(:params) { [147, 145] }
+        let(:ids) { [147, 145] }
 
         it 'returns a Bigcommerce::V3::Response' do
           expect(response).to be_a(Bigcommerce::V3::Response)
@@ -65,7 +65,7 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
       # returns a 204 success with no body
       let(:fixture) { '' }
       let(:status) { 204 }
-      let(:params) { [0] }
+      let(:ids) { [0] }
 
       it 'returns a Bigcommerce::V3::Response' do
         expect(response).to be_a(Bigcommerce::V3::Response)
@@ -89,9 +89,9 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
     end
   end
 
-  context 'when passing an invalid params Array' do
+  context 'when passing an invalid ids Array' do
     let(:fixture) { '' }
-    let(:params) { %w[string string] }
+    let(:ids) { %w[string string] }
 
     it 'raises an error' do
       expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
@@ -100,7 +100,7 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
 
   context 'when passing invalid params' do
     let(:fixture) { '' }
-    let(:params) { '' }
+    let(:ids) { '' }
 
     it 'raises an error' do
       expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
