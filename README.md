@@ -4,6 +4,23 @@ Ruby client for interacting with the BigCommerce Store Management V3 REST API.
 
 For more information about getting started with the BigCommerce V3 REST API, see [developer.bigcommerce.com](https://developer.bigcommerce.com/docs/97b76565d4269-big-commerce-ap-is-quick-start#rest-api).
 
+# Not For Production Use Yet
+```
+####################################
+#   This client is under active    #
+# development and will remain in a #
+#                                  #
+#    ##########################    #
+#    ## "not for Production" ##    #
+#    ##########################    #
+#                                  #
+#     state until basic work is    #
+#           completed.             #
+#                                  #
+#  Last updated Sun, Feb 12, 2023  #
+####################################
+```
+
 # Installation
 
 Add this line to your application's Gemfile:
