@@ -6,7 +6,7 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
   let(:resource_action) { 'retrieve' }
   let(:stubs) { stub_request(path: url, response: stubbed_response) }
 
-  context 'when retrieving a valid id' do
+  context 'when called with a valid id' do
     let(:status) { 200 }
     let(:fixture_file) { status.to_s }
     let(:id) { 2 }
@@ -14,7 +14,7 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     it { is_expected.to be_a(Bigcommerce::V3::Response) }
     it { is_expected.to be_success }
 
-    it 'stores an array with 1 returned record' do
+    it 'returns an array with 1 record' do
       expect(returned_records.count).to eq(1)
     end
 
@@ -23,7 +23,7 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     end
   end
 
-  context 'when retrieving a non-existent id' do
+  context 'when called with a non-existent id' do
     let(:fixture_file) { "no_records_#{retrieve_no_records_status}" }
     let(:status) { retrieve_no_records_status }
     let(:id) { 42 }
@@ -31,12 +31,12 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     it { is_expected.to be_a(Bigcommerce::V3::Response) }
     it { is_expected.to be_success }
 
-    it 'stores an array with 0 returned record' do
-      expect(returned_records.count).to eq(0)
+    it 'returns an empty array of records' do
+      expect(returned_records.count).to be_zero
     end
   end
 
-  context 'when passing invalid parameters', if: fails_on_error do
+  context 'when called with invalid parameters', if: fails_on_error do
     let(:fixture_file) { "bad_params_#{retrieve_invalid_params_status}" }
     let(:status) { retrieve_invalid_params_status }
     let(:id) { 'hello' }
@@ -45,24 +45,24 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     it { is_expected.to be_a(Bigcommerce::V3::Response) }
     it { is_expected.not_to be_success }
 
-    it 'has an appropriate status' do
+    it 'returns an appropriate status' do
       expect(response.status).to eq(status)
     end
 
-    it 'has an error title' do
+    it 'returns an error title' do
       expect(response.error.title).not_to be_nil
     end
 
-    it 'has an error type' do
+    it 'returns an error type' do
       expect(response.error.type).not_to be_nil
     end
 
-    it 'has a data payload with an errors hash' do
+    it 'returns a data payload with an errors hash' do
       expect(response.error.errors).not_to be_nil
     end
   end
 
-  context 'when passing invalid parameters', if: !fails_on_error do
+  context 'when called with invalid parameters', if: !fails_on_error do
     let(:fixture_file) { "bad_params_#{retrieve_invalid_params_status}" }
     let(:status) { retrieve_invalid_params_status }
     let(:id) { 'hello' }
@@ -71,11 +71,11 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     it { is_expected.to be_a(Bigcommerce::V3::Response) }
     it { is_expected.to be_success }
 
-    it 'has an appropriate status' do
+    it 'returns an appropriate status' do
       expect(response.status).to eq(status)
     end
 
-    it 'has an empty .data' do
+    it 'returns an empty .data' do
       expect(returned_records).to be_empty
     end
   end
