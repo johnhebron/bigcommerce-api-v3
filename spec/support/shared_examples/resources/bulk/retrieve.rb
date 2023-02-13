@@ -7,18 +7,19 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
   let(:stubs) { stub_request(path: url, response: stubbed_response) }
 
   context 'when retrieving a valid id' do
-    let(:fixture_file) { '200' }
+    let(:status) { 200 }
+    let(:fixture_file) { status.to_s }
     let(:id) { 2 }
 
     it { is_expected.to be_a(Bigcommerce::V3::Response) }
     it { is_expected.to be_success }
 
     it 'stores an array with 1 returned record' do
-      expect(response.data.count).to eq(1)
+      expect(returned_records.count).to eq(1)
     end
 
     it 'returns the correct record' do
-      expect(response.data.first.id).to eq(id)
+      expect(returned_record.id).to eq(id)
     end
   end
 
@@ -31,7 +32,7 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     it { is_expected.to be_success }
 
     it 'stores an array with 0 returned record' do
-      expect(response.data.count).to eq(0)
+      expect(returned_records.count).to eq(0)
     end
   end
 
@@ -75,7 +76,7 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     end
 
     it 'has an empty .data' do
-      expect(response.data).to be_empty
+      expect(returned_records).to be_empty
     end
   end
 end

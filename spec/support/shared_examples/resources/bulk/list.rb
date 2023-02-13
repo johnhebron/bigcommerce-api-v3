@@ -3,6 +3,7 @@
 RSpec.shared_examples 'a bulk .list endpoint' do
   let(:resource_action) { 'list' }
   let(:stubs) { stub_request(path: url, response: stubbed_response) }
+  let(:status) { 200 }
 
   context 'when called with no params' do
     subject(:response) { resource.list }
@@ -14,25 +15,24 @@ RSpec.shared_examples 'a bulk .list endpoint' do
       it { is_expected.to be_success }
 
       it 'stores an array of returned records' do
-        expect(response.data.count).to be > 0
+        expect(returned_records.count).to be > 0
       end
 
       it 'stores an array of records' do
-        data = response.data
-        data.map do |record|
+        returned_records.map do |record|
           expect(record).to be_a(object_type)
         end
       end
     end
 
     context 'with no available records to return' do
-      let(:fixture_file) { 'no_records_200' }
+      let(:fixture_file) { "no_records_#{status}" }
 
       it { is_expected.to be_a(Bigcommerce::V3::Response) }
       it { is_expected.to be_success }
 
       it 'stores an array with no records' do
-        expect(resource.list.data.count).to be_zero
+        expect(returned_records.count).to be_zero
       end
     end
   end
@@ -50,7 +50,7 @@ RSpec.shared_examples 'a bulk .list endpoint' do
     end
 
     context 'with available records to return' do
-      let(:fixture_file) { 'with_params_200' }
+      let(:fixture_file) { "with_params_#{status}" }
 
       it { is_expected.to be_a(Bigcommerce::V3::Response) }
       it { is_expected.to be_success }
@@ -64,30 +64,29 @@ RSpec.shared_examples 'a bulk .list endpoint' do
       end
 
       it 'stores an array of returned records' do
-        expect(response.data.count).to be > 0
+        expect(returned_records.count).to be > 0
       end
 
       it 'stores an array of records' do
-        data = response.data
-        data.map do |record|
+        returned_records.map do |record|
           expect(record).to be_a(object_type)
         end
       end
     end
 
     context 'with no available records to return' do
-      let(:fixture_file) { 'with_params_no_records_200' }
+      let(:fixture_file) { "with_params_no_records_#{status}" }
 
       it { is_expected.to be_a(Bigcommerce::V3::Response) }
       it { is_expected.to be_success }
 
       it 'stores an array with no records' do
-        expect(response.data.count).to eq(0)
+        expect(returned_records.count).to eq(0)
       end
     end
 
     context 'when passing invalid parameters' do
-      let(:fixture_file) { '422' }
+      let(:fixture_file) { status.to_s }
       let(:status) { 422 }
       let(:params) do
         {
