@@ -11,6 +11,7 @@ RSpec.shared_examples 'a bulk .list endpoint' do
       let(:fixture_file) { status.to_s }
 
       it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.to be_success }
 
       it 'stores an array of returned records' do
         expect(response.data.count).to be > 0
@@ -27,9 +28,8 @@ RSpec.shared_examples 'a bulk .list endpoint' do
     context 'with no available records to return' do
       let(:fixture_file) { 'no_records_200' }
 
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(resource.list).to be_a(Bigcommerce::V3::Response)
-      end
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.to be_success }
 
       it 'stores an array with no records' do
         expect(resource.list.data.count).to be_zero
@@ -38,7 +38,8 @@ RSpec.shared_examples 'a bulk .list endpoint' do
   end
 
   context 'when called with params hash' do
-    let(:response) { resource.list(params: params) }
+    subject(:response) { resource.list(params: params) }
+
     let(:per_page) { 2 }
     let(:current_page) { 2 }
     let(:params) do
@@ -51,16 +52,15 @@ RSpec.shared_examples 'a bulk .list endpoint' do
     context 'with available records to return' do
       let(:fixture_file) { 'with_params_200' }
 
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.to be_success }
+
       it 'returns the appropriate :per_page' do
         expect(response.per_page).to eq(per_page.to_s)
       end
 
       it 'returns the appropriate :page' do
         expect(response.current_page).to eq(current_page.to_s)
-      end
-
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
       end
 
       it 'stores an array of returned records' do
@@ -78,9 +78,8 @@ RSpec.shared_examples 'a bulk .list endpoint' do
     context 'with no available records to return' do
       let(:fixture_file) { 'with_params_no_records_200' }
 
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.to be_success }
 
       it 'stores an array with no records' do
         expect(response.data.count).to eq(0)
@@ -98,16 +97,11 @@ RSpec.shared_examples 'a bulk .list endpoint' do
       let(:errors) { {} }
       let(:title) { 'The filter(s): foo are not valid filter parameter(s).' }
 
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.not_to be_success }
 
       it 'has an appropriate status' do
         expect(response.status).to eq(status)
-      end
-
-      it 'is not a success' do
-        expect(response).not_to be_success
       end
 
       it 'has an error title' do

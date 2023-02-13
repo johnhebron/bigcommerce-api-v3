@@ -1,21 +1,17 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
+  subject(:response) { resource.retrieve(id: id) }
+
   let(:resource_action) { 'retrieve' }
   let(:stubs) { stub_request(path: url, response: stubbed_response) }
-  let(:response) { resource.retrieve(id: id) }
 
   context 'when retrieving a valid id' do
     let(:fixture_file) { '200' }
     let(:id) { 2 }
 
-    it 'returns a Bigcommerce::V3::Response' do
-      expect(response).to be_a(Bigcommerce::V3::Response)
-    end
-
-    it 'is a success' do
-      expect(response).to be_success
-    end
+    it { is_expected.to be_a(Bigcommerce::V3::Response) }
+    it { is_expected.to be_success }
 
     it 'stores an array with 1 returned record' do
       expect(response.data.count).to eq(1)
@@ -31,13 +27,8 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     let(:status) { retrieve_no_records_status }
     let(:id) { 42 }
 
-    it 'returns a Bigcommerce::V3::Response' do
-      expect(response).to be_a(Bigcommerce::V3::Response)
-    end
-
-    it 'is a success' do
-      expect(response).to be_success
-    end
+    it { is_expected.to be_a(Bigcommerce::V3::Response) }
+    it { is_expected.to be_success }
 
     it 'stores an array with 0 returned record' do
       expect(response.data.count).to eq(0)
@@ -50,13 +41,8 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     let(:id) { 'hello' }
     let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
 
-    it 'returns a Bigcommerce::V3::Response' do
-      expect(response).to be_a(Bigcommerce::V3::Response)
-    end
-
-    it 'is not a success' do
-      expect(response).not_to be_success
-    end
+    it { is_expected.to be_a(Bigcommerce::V3::Response) }
+    it { is_expected.not_to be_success }
 
     it 'has an appropriate status' do
       expect(response.status).to eq(status)
@@ -81,13 +67,8 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     let(:id) { 'hello' }
     let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
 
-    it 'returns a Bigcommerce::V3::Response' do
-      expect(response).to be_a(Bigcommerce::V3::Response)
-    end
-
-    it 'is a success' do
-      expect(response).to be_success
-    end
+    it { is_expected.to be_a(Bigcommerce::V3::Response) }
+    it { is_expected.to be_success }
 
     it 'has an appropriate status' do
       expect(response.status).to eq(status)
