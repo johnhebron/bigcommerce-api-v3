@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "id": 3,
+      "authentication": {
+        "force_password_reset": false
+      },
+      "company": "",
+      "customer_group_id": 0,
+      "email": "fred.rogers+e141dc52-9b28-43e6-a844-523e32746ee9@example.com",
+      "first_name": "Fred",
+      "last_name": "Rogers",
+      "notes": "",
+      "phone": "",
+      "registration_ip_address": "",
+      "tax_exempt_category": "",
+      "date_created": "2023-01-28T19:56:00Z",
+      "date_modified": "2023-02-11T03:44:38Z",
+      "accepts_product_review_abandoned_cart_emails": false,
+      "store_credit_amounts": [
+        {
+          "amount": 0
+        }
+      ],
+      "origin_channel_id": 1,
+      "channel_ids": null
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 1,
+      "count": 1,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 1
+    }
+  }
+}
