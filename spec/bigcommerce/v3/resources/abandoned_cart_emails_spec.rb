@@ -54,7 +54,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
       end
 
       it 'stores an array with no records' do
-        expect(response.data.count).to eq(0)
+        expect(response.data.count).to be_zero
       end
     end
   end

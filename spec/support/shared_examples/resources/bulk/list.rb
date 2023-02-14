@@ -81,7 +81,7 @@ RSpec.shared_examples 'a bulk .list endpoint' do
       it { is_expected.to be_success }
 
       it 'returns an array with no records' do
-        expect(returned_records.count).to eq(0)
+        expect(returned_records.count).to be_zero
       end
     end
 
@@ -116,11 +116,106 @@ RSpec.shared_examples 'a bulk .list endpoint' do
       end
     end
 
-    context 'when called with a `nil` :params' do
-      let(:params) { nil }
+    context 'when called with the wrong :params type' do
+      invalid_params_examples = [nil, 'string', 0, [1, 2]] # nil, string, <1, array
 
-      it 'raises a Bigcommerce::V3::Error' do
-        expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      invalid_params_examples.each do |param|
+        let(:params) { param }
+
+        it 'raises a Bigcommerce::V3::Error' do
+          expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+        end
+      end
+    end
+  end
+
+  context 'when called with :page and :per_page' do
+    subject(:response) { resource.list(page: current_page, per_page: per_page) }
+
+    let(:per_page) { 2 }
+    let(:current_page) { 2 }
+
+    context 'when there are available records to return' do
+      let(:fixture_file) { "with_params_#{status}" }
+
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.to be_success }
+
+      it 'returns the appropriate :per_page' do
+        expect(response.per_page).to eq(per_page.to_s)
+      end
+
+      it 'returns the appropriate :page' do
+        expect(response.current_page).to eq(current_page.to_s)
+      end
+
+      it 'returns an array with at least one record' do
+        expect(returned_records.count).to be > 0
+      end
+
+      it 'returns an array of matching records' do
+        returned_records.map do |record|
+          expect(record).to be_a(object_type)
+        end
+      end
+    end
+
+    context 'when there are no available records to return' do
+      let(:fixture_file) { "with_params_no_records_#{status}" }
+
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.to be_success }
+
+      it 'returns an array with no records' do
+        expect(returned_records.count).to be_zero
+      end
+    end
+
+    context 'when called with the wrong :page and :per_page type' do
+      invalid_params_examples = [nil, 'string', 0, [1, 2], {}] # nil, string, <1, array, hash
+
+      invalid_params_examples.each do |param|
+        let(:per_page) { param }
+        let(:current_page) { param }
+
+        it 'raises a Bigcommerce::V3::Error' do
+          expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+        end
+      end
+    end
+
+    context 'when called with :page, :per_page, and :params' do
+      subject(:response) { resource.list(per_page: per_page, page: current_page) }
+
+      let(:fixture_file) { "with_params_#{status}" }
+      let(:per_page) { 2 }
+      let(:current_page) { 2 }
+      let(:params) do
+        {
+          'limit' => 34,
+          'page' => 54
+        }
+      end
+
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.to be_success }
+
+      it 'returns the appropriate :per_page' do
+        expect(response.per_page).to eq(per_page.to_s)
+      end
+
+      it 'returns the appropriate :page' do
+        expect(response.current_page).to eq(current_page.to_s)
+      end
+
+      it 'returns an array with at least one record' do
+        expect(returned_records.count).to be > 0
+      end
+
+      it 'returns an array of matching records' do
+        returned_records.map do |record|
+          expect(record).to be_a(object_type)
+        end
       end
     end
   end
