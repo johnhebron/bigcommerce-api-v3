@@ -9,10 +9,12 @@ require 'bundler/setup'
 require 'bigcommerce/v3'
 require 'irb'
 
+logger = ARGV[0] ? ARGV[0].to_s.casecmp('--logger').zero? : false
+
 # Create a Bigcommerce::V3::Configuration object with .env variables
 @config = Bigcommerce::V3::Configuration.new(store_hash: ENV.fetch('STORE_HASH', nil),
                                              access_token: ENV.fetch('ACCESS_TOKEN', nil),
-                                             logger: true)
+                                             logger: logger)
 
 # Create a Bigcommerce::V3::Client
 @client = Bigcommerce::V3::Client.new(config: @config)
@@ -32,5 +34,7 @@ puts '~~~~~~~~~~~~~~'
 puts "@client.customers.list\n  # Returns first page of Customers"
 puts "@client.pages.list\n  # Returns first page of Pages\n\n"
 
+# Clear arguments
+ARGV.clear
 # Start IRB
-IRB.start(__FILE__)
+IRB.start
