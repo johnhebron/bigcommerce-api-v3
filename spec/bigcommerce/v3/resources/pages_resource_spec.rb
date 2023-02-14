@@ -29,7 +29,7 @@ describe 'Bigcommerce::V3::PagesResource' do
   describe '#retrieve' do
     let(:status) { 200 }
     let(:retrieve_no_records_status) { 200 }
-    let(:retrieve_invalid_params_status) { 200 }
+    let(:retrieve_invalid_id_status) { 200 }
 
     fails_on_error = false
 

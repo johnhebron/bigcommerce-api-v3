@@ -10,6 +10,12 @@ module Bigcommerce
         ##
         module Retrieve
           def retrieve(id:)
+            raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+            if id < 1
+              raise Bigcommerce::V3::Error::InvalidArguments,
+                    ':id must be >= 0'
+            end
+
             list(params: { 'id:in' => id })
           end
         end

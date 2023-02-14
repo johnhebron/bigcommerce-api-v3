@@ -10,10 +10,7 @@ module Bigcommerce
         ##
         module BulkUpdate
           def bulk_update(params:)
-            unless params.is_a?(Array)
-              raise Bigcommerce::V3::Error::ParamError,
-                    params_error(param: params, type: 'Array')
-            end
+            raise_params_error(param: params, type: 'Array') unless params.is_a?(Array)
 
             url = @resource_url
             object_type = @object_type

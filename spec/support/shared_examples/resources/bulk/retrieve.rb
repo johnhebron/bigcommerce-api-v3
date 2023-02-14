@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
+RSpec.shared_examples 'a bulk .retrieve endpoint' do |_fails_on_error|
   subject(:response) { resource.retrieve(id: id) }
 
   let(:resource_action) { 'retrieve' }
@@ -36,47 +36,27 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do |fails_on_error|
     end
   end
 
-  context 'when called with invalid parameters', if: fails_on_error do
-    let(:fixture_file) { "bad_params_#{retrieve_invalid_params_status}" }
-    let(:status) { retrieve_invalid_params_status }
+  context 'when called with an :id that is not an Integer' do
     let(:id) { 'hello' }
-    let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
 
-    it { is_expected.to be_a(Bigcommerce::V3::Response) }
-    it { is_expected.not_to be_success }
-
-    it 'returns an appropriate status' do
-      expect(response.status).to eq(status)
-    end
-
-    it 'returns an error title' do
-      expect(response.error.title).not_to be_nil
-    end
-
-    it 'returns an error type' do
-      expect(response.error.type).not_to be_nil
-    end
-
-    it 'returns a data payload with an errors hash' do
-      expect(response.error.errors).not_to be_nil
+    it 'raises and InvalidArguments Error' do
+      expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
     end
   end
 
-  context 'when called with invalid parameters', if: !fails_on_error do
-    let(:fixture_file) { "bad_params_#{retrieve_invalid_params_status}" }
-    let(:status) { retrieve_invalid_params_status }
-    let(:id) { 'hello' }
-    let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
+  context 'when called with a nil :id' do
+    let(:id) { nil }
 
-    it { is_expected.to be_a(Bigcommerce::V3::Response) }
-    it { is_expected.to be_success }
-
-    it 'returns an appropriate status' do
-      expect(response.status).to eq(status)
+    it 'raises and InvalidArguments Error' do
+      expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
     end
+  end
 
-    it 'returns an empty .data' do
-      expect(returned_records).to be_empty
+  context 'when called with a zero :id' do
+    let(:id) { 0 }
+
+    it 'raises and InvalidArguments Error' do
+      expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
     end
   end
 end

@@ -5,7 +5,7 @@ RSpec.shared_examples 'a bulk .list endpoint' do
   let(:stubs) { stub_request(path: url, response: stubbed_response) }
   let(:status) { 200 }
 
-  context 'when called with no params' do
+  context 'when called with no parameters' do
     subject(:response) { resource.list }
 
     context 'when there are available records to return' do
@@ -37,7 +37,7 @@ RSpec.shared_examples 'a bulk .list endpoint' do
     end
   end
 
-  context 'when called with a params input' do
+  context 'when called with :params' do
     subject(:response) { resource.list(params: params) }
 
     let(:per_page) { 2 }
@@ -85,7 +85,7 @@ RSpec.shared_examples 'a bulk .list endpoint' do
       end
     end
 
-    context 'when called with invalid parameters' do
+    context 'when called with :params containing an invalid key' do
       let(:fixture_file) { status.to_s }
       let(:status) { 422 }
       let(:params) do
@@ -113,6 +113,14 @@ RSpec.shared_examples 'a bulk .list endpoint' do
 
       it 'returns an errors hash' do
         expect(response.error.errors).not_to be_nil
+      end
+    end
+
+    context 'when called with a `nil` :params' do
+      let(:params) { nil }
+
+      it 'raises a Bigcommerce::V3::Error' do
+        expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
       end
     end
   end

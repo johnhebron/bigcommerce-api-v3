@@ -10,7 +10,7 @@ module Bigcommerce
         ##
         module Create
           def create(params:)
-            raise Bigcommerce::V3::Error::ParamError, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
+            raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
             bulk_create(params: [params])
           end

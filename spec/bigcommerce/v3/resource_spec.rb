@@ -129,6 +129,23 @@ describe 'Bigcommerce::V3::Resource' do
 
     let(:fixture) { 'resource/post_url201' }
     let(:status) { 201 }
+    let(:body) do
+      {
+        'channel_id' => 1,
+        'name' => 'Updated With a New Name!',
+        'meta_title' => 'Second Page In A Bulk Create',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/second-page'
+      }.to_json
+    end
 
     it 'returns a Faraday::Response' do
       expect(resource.post_request(url: url, body: body)).to be_a(Faraday::Response)
