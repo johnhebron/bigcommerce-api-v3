@@ -99,7 +99,7 @@ RSpec.shared_examples 'a bulk .list endpoint' do
       it { is_expected.to be_a(Bigcommerce::V3::Response) }
       it { is_expected.not_to be_success }
 
-      it 'returns an appropriate status' do
+      it 'returns the correct status' do
         expect(response.status).to eq(status)
       end
 

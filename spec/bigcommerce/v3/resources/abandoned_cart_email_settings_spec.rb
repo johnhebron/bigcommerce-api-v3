@@ -60,7 +60,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
         expect(response).not_to be_success
       end
 
-      it 'has an appropriate status' do
+      it 'returns the correct status' do
         expect(response.status).to eq(status)
       end
 
@@ -100,7 +100,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
         expect(response).to be_success
       end
 
-      it 'has a .total of nil records' do
+      it 'has a .total of nil' do
         # because the .total is pulled from the meta hash
         # which is not returned on a POST request
         expect(response.total).to be_nil

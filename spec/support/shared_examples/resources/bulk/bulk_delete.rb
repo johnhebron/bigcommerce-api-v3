@@ -21,13 +21,13 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
           expect(response).to be_success
         end
 
-        it 'has a .total of nil records' do
+        it 'has a .total of nil' do
           # because the .total is pulled from the meta hash
           # which is not returned on a DELETE request
           expect(response.total).to be_nil
         end
 
-        it 'has a nil .data' do
+        it 'returns a nil .data' do
           # since a DELETE request only returns a 204 with no body
           # the .success? method is the best way to check success
           expect(response.data).to be_nil
@@ -46,13 +46,13 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
           expect(response).to be_success
         end
 
-        it 'has a .total of nil records' do
+        it 'has a .total of nil' do
           # because the .total is pulled from the meta hash
           # which is not returned on a DELETE request
           expect(response.total).to be_nil
         end
 
-        it 'has a nil .data' do
+        it 'returns a nil .data' do
           # since a DELETE request only returns a 204 with no body
           # the .success? method is the best way to check success
           expect(response.data).to be_nil
@@ -75,13 +75,13 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
         expect(response).to be_success
       end
 
-      it 'has a .total of nil records' do
+      it 'has a .total of nil' do
         # because the .total is pulled from the meta hash
         # which is not returned on a DELETE request
         expect(response.total).to be_nil
       end
 
-      it 'has a nil .data' do
+      it 'returns a nil .data' do
         # since a DELETE request only returns a 204 with no body
         # the .success? method is the best way to check success
         expect(response.data).to be_nil
