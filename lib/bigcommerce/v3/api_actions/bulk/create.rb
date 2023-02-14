@@ -11,6 +11,7 @@ module Bigcommerce
         module Create
           def create(params:)
             raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
+            raise Bigcommerce::V3::Error::InvalidArguments, ':params must not be empty' if params.empty?
 
             bulk_create(params: [params])
           end

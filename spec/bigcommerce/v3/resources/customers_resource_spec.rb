@@ -80,6 +80,13 @@ describe 'Bigcommerce::V3::CustomersResource' do
         'email' => 'sally@smithers.org'
       }
     end
+    let(:existing_record_detail) { nil }
+    let(:existing_record_title) { 'Create customers failed.' }
+    let(:existing_record_errors) do
+      {
+        '.customer_create' => 'Error creating customers: email sally@smithers.org already in use'
+      }
+    end
 
     it_behaves_like 'a bulk .create endpoint'
   end

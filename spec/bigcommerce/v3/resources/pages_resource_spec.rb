@@ -88,7 +88,6 @@ describe 'Bigcommerce::V3::PagesResource' do
       ]
     end
     let(:existing_record_params) { single_record_params }
-    let(:invalid_params) { 42 }
     let(:existing_record_title) { 'Input is invalid' }
     let(:existing_record_errors) { nil }
     let(:existing_record_detail) { "'Name' must be unique" }
@@ -114,6 +113,10 @@ describe 'Bigcommerce::V3::PagesResource' do
         'url' => '/a-whole-new-page'
       }
     end
+    let(:existing_record_params) { single_record_params }
+    let(:existing_record_title) { 'Input is invalid' }
+    let(:existing_record_errors) { nil }
+    let(:existing_record_detail) { "'Name' must be unique" }
 
     it_behaves_like 'a bulk .create endpoint'
   end
