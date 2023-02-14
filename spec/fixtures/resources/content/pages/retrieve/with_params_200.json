@@ -1,0 +1,33 @@
+{
+  "data": [
+    {
+      "id": 3,
+      "channel_id": 1,
+      "name": "An Example Page Title",
+      "meta_title": "",
+      "body": "<p>some <em>great<\/em> html content<\/p>",
+      "is_visible": false,
+      "parent_id": 0,
+      "sort_order": 0,
+      "meta_keywords": null,
+      "type": "page",
+      "meta_description": "",
+      "is_homepage": false,
+      "is_customers_only": false,
+      "search_keywords": ""
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 211,
+      "count": 1,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 5,
+      "links": {
+        "next": "?id%3Ain=5&include=body&limit=50&page=2",
+        "current": "?id%3Ain=5&include=body&limit=50&page=1"
+      }
+    }
+  }
+}

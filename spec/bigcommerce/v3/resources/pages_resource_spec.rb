@@ -30,10 +30,9 @@ describe 'Bigcommerce::V3::PagesResource' do
     let(:status) { 200 }
     let(:retrieve_no_records_status) { 200 }
     let(:retrieve_invalid_id_status) { 200 }
+    let(:retrieve_optional_params) { { include: 'body' } }
 
-    fails_on_error = false
-
-    it_behaves_like 'a bulk .retrieve endpoint', fails_on_error
+    it_behaves_like 'a bulk .retrieve endpoint'
   end
 
   describe '#bulk_create' do

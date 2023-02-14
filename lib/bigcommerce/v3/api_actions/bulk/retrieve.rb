@@ -9,14 +9,12 @@ module Bigcommerce
         # since the list endpoint supports bulk by default
         ##
         module Retrieve
-          def retrieve(id:)
+          def retrieve(id:, params: {})
+            raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
             raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
-            if id < 1
-              raise Bigcommerce::V3::Error::InvalidArguments,
-                    ':id must be >= 0'
-            end
+            raise Bigcommerce::V3::Error::InvalidArguments, ':id must be > 0' if id < 1
 
-            list(params: { 'id:in' => id })
+            list(params: params.merge({ 'id:in' => id }))
           end
         end
       end
