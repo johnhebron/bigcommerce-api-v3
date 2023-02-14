@@ -41,7 +41,7 @@ module Bigcommerce
       # Create Resource
       ##
       def create(params:)
-        raise Error::ParamError, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
+        raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: post_request(url: url,
@@ -53,8 +53,8 @@ module Bigcommerce
       # Update Resource
       ##
       def update(id:, params:)
-        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
-        raise Error::InvalidArguments, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
+        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+        raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
         url = "#{RESOURCE_URL}/#{id}"
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
@@ -65,7 +65,7 @@ module Bigcommerce
       # Delete Resource
       ##
       def delete(id:)
-        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
 
         url = "#{RESOURCE_URL}/#{id}"
         Bigcommerce::V3::Response.from_response(response: delete_request(url: url),

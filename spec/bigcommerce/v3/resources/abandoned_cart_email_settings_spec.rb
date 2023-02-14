@@ -14,13 +14,19 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
   let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
+    let(:status) { 200 }
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:response) { resource.list }
+
     it_behaves_like 'an instantiable Resource'
   end
 
   describe '#retrieve' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.retrieve(id: id) }
 
     context 'when retrieving a valid id' do
+      let(:status) { 200 }
       let(:id) { 2 }
 
       it 'returns a Bigcommerce::V3::Response' do
@@ -54,7 +60,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
         expect(response).not_to be_success
       end
 
-      it 'has an appropriate status' do
+      it 'returns the correct status' do
         expect(response.status).to eq(status)
       end
 
@@ -94,7 +100,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
         expect(response).to be_success
       end
 
-      it 'has a .total of nil records' do
+      it 'has a .total of nil' do
         # because the .total is pulled from the meta hash
         # which is not returned on a POST request
         expect(response.total).to be_nil

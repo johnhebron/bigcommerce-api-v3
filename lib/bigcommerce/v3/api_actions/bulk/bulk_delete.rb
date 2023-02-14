@@ -10,16 +10,10 @@ module Bigcommerce
         ##
         module BulkDelete
           def bulk_delete(ids:)
-            unless ids.is_a?(Array)
-              raise Bigcommerce::V3::Error::InvalidArguments,
-                    params_error(param: ids, type: 'Array')
-            end
+            raise_params_error(param: ids, type: 'Array') unless ids.is_a?(Array)
 
             ids.map do |id|
-              unless id.is_a?(Integer)
-                raise Bigcommerce::V3::Error::InvalidArguments,
-                      params_error(param: id, type: 'Array of Integers')
-              end
+              raise_params_error(param: id, type: 'Array of Integers') unless id.is_a?(Integer)
             end
 
             url = @resource_url

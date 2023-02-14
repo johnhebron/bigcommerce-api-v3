@@ -14,13 +14,19 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
   let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
+    let(:status) { 200 }
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:response) { resource.list }
+
     it_behaves_like 'an instantiable Resource'
   end
 
   describe '#list' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.list }
 
     context 'with available records to return' do
+      let(:status) { 200 }
       let(:fixture_file) { 'get_abandoned_cart_emails_url200' }
 
       it 'returns a Bigcommerce::V3::Response' do
@@ -40,6 +46,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     end
 
     context 'with no available records to return' do
+      let(:status) { 200 }
       let(:fixture_file) { 'get_abandoned_cart_emails_url_no_records200' }
 
       it 'returns a Bigcommerce::V3::Response' do
@@ -53,10 +60,12 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
   end
 
   describe '#retrieve' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:url) { "#{base_url}#{resource_url}/#{id}" }
     let(:response) { resource.retrieve(id: id) }
 
     context 'when retrieving a valid id' do
+      let(:status) { 200 }
       let(:fixture_file) { 'retrieve_abandoned_cart_email_url200' }
       let(:id) { 2 }
 
@@ -90,7 +99,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
         expect(response).not_to be_success
       end
 
-      it 'has a nil .data' do
+      it 'returns a nil .data' do
         expect(response.data).to be_nil
       end
     end
@@ -111,7 +120,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
         expect(response).not_to be_success
       end
 
-      it 'has an appropriate status' do
+      it 'returns the correct status' do
         expect(response.status).to eq(status)
       end
 
@@ -123,7 +132,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
         expect(response.error.type).to eq(type)
       end
 
-      it 'has a data payload with an errors hash' do
+      it 'returns an error with an errors hash' do
         expect(response.error.errors).to eq(errors)
       end
     end
@@ -167,7 +176,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
         expect(response).to be_success
       end
 
-      it 'has a .total of nil records' do
+      it 'has a .total of nil' do
         # because the .total is pulled from the meta hash
         # which is not returned on a POST request
         expect(response.total).to be_nil
@@ -222,7 +231,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
         expect(response).to be_success
       end
 
-      it 'has a .total of nil records' do
+      it 'has a .total of nil' do
         # because the .total is pulled from the meta hash
         # which is not returned on a POST request
         expect(response.total).to be_nil
@@ -281,13 +290,13 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
         expect(response).to be_success
       end
 
-      it 'has a .total of nil records' do
+      it 'has a .total of nil' do
         # because the .total is pulled from the meta hash
         # which is not returned on a POST request
         expect(response.total).to be_nil
       end
 
-      it 'has a nil .data' do
+      it 'returns a nil .data' do
         # since .total won't be set, .data.count is your bet
         expect(response.data).to be_nil
       end

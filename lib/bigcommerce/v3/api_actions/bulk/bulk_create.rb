@@ -21,7 +21,7 @@ module Bigcommerce
               Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: [params]),
                                                       object_type: object_type)
             else
-              raise Bigcommerce::V3::Error::InvalidArguments, params_error(param: params, type: 'Hash or Array')
+              raise_params_error(param: params, type: 'Hash or Array')
             end
           end
         end

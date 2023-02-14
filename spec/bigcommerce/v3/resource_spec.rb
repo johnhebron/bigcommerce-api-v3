@@ -4,22 +4,28 @@ require './spec/spec_helper'
 
 describe 'Bigcommerce::V3::Resource' do
   subject(:resource) do
-    Bigcommerce::V3::Resource.new(client: client, resource_url: resource_url, object_type: Bigcommerce::V3::Object)
+    class_name.new(client: client, resource_url: resource_url, object_type: Bigcommerce::V3::Object)
   end
 
   include_context 'when connected to API'
 
   # Using 'content/pages' as example
   let(:resource_url) { 'content/pages' }
-  let(:fixture) { 'resource/get_url200' }
+
+  let(:class_name) { Bigcommerce::V3::Resource }
 
   describe '#initialize' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:fixture) { "resource/get_url#{status}" }
+    let(:status) { 200 }
+
     it 'is of type Resource' do
       expect(resource).to be_a(Bigcommerce::V3::Resource)
     end
   end
 
   describe '#get_request' do
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:url) { "/stores/#{store_hash}/v3/content/pages" }
     let(:fixture) { 'resource/get_url200' }
     let(:status) { 200 }
@@ -123,6 +129,23 @@ describe 'Bigcommerce::V3::Resource' do
 
     let(:fixture) { 'resource/post_url201' }
     let(:status) { 201 }
+    let(:body) do
+      {
+        'channel_id' => 1,
+        'name' => 'Updated With a New Name!',
+        'meta_title' => 'Second Page In A Bulk Create',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/second-page'
+      }.to_json
+    end
 
     it 'returns a Faraday::Response' do
       expect(resource.post_request(url: url, body: body)).to be_a(Faraday::Response)

@@ -1,33 +1,28 @@
 # frozen_string_literal: true
 
 RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
+  subject(:response) { resource.bulk_delete(ids: ids) }
+
   let(:resource_action) { 'bulk_delete' }
   let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
-  let(:response) { resource.bulk_delete(ids: ids) }
   let(:fixture) { '' } # successful response body is empty for DELETE request
+  let(:status) { 204 }
 
-  context 'when passing a valid customer_ids Array' do
+  context 'when called with a valid :ids array' do
     context 'when the customer records do exist' do
-      let(:status) { 204 }
-
       context 'when deleting only one customer' do
         let(:ids) { [42] }
 
-        it 'returns a Bigcommerce::V3::Response' do
-          expect(response).to be_a(Bigcommerce::V3::Response)
-        end
+        it { is_expected.to be_a(Bigcommerce::V3::Response) }
+        it { is_expected.to be_success }
 
-        it 'is a success' do
-          expect(response).to be_success
-        end
-
-        it 'has a .total of nil records' do
+        it 'returns a .total of nil' do
           # because the .total is pulled from the meta hash
           # which is not returned on a DELETE request
           expect(response.total).to be_nil
         end
 
-        it 'has a nil .data' do
+        it 'returns a nil .data' do
           # since a DELETE request only returns a 204 with no body
           # the .success? method is the best way to check success
           expect(response.data).to be_nil
@@ -38,21 +33,16 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
         let(:fixture) { '' }
         let(:ids) { [147, 145] }
 
-        it 'returns a Bigcommerce::V3::Response' do
-          expect(response).to be_a(Bigcommerce::V3::Response)
-        end
+        it { is_expected.to be_a(Bigcommerce::V3::Response) }
+        it { is_expected.to be_success }
 
-        it 'is a success' do
-          expect(response).to be_success
-        end
-
-        it 'has a .total of nil records' do
+        it 'returns a .total of nil' do
           # because the .total is pulled from the meta hash
           # which is not returned on a DELETE request
           expect(response.total).to be_nil
         end
 
-        it 'has a nil .data' do
+        it 'returns a nil .data' do
           # since a DELETE request only returns a 204 with no body
           # the .success? method is the best way to check success
           expect(response.data).to be_nil
@@ -64,24 +54,18 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
       # For the BigCommerce API, a DELETE request for an invalid ID still
       # returns a 204 success with no body
       let(:fixture) { '' }
-      let(:status) { 204 }
       let(:ids) { [0] }
 
-      it 'returns a Bigcommerce::V3::Response' do
-        expect(response).to be_a(Bigcommerce::V3::Response)
-      end
+      it { is_expected.to be_a(Bigcommerce::V3::Response) }
+      it { is_expected.to be_success }
 
-      it 'is a success' do
-        expect(response).to be_success
-      end
-
-      it 'has a .total of nil records' do
+      it 'returns a .total of nil' do
         # because the .total is pulled from the meta hash
         # which is not returned on a DELETE request
         expect(response.total).to be_nil
       end
 
-      it 'has a nil .data' do
+      it 'returns a nil .data' do
         # since a DELETE request only returns a 204 with no body
         # the .success? method is the best way to check success
         expect(response.data).to be_nil
@@ -89,7 +73,7 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
     end
   end
 
-  context 'when passing an invalid ids Array' do
+  context 'when called with array of non-Integers' do
     let(:fixture) { '' }
     let(:ids) { %w[string string] }
 
@@ -98,7 +82,7 @@ RSpec.shared_examples 'a bulk .bulk_delete endpoint' do
     end
   end
 
-  context 'when passing invalid params' do
+  context 'when called with an empty string' do
     let(:fixture) { '' }
     let(:ids) { '' }
 

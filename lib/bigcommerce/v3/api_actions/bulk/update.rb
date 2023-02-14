@@ -10,14 +10,8 @@ module Bigcommerce
         ##
         module Update
           def update(id:, params:)
-            unless id.is_a?(Integer)
-              raise Bigcommerce::V3::Error::InvalidArguments,
-                    params_error(param: id, type: 'Integer')
-            end
-            unless params.is_a?(Hash)
-              raise Bigcommerce::V3::Error::InvalidArguments,
-                    params_error(param: params, type: 'Hash')
-            end
+            raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+            raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
             params['id'] = id
             bulk_update(params: [params])

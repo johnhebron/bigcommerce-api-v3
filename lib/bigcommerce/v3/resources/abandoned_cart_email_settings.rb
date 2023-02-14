@@ -23,7 +23,7 @@ module Bigcommerce
       # Retrieve Resource
       ##
       def retrieve(id:)
-        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
 
         params = { channel_id: id }
         url = RESOURCE_URL
@@ -35,8 +35,8 @@ module Bigcommerce
       # Update Resource
       ##
       def update(id:, params:)
-        raise Error::InvalidArguments, params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
-        raise Error::InvalidArguments, params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
+        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+        raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
         params[:channel_id] = id
         url = RESOURCE_URL

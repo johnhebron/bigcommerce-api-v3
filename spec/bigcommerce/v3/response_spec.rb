@@ -150,7 +150,7 @@ describe 'Bigcommerce::V3::Response' do
           expect(response).not_to be_success
         end
 
-        it 'has a nil .data' do
+        it 'returns a nil .data' do
           expect(response.data).to be_nil
         end
 

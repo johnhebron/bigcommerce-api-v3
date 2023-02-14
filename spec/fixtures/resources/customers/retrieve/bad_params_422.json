@@ -1,6 +1,0 @@
-{
-  "status": 422,
-  "title": "Query parameter \"id:in\" value may contain only integer values. For input string: \"hello\".",
-  "type": "https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes",
-  "errors": {}
-}
