@@ -10,19 +10,17 @@ module Bigcommerce
         ##
         module BulkCreate
           def bulk_create(params:)
+            raise_params_error(param: params, type: 'Array') unless params.is_a?(Array)
+            params.each do |param|
+              raise Bigcommerce::V3::Error::InvalidArguments, ':params elements must be Hashes' unless param.is_a?(Hash)
+            end
+            raise Bigcommerce::V3::Error::InvalidArguments, ':params must not be empty' if params.empty?
+
             url = @resource_url
             object_type = @object_type
 
-            case params
-            when Array
-              Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: params),
-                                                      object_type: object_type)
-            when Hash
-              Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: [params]),
-                                                      object_type: object_type)
-            else
-              raise_params_error(param: params, type: 'Hash or Array')
-            end
+            Bigcommerce::V3::Response.from_response(response: post_request(url: url, body: params),
+                                                    object_type: object_type)
           end
         end
       end

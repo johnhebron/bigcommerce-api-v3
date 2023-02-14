@@ -95,14 +95,38 @@ RSpec.shared_examples 'a bulk .bulk_create endpoint' do
     end
   end
 
-  context 'when called with invalid :params' do
+  context 'when called with invalid :params types' do
     let(:fixture) { '' }
-    let(:status) { 422 }
-    let(:params) { invalid_params }
-    let(:stringified_params) { invalid_params.to_json }
 
-    it 'raises an error' do
-      expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+    invalid_params_examples = [nil, 'string', 0, { key: 'value' }] # nil, string, integer, hash
+
+    invalid_params_examples.each do |param|
+      let(:params) { param }
+      let(:stringified_params) { param.to_json }
+
+      it 'raises a Bigcommerce::V3::Error' do
+        expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      end
+    end
+  end
+
+  context 'when called with empty :params array' do
+    let(:fixture) { '' }
+    let(:params) { [] }
+    let(:stringified_params) { [].to_json }
+
+    it 'raises a Bigcommerce::V3::Error' do
+      expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+    end
+  end
+
+  context 'when called with a :params array containing non-hash values' do
+    let(:fixture) { '' }
+    let(:params) { [{ key: 'value' }, 1] }
+    let(:stringified_params) { [{ key: 'value' }, 1].to_json }
+
+    it 'raises a Bigcommerce::V3::Error' do
+      expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
     end
   end
 end
