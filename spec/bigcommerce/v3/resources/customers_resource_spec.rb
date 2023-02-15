@@ -160,6 +160,8 @@ describe 'Bigcommerce::V3::CustomersResource' do
   end
 
   describe '#delete' do
-    it_behaves_like 'a bulk .delete endpoint'
+    fails_on_not_found = false
+
+    it_behaves_like 'a bulk .delete endpoint', fails_on_not_found
   end
 end

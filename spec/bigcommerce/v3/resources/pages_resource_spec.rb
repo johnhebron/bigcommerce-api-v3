@@ -242,6 +242,8 @@ describe 'Bigcommerce::V3::PagesResource' do
   end
 
   describe '#delete' do
-    it_behaves_like 'a bulk .delete endpoint'
+    fails_on_not_found = true
+
+    it_behaves_like 'a bulk .delete endpoint', fails_on_not_found
   end
 end
