@@ -11,6 +11,10 @@ module Bigcommerce
         module BulkUpdate
           def bulk_update(params:)
             raise_params_error(param: params, type: 'Array') unless params.is_a?(Array)
+            params.each do |param|
+              raise Bigcommerce::V3::Error::InvalidArguments, ':params elements must be Hashes' unless param.is_a?(Hash)
+            end
+            raise Bigcommerce::V3::Error::InvalidArguments, ':params must not be empty' if params.empty?
 
             url = @resource_url
             object_type = @object_type

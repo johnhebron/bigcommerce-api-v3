@@ -143,6 +143,14 @@ describe 'Bigcommerce::V3::CustomersResource' do
         'first_name' => 'Sal'
       }
     end
+    let(:existing_record_status) { 422 }
+    let(:existing_record_title) { 'Update customers failed.' }
+    let(:existing_record_errors) do
+      {
+        '0.id' => 'invalid customer ID'
+      }
+    end
+    let(:existing_record_detail) { nil }
 
     it_behaves_like 'a bulk .update endpoint'
   end

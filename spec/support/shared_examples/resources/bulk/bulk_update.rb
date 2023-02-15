@@ -91,40 +91,39 @@ RSpec.shared_examples 'a bulk .bulk_update endpoint' do
     end
   end
 
-  context 'when called with invalid :params' do
-    let(:status) { 422 }
-    let(:fixture_file) { "invalid_params_#{status}" }
-    let(:params) { invalid_params_array }
-    let(:stringified_params) { invalid_params_array.to_json }
-    let(:title) { invalid_params_array_title }
-    let(:errors) { invalid_params_array_errors }
-    let(:detail) { invalid_params_array_detail }
+  context 'when called with invalid :params types' do
+    let(:fixture) { '' }
 
-    it { is_expected.to be_a(Bigcommerce::V3::Response) }
-    it { is_expected.not_to be_success }
+    invalid_params_examples = [nil, 'string', 0, { key: 'value' }] # nil, string, integer, hash
 
-    it 'returns a .total of nil' do
-      expect(response.total).to be_nil
+    invalid_params_examples.each do |param|
+      let(:params) { param }
+      let(:stringified_params) { param.to_json }
+
+      it 'raises a Bigcommerce::V3::Error' do
+        expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+      end
     end
+  end
 
-    it 'returns a nil .data' do
-      expect(response.data).to be_nil
+  context 'when called with empty :params array' do
+    let(:fixture) { '' }
+    let(:id) { single_record_id }
+    let(:params) { [] }
+    let(:stringified_params) { params.to_json }
+
+    it 'raises a Bigcommerce::V3::Error' do
+      expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
     end
+  end
 
-    it 'returns the correct status' do
-      expect(response.status).to eq(status)
-    end
+  context 'when called with a :params array containing non-hash values' do
+    let(:fixture) { '' }
+    let(:params) { [{ key: 'value' }, 1] }
+    let(:stringified_params) { [{ key: 'value' }, 1].to_json }
 
-    it 'returns an error with a title' do
-      expect(response.error.title).to eq(title)
-    end
-
-    it 'returns an error with a type' do
-      expect(response.error.type).to eq(type)
-    end
-
-    it 'returns an error with an errors hash' do
-      expect(response.error.errors).to eq(errors)
+    it 'raises a Bigcommerce::V3::Error' do
+      expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
     end
   end
 end

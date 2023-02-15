@@ -229,6 +229,10 @@ describe 'Bigcommerce::V3::PagesResource' do
         'url' => '/second-page'
       }
     end
+    let(:existing_record_status) { 404 }
+    let(:existing_record_title) { 'A Page was not found with an id of 323' }
+    let(:existing_record_errors) { nil }
+    let(:existing_record_detail) { nil }
 
     it_behaves_like 'a bulk .update endpoint'
   end

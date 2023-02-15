@@ -1,0 +1,8 @@
+{
+  "status": 422,
+  "title": "Update customers failed.",
+  "type": "https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes",
+  "errors": {
+    "0.id": "invalid customer ID"
+  }
+}
