@@ -10,7 +10,10 @@ module Bigcommerce
         ##
         module BulkDelete
           def bulk_delete(ids:)
-            raise_params_error(param: ids, type: 'Array') unless ids.is_a?(Array)
+            ids.each do |id|
+              raise Bigcommerce::V3::Error::InvalidArguments, ':id elements must be Integers' unless id.is_a?(Integer)
+            end
+            raise Bigcommerce::V3::Error::InvalidArguments, ':ids must not be empty' if ids.empty?
 
             ids.map do |id|
               raise_params_error(param: id, type: 'Array of Integers') unless id.is_a?(Integer)
