@@ -56,7 +56,7 @@ describe 'Bigcommerce::V3::Connection' do
     subject(:get) { connection.get(url, params, headers) }
 
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
-    let(:fixture) { 'resource/get_url200' }
+    let(:fixture) { '' }
     let(:status) { 200 }
     let(:url) { "/stores/#{store_hash}/v3/content/pages" }
     let(:params) { {} }
@@ -66,7 +66,7 @@ describe 'Bigcommerce::V3::Connection' do
 
     context 'when rate-limiting occurs' do
       let(:stubs) { stub_request(path: url, response: stubbed_response) }
-      let(:fixture) { 'resource/get_url200' }
+      let(:fixture) { '' }
       let(:status) { 429 }
       let(:response_headers) { { 'X-Rate-Limit-Time-Reset-Ms' => 500 } }
       let(:stubbed_response) { stub_response(fixture: fixture, status: status, headers: response_headers) }
@@ -81,6 +81,140 @@ describe 'Bigcommerce::V3::Connection' do
 
       it 'sleeps the correct amount of time' do
         get
+        expect(elapsed).to be >= expected_sleep
+      end
+    end
+  end
+
+  describe '#post' do
+    subject(:post) { connection.post(url, body, headers) }
+
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: body) }
+    let(:fixture) { '' }
+    let(:status) { 201 }
+    let(:url) { "/stores/#{store_hash}/v3/content/pages" }
+    let(:body) do
+      {
+        'channel_id' => 1,
+        'name' => 'Updated With a New Name!',
+        'meta_title' => 'Second Page In A Bulk Create',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/second-page'
+      }.to_json
+    end
+    let(:headers) { {} }
+
+    it { is_expected.to be_a(Faraday::Response) }
+
+    context 'when rate-limiting occurs' do
+      let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :post, body: body) }
+      let(:fixture) { '' }
+      let(:status) { 429 }
+      let(:response_headers) { { 'X-Rate-Limit-Time-Reset-Ms' => 500 } }
+      let(:stubbed_response) { stub_response(fixture: fixture, status: status, headers: response_headers) }
+      let!(:start) { Time.now }
+      let(:elapsed) { Time.now - start }
+      let(:retries) { Bigcommerce::V3::Connection::MAX_RETRIES }
+      let(:expected_sleep) { (response_headers['X-Rate-Limit-Time-Reset-Ms'] / 1_000) * retries }
+
+      it 'retries MAX_RETRIES times' do
+        expect { post }.to change(connection, :retry_count).by(retries)
+      end
+
+      it 'sleeps the correct amount of time' do
+        post
+        expect(elapsed).to be >= expected_sleep
+      end
+    end
+  end
+
+  describe '#put' do
+    subject(:put) { connection.put(url, body, headers) }
+
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: body) }
+    let(:fixture) { '' }
+    let(:status) { 200 }
+    let(:url) { "/stores/#{store_hash}/v3/content/pages" }
+    let(:body) do
+      {
+        'channel_id' => 1,
+        'name' => 'Updated With a New Name!',
+        'meta_title' => 'Second Page In A Bulk Create',
+        'is_visible' => false,
+        'parent_id' => 0,
+        'sort_order' => 0,
+        'meta_keywords' => 'string',
+        'type' => 'page',
+        'meta_description' => 'string',
+        'is_homepage' => false,
+        'is_customers_only' => false,
+        'search_keywords' => 'string',
+        'url' => '/second-page'
+      }.to_json
+    end
+    let(:headers) { {} }
+
+    it { is_expected.to be_a(Faraday::Response) }
+
+    context 'when rate-limiting occurs' do
+      let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: body) }
+      let(:fixture) { '' }
+      let(:status) { 429 }
+      let(:response_headers) { { 'X-Rate-Limit-Time-Reset-Ms' => 500 } }
+      let(:stubbed_response) { stub_response(fixture: fixture, status: status, headers: response_headers) }
+      let!(:start) { Time.now }
+      let(:elapsed) { Time.now - start }
+      let(:retries) { Bigcommerce::V3::Connection::MAX_RETRIES }
+      let(:expected_sleep) { (response_headers['X-Rate-Limit-Time-Reset-Ms'] / 1_000) * retries }
+
+      it 'retries MAX_RETRIES times' do
+        expect { put }.to change(connection, :retry_count).by(retries)
+      end
+
+      it 'sleeps the correct amount of time' do
+        put
+        expect(elapsed).to be >= expected_sleep
+      end
+    end
+  end
+
+  describe '#delete' do
+    subject(:delete) { connection.delete(url, params, headers) }
+
+    let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
+    let(:fixture) { '' }
+    let(:status) { 204 }
+    let(:url) { "/stores/#{store_hash}/v3/content/pages/1" }
+    let(:params) { {} }
+    let(:headers) { {} }
+
+    it { is_expected.to be_a(Faraday::Response) }
+
+    context 'when rate-limiting occurs' do
+      let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :delete) }
+      let(:fixture) { '' }
+      let(:status) { 429 }
+      let(:response_headers) { { 'X-Rate-Limit-Time-Reset-Ms' => 500 } }
+      let(:stubbed_response) { stub_response(fixture: fixture, status: status, headers: response_headers) }
+      let!(:start) { Time.now }
+      let(:elapsed) { Time.now - start }
+      let(:retries) { Bigcommerce::V3::Connection::MAX_RETRIES }
+      let(:expected_sleep) { (response_headers['X-Rate-Limit-Time-Reset-Ms'] / 1_000) * retries }
+
+      it 'retries MAX_RETRIES times' do
+        expect { delete }.to change(connection, :retry_count).by(retries)
+      end
+
+      it 'sleeps the correct amount of time' do
+        delete
         expect(elapsed).to be >= expected_sleep
       end
     end
