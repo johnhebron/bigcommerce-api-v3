@@ -22,30 +22,20 @@ module Bigcommerce
       ##
       # List Resource
       ##
-      def list
+      def list(params: {})
         url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url),
+        Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
                                                 object_type: OBJECT_TYPE)
       end
 
       ##
       # Retrieve Resource
       ##
-      def retrieve(id:)
+      def retrieve(id:, params: {})
+        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+
         url = "#{RESOURCE_URL}/#{id}/categories"
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url),
-                                                object_type: OBJECT_TYPE)
-      end
-
-      ##
-      # Create Resource
-      ##
-      def create(params:)
-        raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
-
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: put_request(url: url,
-                                                                      body: params),
+        Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
                                                 object_type: OBJECT_TYPE)
       end
 
@@ -53,10 +43,10 @@ module Bigcommerce
       # Update Resource
       ##
       def update(id:, params:)
-        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
-        raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
+        raise_params_error(param: id, type: 'Integer or Nil') unless id.is_a?(Integer) || id.nil?
+        raise_params_error(param: params, type: 'Array') unless params.is_a?(Array)
 
-        params[:id] = id
+        params.first[:id] = id.to_i if id
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
                                                 object_type: OBJECT_TYPE)
@@ -68,7 +58,7 @@ module Bigcommerce
       def delete(id:)
         raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
 
-        params = { id: id }
+        params = { 'id:in' => id }
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: delete_request(url: url, params: params),
                                                 object_type: OBJECT_TYPE)

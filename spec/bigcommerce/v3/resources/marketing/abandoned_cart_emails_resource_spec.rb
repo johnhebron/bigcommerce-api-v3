@@ -3,11 +3,12 @@
 require './spec/spec_helper'
 
 describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
-  subject(:resource) { Bigcommerce::V3::AbandonedCartEmailsResource.new(client: client) }
+  subject(:resource) { class_name.new(client: client) }
 
   include_context 'when connected to API'
 
   let(:class_name) { Bigcommerce::V3::AbandonedCartEmailsResource }
+  let(:object_type) { Bigcommerce::V3::AbandonedCartEmail }
   let(:resource_url) { 'marketing/abandoned-cart-emails' }
   let(:fixture_base) { 'resources' }
   let(:fixture_file) { 'get_abandoned_cart_emails_url200' }
