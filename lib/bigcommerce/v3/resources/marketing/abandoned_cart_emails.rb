@@ -11,6 +11,7 @@ module Bigcommerce
     ##
     class AbandonedCartEmailsResource < Resource
       include Bigcommerce::V3::APIActions::Create
+      include Bigcommerce::V3::APIActions::Delete
       include Bigcommerce::V3::APIActions::List
       include Bigcommerce::V3::APIActions::Retrieve
       include Bigcommerce::V3::APIActions::Update
@@ -22,17 +23,6 @@ module Bigcommerce
         super(client: client,
               resource_url: RESOURCE_URL,
               object_type: OBJECT_TYPE)
-      end
-
-      ##
-      # Delete Resource
-      ##
-      def delete(id:)
-        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
-
-        url = "#{RESOURCE_URL}/#{id}"
-        Bigcommerce::V3::Response.from_response(response: delete_request(url: url),
-                                                object_type: OBJECT_TYPE)
       end
 
       ##

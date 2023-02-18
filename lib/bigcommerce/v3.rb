@@ -34,6 +34,7 @@ module Bigcommerce
     # API Action Modules
     module APIActions
       autoload :Create, 'bigcommerce/v3/api_actions/create'
+      autoload :Delete, 'bigcommerce/v3/api_actions/delete'
       autoload :List, 'bigcommerce/v3/api_actions/list'
       autoload :Retrieve, 'bigcommerce/v3/api_actions/retrieve'
       autoload :Update, 'bigcommerce/v3/api_actions/update'
