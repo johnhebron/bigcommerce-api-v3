@@ -13,6 +13,7 @@ module Bigcommerce
       include Bigcommerce::V3::APIActions::Create
       include Bigcommerce::V3::APIActions::List
       include Bigcommerce::V3::APIActions::Retrieve
+      include Bigcommerce::V3::APIActions::Update
 
       RESOURCE_URL = 'marketing/abandoned-cart-emails'
       OBJECT_TYPE = Bigcommerce::V3::AbandonedCartEmail
@@ -21,18 +22,6 @@ module Bigcommerce
         super(client: client,
               resource_url: RESOURCE_URL,
               object_type: OBJECT_TYPE)
-      end
-
-      ##
-      # Update Resource
-      ##
-      def update(id:, params:)
-        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
-        raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
-
-        url = "#{RESOURCE_URL}/#{id}"
-        Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
-                                                object_type: OBJECT_TYPE)
       end
 
       ##

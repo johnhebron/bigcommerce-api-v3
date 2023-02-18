@@ -36,6 +36,7 @@ module Bigcommerce
       autoload :Create, 'bigcommerce/v3/api_actions/create'
       autoload :List, 'bigcommerce/v3/api_actions/list'
       autoload :Retrieve, 'bigcommerce/v3/api_actions/retrieve'
+      autoload :Update, 'bigcommerce/v3/api_actions/update'
 
       # Bulk First API Actions
       module Bulk
