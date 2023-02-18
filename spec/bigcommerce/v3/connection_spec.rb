@@ -5,6 +5,8 @@ require './spec/spec_helper'
 describe 'Bigcommerce::V3::Connection' do
   subject(:connection) { Bigcommerce::V3::Connection.new(config: config) }
 
+  include_context 'when connected to API'
+
   let(:store_hash) { SecureRandom.alphanumeric(7) }
   let(:access_token) { SecureRandom.alphanumeric(31) }
 
@@ -47,6 +49,40 @@ describe 'Bigcommerce::V3::Connection' do
 
     it 'returns a Faraday::Connection object' do
       expect(connection.connection).to be_a(Faraday::Connection)
+    end
+  end
+
+  describe '#get' do
+    subject(:get) { connection.get(url, params, headers) }
+
+    let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:fixture) { 'resource/get_url200' }
+    let(:status) { 200 }
+    let(:url) { "/stores/#{store_hash}/v3/content/pages" }
+    let(:params) { {} }
+    let(:headers) { {} }
+
+    it { is_expected.to be_a(Faraday::Response) }
+
+    context 'when rate-limiting occurs' do
+      let(:stubs) { stub_request(path: url, response: stubbed_response) }
+      let(:fixture) { 'resource/get_url200' }
+      let(:status) { 429 }
+      let(:response_headers) { { 'X-Rate-Limit-Time-Reset-Ms' => 500 } }
+      let(:stubbed_response) { stub_response(fixture: fixture, status: status, headers: response_headers) }
+      let!(:start) { Time.now }
+      let(:elapsed) { Time.now - start }
+      let(:retries) { Bigcommerce::V3::Connection::MAX_RETRIES }
+      let(:expected_sleep) { (response_headers['X-Rate-Limit-Time-Reset-Ms'] / 1_000) * retries }
+
+      it 'retries MAX_RETRIES times' do
+        expect { get }.to change(connection, :retry_count).by(retries)
+      end
+
+      it 'sleeps the correct amount of time' do
+        get
+        expect(elapsed).to be >= expected_sleep
+      end
     end
   end
 end
