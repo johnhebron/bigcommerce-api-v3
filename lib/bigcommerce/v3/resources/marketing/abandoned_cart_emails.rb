@@ -10,6 +10,9 @@ module Bigcommerce
     # Docs:
     ##
     class AbandonedCartEmailsResource < Resource
+      include Bigcommerce::V3::APIActions::List
+      include Bigcommerce::V3::APIActions::Retrieve
+
       RESOURCE_URL = 'marketing/abandoned-cart-emails'
       OBJECT_TYPE = Bigcommerce::V3::AbandonedCartEmail
 
@@ -17,24 +20,6 @@ module Bigcommerce
         super(client: client,
               resource_url: RESOURCE_URL,
               object_type: OBJECT_TYPE)
-      end
-
-      ##
-      # List Resource
-      ##
-      def list
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmail)
-      end
-
-      ##
-      # Retrieve Resource
-      ##
-      def retrieve(id:)
-        url = "#{RESOURCE_URL}/#{id}"
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmail)
       end
 
       ##
@@ -46,7 +31,7 @@ module Bigcommerce
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: post_request(url: url,
                                                                        body: params),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmail)
+                                                object_type: OBJECT_TYPE)
       end
 
       ##
@@ -58,7 +43,7 @@ module Bigcommerce
 
         url = "#{RESOURCE_URL}/#{id}"
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmail)
+                                                object_type: OBJECT_TYPE)
       end
 
       ##
@@ -69,7 +54,7 @@ module Bigcommerce
 
         url = "#{RESOURCE_URL}/#{id}"
         Bigcommerce::V3::Response.from_response(response: delete_request(url: url),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmail)
+                                                object_type: OBJECT_TYPE)
       end
 
       ##
@@ -78,7 +63,7 @@ module Bigcommerce
       def default
         url = "#{RESOURCE_URL}/default"
         Bigcommerce::V3::Response.from_response(response: get_request(url: url),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmail)
+                                                object_type: OBJECT_TYPE)
       end
     end
   end

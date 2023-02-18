@@ -28,7 +28,7 @@ module Bigcommerce
         params = { channel_id: id }
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmailSettings)
+                                                object_type: OBJECT_TYPE)
       end
 
       ##
@@ -41,7 +41,7 @@ module Bigcommerce
         params[:channel_id] = id
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmailSettings)
+                                                object_type: OBJECT_TYPE)
       end
     end
   end
