@@ -1,0 +1,25 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "Default catalog tree",
+      "channels": [
+        1
+      ]
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "total": 1,
+      "count": 1,
+      "per_page": 50,
+      "current_page": 1,
+      "total_pages": 1,
+      "links": {
+        "previous": "?limit=50&page=1",
+        "current": "?limit=50&page=1",
+        "next": "?limit=50&page=1"
+      }
+    }
+  }
+}

@@ -27,6 +27,10 @@ module Bigcommerce
         AbandonedCartEmailSettingsResource.new(client: self)
       end
 
+      def category_trees
+        CategoryTreesResource.new(client: self)
+      end
+
       def customers
         CustomersResource.new(client: self)
       end

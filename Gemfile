@@ -17,6 +17,7 @@ gemspec
 # Specify gem's development/test dependencies below
 group :development do
   gem 'dotenv', '~> 2.8'
+  gem 'pry'
   gem 'rspec', '~> 3.0'
   gem 'rubocop', '~> 1.21'
   gem 'rubocop-performance'

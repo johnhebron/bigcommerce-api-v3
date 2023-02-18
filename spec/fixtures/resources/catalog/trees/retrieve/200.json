@@ -1,0 +1,65 @@
+{
+  "data": [
+    {
+      "id": 23,
+      "parent_id": 0,
+      "name": "Shop All",
+      "is_visible": true,
+      "depth": 0,
+      "path": [],
+      "children": [],
+      "url": "/shop-all/"
+    },
+    {
+      "id": 18,
+      "parent_id": 0,
+      "name": "Bath",
+      "is_visible": true,
+      "depth": 0,
+      "path": [],
+      "children": [],
+      "url": "/bath/"
+    },
+    {
+      "id": 19,
+      "parent_id": 0,
+      "name": "Garden",
+      "is_visible": true,
+      "depth": 0,
+      "path": [],
+      "children": [],
+      "url": "/garden/"
+    },
+    {
+      "id": 21,
+      "parent_id": 0,
+      "name": "Kitchen",
+      "is_visible": true,
+      "depth": 0,
+      "path": [],
+      "children": [],
+      "url": "/kitchen/"
+    },
+    {
+      "id": 20,
+      "parent_id": 0,
+      "name": "Publications",
+      "is_visible": true,
+      "depth": 0,
+      "path": [],
+      "children": [],
+      "url": "/publications/"
+    },
+    {
+      "id": 22,
+      "parent_id": 0,
+      "name": "Utility",
+      "is_visible": true,
+      "depth": 0,
+      "path": [],
+      "children": [],
+      "url": "/utility/"
+    }
+  ],
+  "meta": {}
+}

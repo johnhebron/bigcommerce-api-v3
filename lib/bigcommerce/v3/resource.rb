@@ -80,7 +80,11 @@ module Bigcommerce
       end
 
       def check_params(params: nil, per_page: nil, page: nil)
-        raise_params_error(param: params, type: 'Hash') if (params || params.nil?) && !params.is_a?(Hash)
+        if !params.is_a?(Array) && @object_type == Bigcommerce::V3::CategoryTreesResource
+          raise_params_error(param: params, type: 'Array')
+        elsif !params.is_a?(Hash)
+          raise_params_error(param: params, type: 'Hash')
+        end
         raise_params_error(param: per_page, type: 'Integer') if per_page && !per_page.is_a?(Integer)
         raise_params_error(param: page, type: 'Integer') if page && !page.is_a?(Integer)
       end

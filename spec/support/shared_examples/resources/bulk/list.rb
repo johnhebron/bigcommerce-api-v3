@@ -117,7 +117,7 @@ RSpec.shared_examples 'a bulk .list endpoint' do
     end
 
     context 'when called with the wrong :params type' do
-      invalid_params_examples = [nil, 'string', 0, [1, 2]] # nil, string, <1, array
+      invalid_params_examples = [nil, 'string', 0] # nil, string, <1
 
       invalid_params_examples.each do |param|
         let(:params) { param }
