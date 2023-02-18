@@ -10,6 +10,7 @@ module Bigcommerce
     # Docs:
     ##
     class AbandonedCartEmailsResource < Resource
+      include Bigcommerce::V3::APIActions::Create
       include Bigcommerce::V3::APIActions::List
       include Bigcommerce::V3::APIActions::Retrieve
 
@@ -20,18 +21,6 @@ module Bigcommerce
         super(client: client,
               resource_url: RESOURCE_URL,
               object_type: OBJECT_TYPE)
-      end
-
-      ##
-      # Create Resource
-      ##
-      def create(params:)
-        raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
-
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: post_request(url: url,
-                                                                       body: params),
-                                                object_type: OBJECT_TYPE)
       end
 
       ##
