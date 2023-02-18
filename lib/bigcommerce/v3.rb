@@ -18,6 +18,7 @@ module Bigcommerce
   module V3
     autoload :Client, 'bigcommerce/v3/client'
     autoload :Configuration, 'bigcommerce/v3/configuration'
+    autoload :Connection, 'bigcommerce/v3/connection'
     autoload :Error, 'bigcommerce/v3/error'
     autoload :Object, 'bigcommerce/v3/object'
     autoload :Resource, 'bigcommerce/v3/resource'
