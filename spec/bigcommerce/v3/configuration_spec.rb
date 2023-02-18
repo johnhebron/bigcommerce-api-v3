@@ -7,7 +7,7 @@ describe 'Bigcommerce::V3::Configuration' do
 
   let(:store_hash) { SecureRandom.alphanumeric(7) }
   let(:access_token) { SecureRandom.alphanumeric(31) }
-  let(:error) { 'Store_hash and access_token are required.' }
+  let(:error) { ':store_hash and :access_token are required.' }
 
   describe '#initialize' do
     context 'with a valid store_hash and access_token' do
