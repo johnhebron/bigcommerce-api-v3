@@ -16,7 +16,7 @@ module Bigcommerce
           @config = config
         end
 
-        @conn = create_connection
+        @conn = Bigcommerce::V3::Connection.new(config: @config)
       end
 
       def abandoned_cart_emails
@@ -37,29 +37,10 @@ module Bigcommerce
 
       private
 
-      def create_connection
-        Faraday.new(url: @config.full_api_path) do |conn|
-          conn.headers = @config.http_headers
-          conn.request :json
-          conn.response :json
-          configure_logger(conn)
-          # Adapter must be last
-          conn.adapter @config.adapter, @config.stubs
-        end
-      end
-
       def validate_params(store_hash:, access_token:)
         return unless store_hash.nil? || access_token.nil? || store_hash.empty? || access_token.empty?
 
         raise Error::ClientConfigError, 'Valid Configuration object or store_hash/access_token required.'
-      end
-
-      def configure_logger(conn)
-        return unless @config.logger
-
-        conn.response :logger, nil, { headers: true, bodies: true } do |logger|
-          logger.filter(/(X-Auth-Token: )([^&]+)/, '\1[REMOVED]')
-        end
       end
     end
   end

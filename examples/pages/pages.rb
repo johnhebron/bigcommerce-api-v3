@@ -307,7 +307,7 @@ puts "\n"
 #
 puts '# Error Case Example'
 puts '##################################'
-response = @client.pages.create(params: {})
+response = @client.pages.create(params: { a: 'b' })
 
 if response.success?
   puts 'Hmm, how did that happen?'

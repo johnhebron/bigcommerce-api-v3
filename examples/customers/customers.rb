@@ -326,7 +326,7 @@ puts "\n"
 #
 puts '# Error Case Example'
 puts '##################################'
-response = @client.customers.create(params: {})
+response = @client.customers.create(params: { a: 'b' })
 
 if response.success?
   puts 'Hmm, how did that happen?'
