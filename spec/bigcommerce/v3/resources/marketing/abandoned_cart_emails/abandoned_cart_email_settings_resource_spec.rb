@@ -3,11 +3,12 @@
 require './spec/spec_helper'
 
 describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
-  subject(:resource) { Bigcommerce::V3::AbandonedCartEmailSettingsResource.new(client: client) }
+  subject(:resource) { class_name.new(client: client) }
 
   include_context 'when connected to API'
 
   let(:class_name) { Bigcommerce::V3::AbandonedCartEmailSettingsResource }
+  let(:object_type) { Bigcommerce::V3::AbandonedCartEmailSettings }
   let(:resource_url) { 'marketing/abandoned-cart-emails/settings' }
 
   describe '#initialize' do

@@ -6,6 +6,9 @@
 
 require './spec/support/shared_examples/resources/base'
 
+# Resources
+require './spec/support/shared_examples/resources/list'
+
 # Bulk Resources
 require './spec/support/shared_examples/resources/bulk/bulk_create'
 require './spec/support/shared_examples/resources/bulk/bulk_delete'
