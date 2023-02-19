@@ -9,14 +9,12 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
 
   let(:class_name) { Bigcommerce::V3::AbandonedCartEmailSettingsResource }
   let(:resource_url) { 'marketing/abandoned-cart-emails/settings' }
-  let(:fixture_base) { 'resources' }
-  let(:fixture_file) { 'retrieve_abandoned_cart_email_settings_url200' }
-  let(:fixture) { "#{fixture_base}/#{resource_url}/#{fixture_file}" }
 
   describe '#initialize' do
     let(:status) { 200 }
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.list }
+    let(:fixture) { '' }
 
     it_behaves_like 'an instantiable Resource'
   end
@@ -24,8 +22,10 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
   describe '#retrieve' do
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.retrieve(id: id) }
+    let(:resource_action) { 'retrieve' }
 
     context 'when retrieving a valid id' do
+      let(:fixture_file) { status.to_s }
       let(:status) { 200 }
       let(:id) { 2 }
 
@@ -47,7 +47,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
     end
 
     context 'when retrieving a non-existent id' do
-      let(:fixture_file) { 'retrieve_abandoned_cart_email_settings_url422' }
+      let(:fixture_file) { status.to_s }
       let(:id) { 1 }
       let(:status) { 422 }
       let(:title) { 'Unsupported channel ID' }
@@ -85,9 +85,11 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
   describe '#update' do
     let(:stubs) { stub_request(path: url, response: stubbed_response, verb: :put, body: stringified_params) }
     let(:response) { resource.update(id: id, params: params) }
+    let(:resource_action) { 'update' }
 
     context 'when passing a valid id and params Hash' do
-      let(:fixture_file) { 'update_abandoned_cart_email_settings_url200' }
+      let(:fixture_file) { status.to_s }
+      let(:status) { 200 }
       let(:id) { 1 }
       let(:params) { { use_global: true } }
       let(:stringified_params) { '{"use_global":true,"channel_id":1}' }

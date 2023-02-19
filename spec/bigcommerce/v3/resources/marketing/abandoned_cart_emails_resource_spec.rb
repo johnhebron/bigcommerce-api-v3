@@ -28,7 +28,6 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     let(:resource_action) { 'list' }
     let(:status) { 200 }
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
-    let(:fixture_file) { 'get_abandoned_cart_emails_url200' }
 
     context 'with available records to return' do
       let(:fixture_file) { status.to_s }
