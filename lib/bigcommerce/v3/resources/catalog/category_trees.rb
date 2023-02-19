@@ -10,6 +10,8 @@ module Bigcommerce
     # Docs:
     ##
     class CategoryTreesResource < Resource
+      include Bigcommerce::V3::APIActions::List
+
       RESOURCE_URL = 'catalog/trees'
       OBJECT_TYPE = Bigcommerce::V3::CategoryTree
 
@@ -17,15 +19,6 @@ module Bigcommerce
         super(client: client,
               resource_url: RESOURCE_URL,
               object_type: OBJECT_TYPE)
-      end
-
-      ##
-      # List Resource
-      ##
-      def list(params: {})
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
-                                                object_type: OBJECT_TYPE)
       end
 
       ##

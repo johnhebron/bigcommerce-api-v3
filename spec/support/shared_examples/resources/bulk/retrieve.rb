@@ -41,8 +41,8 @@ RSpec.shared_examples 'a bulk .retrieve endpoint' do
   context 'when called with the wrong :id type' do
     invalid_id_examples = [nil, 'string', 0, [1, 2], { key: 'value' }] # nil, string, <1, array, hash
 
-    invalid_id_examples.each do |param|
-      let(:id) { param }
+    invalid_id_examples.each do |id|
+      let(:id) { id }
 
       it 'raises a Bigcommerce::V3::Error' do
         expect { subject }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)

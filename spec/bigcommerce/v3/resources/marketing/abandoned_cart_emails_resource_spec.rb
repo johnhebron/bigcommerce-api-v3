@@ -10,10 +10,10 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
   let(:class_name) { Bigcommerce::V3::AbandonedCartEmailsResource }
   let(:object_type) { Bigcommerce::V3::AbandonedCartEmail }
   let(:resource_url) { 'marketing/abandoned-cart-emails' }
-  let(:fixture_file) { 'get_abandoned_cart_emails_url200' }
 
   describe '#initialize' do
     let(:resource_action) { 'list' }
+
     let(:status) { 200 }
     let(:fixture_file) { status.to_s }
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
@@ -28,6 +28,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
     let(:resource_action) { 'list' }
     let(:status) { 200 }
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
+    let(:fixture_file) { 'get_abandoned_cart_emails_url200' }
 
     context 'with available records to return' do
       let(:fixture_file) { status.to_s }
@@ -92,31 +93,35 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
       end
     end
 
-    context 'when passing invalid parameters' do
-      let(:fixture_file) { status.to_s }
-      let(:status) { 400 }
-      let(:id) { 'hello' }
-      let(:title) { 'Input is invalid' }
-      let(:errors) { {} }
-      let(:type) { 'https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes' }
+    context 'when called with invalid :id types' do
+      let(:fixture) { '' }
 
-      it { is_expected.to be_a(Bigcommerce::V3::Response) }
-      it { is_expected.not_to be_success }
+      invalid_id_examples = [nil, 'string', 0, [1, 2], { a: 1 }] # nil, string, <1, array, hash
 
-      it 'returns the correct status' do
-        expect(response.status).to eq(status)
+      invalid_id_examples.each do |id|
+        let(:id) { URI.encode_www_form(id) }
+
+        it 'raises a Bigcommerce::V3::Error' do
+          expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+        end
       end
+    end
 
-      it 'has an error title' do
-        expect(response.error.title).to eq(title)
-      end
+    context 'when called with invalid :params types' do
+      subject(:response) { resource.retrieve(id: id, params: params) }
 
-      it 'has an error type' do
-        expect(response.error.type).to eq(type)
-      end
+      let(:fixture) { '' }
+      let(:id) { 1 }
 
-      it 'returns an error with an errors hash' do
-        expect(response.error.errors).to eq(errors)
+      invalid_params_examples = [nil, 'string', 0, [1, 2]] # nil, string, integer, array
+
+      invalid_params_examples.each do |param|
+        let(:params) { param }
+        let(:stringified_params) { param.to_json }
+
+        it 'raises a Bigcommerce::V3::Error' do
+          expect { response }.to raise_error(Bigcommerce::V3::Error::InvalidArguments)
+        end
       end
     end
   end

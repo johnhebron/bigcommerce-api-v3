@@ -11,10 +11,13 @@ module Bigcommerce
         ##
         # Retrieve Resource
         ##
-        def retrieve(id:)
+        def retrieve(id:, params: {})
+          raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer) && id >= 1
+          raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
+
           url = "#{@resource_url}/#{id}"
           object_type = @object_type
-          Bigcommerce::V3::Response.from_response(response: get_request(url: url),
+          Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
                                                   object_type: object_type)
         end
       end
