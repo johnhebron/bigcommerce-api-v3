@@ -10,6 +10,9 @@ module Bigcommerce
     # Docs:
     ##
     class CategoryTreesResource < Resource
+      include Bigcommerce::V3::APIActions::List
+      include Bigcommerce::V3::APIActions::Retrieve
+
       RESOURCE_URL = 'catalog/trees'
       OBJECT_TYPE = Bigcommerce::V3::CategoryTree
 
@@ -19,24 +22,8 @@ module Bigcommerce
               object_type: OBJECT_TYPE)
       end
 
-      ##
-      # List Resource
-      ##
-      def list(params: {})
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
-                                                object_type: OBJECT_TYPE)
-      end
-
-      ##
-      # Retrieve Resource
-      ##
-      def retrieve(id:, params: {})
-        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
-
-        url = "#{RESOURCE_URL}/#{id}/categories"
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
-                                                object_type: OBJECT_TYPE)
+      def url_for_retrieve(id:)
+        "#{RESOURCE_URL}/#{id}/categories"
       end
 
       ##
@@ -46,10 +33,15 @@ module Bigcommerce
         raise_params_error(param: id, type: 'Integer or Nil') unless id.is_a?(Integer) || id.nil?
         raise_params_error(param: params, type: 'Array') unless params.is_a?(Array)
 
-        params.first[:id] = id.to_i if id
+        params = update_params(id: id, params: params)
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
                                                 object_type: OBJECT_TYPE)
+      end
+
+      def update_params(id:, params:)
+        params.first[:id] = id.to_i if id
+        params
       end
 
       ##

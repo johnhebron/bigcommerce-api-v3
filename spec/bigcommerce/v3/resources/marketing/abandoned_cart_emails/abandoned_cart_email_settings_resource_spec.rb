@@ -48,7 +48,7 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
 
     context 'when retrieving a non-existent id' do
       let(:fixture_file) { 'retrieve_abandoned_cart_email_settings_url422' }
-      let(:id) { 0 }
+      let(:id) { 1 }
       let(:status) { 422 }
       let(:title) { 'Unsupported channel ID' }
 

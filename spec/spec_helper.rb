@@ -6,6 +6,7 @@ require 'support/shared_contexts'
 require 'support/shared_examples'
 require 'rspec'
 require 'securerandom'
+require 'uri'
 require 'bigcommerce/v3'
 
 SimpleCov.start

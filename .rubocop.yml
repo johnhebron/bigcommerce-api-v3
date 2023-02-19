@@ -13,6 +13,11 @@ Layout/LineLength:
     - spec/bigcommerce/v3/resources/**/*
     - spec/support/shared_examples/**/*
 
+Lint/UnusedMethodArgument:
+  Exclude:
+    - lib/bigcommerce/v3/api_actions/retrieve.rb
+    - lib/bigcommerce/v3/resources/marketing/abandoned_cart_emails/abandoned_cart_email_settings.rb
+
 Metrics/AbcSize:
   Enabled: false
 

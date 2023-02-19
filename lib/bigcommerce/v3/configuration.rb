@@ -43,7 +43,7 @@ module Bigcommerce
       def validate_params
         return unless @store_hash.nil? || @access_token.nil? || @store_hash.empty? || @access_token.empty?
 
-        raise Error::ConfigurationError, 'Store_hash and access_token are required.'
+        raise Error::ConfigurationError, ':store_hash and :access_token are required.'
       end
     end
   end

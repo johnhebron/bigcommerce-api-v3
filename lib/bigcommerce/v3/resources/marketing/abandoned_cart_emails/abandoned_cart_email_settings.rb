@@ -10,6 +10,8 @@ module Bigcommerce
     # Docs:
     ##
     class AbandonedCartEmailSettingsResource < Resource
+      include Bigcommerce::V3::APIActions::Retrieve
+
       RESOURCE_URL = 'marketing/abandoned-cart-emails/settings'
       OBJECT_TYPE = Bigcommerce::V3::AbandonedCartEmailSettings
 
@@ -19,16 +21,12 @@ module Bigcommerce
               object_type: OBJECT_TYPE)
       end
 
-      ##
-      # Retrieve Resource
-      ##
-      def retrieve(id:)
-        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
+      def url_for_retrieve(id:)
+        RESOURCE_URL
+      end
 
-        params = { channel_id: id }
-        url = RESOURCE_URL
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmailSettings)
+      def params_for_retrieve(id:, params:)
+        { channel_id: id }
       end
 
       ##
@@ -38,10 +36,19 @@ module Bigcommerce
         raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
         raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
-        params[:channel_id] = id
-        url = RESOURCE_URL
+        params = update_params(id: id, params: params)
+        url = update_url
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
-                                                object_type: Bigcommerce::V3::AbandonedCartEmailSettings)
+                                                object_type: OBJECT_TYPE)
+      end
+
+      def update_params(id:, params:)
+        params[:channel_id] = id
+        params
+      end
+
+      def update_url
+        RESOURCE_URL
       end
     end
   end
