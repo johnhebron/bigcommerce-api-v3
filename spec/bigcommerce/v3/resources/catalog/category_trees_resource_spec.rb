@@ -21,37 +21,10 @@ describe 'Bigcommerce::V3::CategoryTreesResource' do
   end
 
   describe '#list' do
-    subject(:response) { resource.list }
-
     let(:resource_action) { 'list' }
-    let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:status) { 200 }
 
-    context 'when there are available records to return' do
-      let(:status) { 200 }
-      let(:fixture_file) { status.to_s }
-
-      it { is_expected.to be_a(Bigcommerce::V3::Response) }
-
-      it 'returns an array of returned records' do
-        expect(returned_records.count).to be > 0
-      end
-
-      it 'returns an array of Bigcommerce::V3::AbandonedCartEmail records' do
-        expect(returned_records).to all(be_an(object_type))
-      end
-    end
-
-    context 'when there are no available records to return' do
-      let(:status) { 200 }
-      let(:fixture_file) { "no_records_#{status}" }
-
-      it { is_expected.to be_a(Bigcommerce::V3::Response) }
-
-      it 'returns an array with no records' do
-        expect(returned_records.count).to be_zero
-      end
-    end
+    it_behaves_like 'a .list endpoint'
   end
 
   describe '#retrieve' do

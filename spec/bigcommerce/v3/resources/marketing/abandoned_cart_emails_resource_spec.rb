@@ -23,35 +23,10 @@ describe 'Bigcommerce::V3::AbandonedCartEmailsResource' do
   end
 
   describe '#list' do
-    subject(:response) { resource.list }
-
     let(:resource_action) { 'list' }
     let(:status) { 200 }
-    let(:stubs) { stub_request(path: url, response: stubbed_response) }
 
-    context 'with available records to return' do
-      let(:fixture_file) { status.to_s }
-
-      it { is_expected.to be_a(Bigcommerce::V3::Response) }
-
-      it 'stores an array of returned records' do
-        expect(returned_records.count).to be > 0
-      end
-
-      it 'stores an array of Bigcommerce::V3::AbandonedCartEmail records' do
-        expect(returned_records).to all(be_a(Bigcommerce::V3::AbandonedCartEmail))
-      end
-    end
-
-    context 'with no available records to return' do
-      let(:fixture_file) { "no_records_#{status}" }
-
-      it { is_expected.to be_a(Bigcommerce::V3::Response) }
-
-      it 'stores an array with no records' do
-        expect(returned_records.count).to be_zero
-      end
-    end
+    it_behaves_like 'a .list endpoint'
   end
 
   describe '#retrieve' do

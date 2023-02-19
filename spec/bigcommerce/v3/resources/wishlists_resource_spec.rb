@@ -20,11 +20,12 @@ describe 'Bigcommerce::V3::WishlistsResource' do
     it_behaves_like 'an instantiable Resource'
   end
 
-  # describe '#list' do
-  #   let(:status) { 200 }
-  #
-  #   it_behaves_like 'a bulk .list endpoint'
-  # end
+  describe '#list' do
+    let(:resource_action) { 'list' }
+    let(:status) { 200 }
+
+    it_behaves_like 'a .list endpoint'
+  end
   #
   # describe '#retrieve' do
   #   let(:status) { 200 }
