@@ -12,10 +12,15 @@ module Bigcommerce
           raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
           raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
-          url = "#{@resource_url}/#{id}"
+          url = update_url(id: id)
+          params = update_params(params: params)
           object_type = @object_type
           Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
                                                   object_type: object_type)
+        end
+
+        def update_params(params:)
+          params
         end
       end
     end

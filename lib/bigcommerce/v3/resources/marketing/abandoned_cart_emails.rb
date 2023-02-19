@@ -25,7 +25,11 @@ module Bigcommerce
               object_type: OBJECT_TYPE)
       end
 
-      def retrieve_url(id)
+      def url_for_retrieve(id:)
+        "#{RESOURCE_URL}/#{id}"
+      end
+
+      def update_url(id:)
         "#{RESOURCE_URL}/#{id}"
       end
 

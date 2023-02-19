@@ -15,10 +15,15 @@ module Bigcommerce
           raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer) && id >= 1
           raise_params_error(param: params, type: 'Hash') unless params.is_a?(Hash)
 
-          url = retrieve_url(id)
+          url = url_for_retrieve(id: id)
+          params = params_for_retrieve(id: id, params: params)
           object_type = @object_type
           Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
                                                   object_type: object_type)
+        end
+
+        def params_for_retrieve(id:, params:)
+          params
         end
       end
     end

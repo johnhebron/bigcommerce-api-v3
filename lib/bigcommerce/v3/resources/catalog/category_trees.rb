@@ -22,7 +22,7 @@ module Bigcommerce
               object_type: OBJECT_TYPE)
       end
 
-      def retrieve_url(id)
+      def url_for_retrieve(id:)
         "#{RESOURCE_URL}/#{id}/categories"
       end
 
@@ -33,10 +33,15 @@ module Bigcommerce
         raise_params_error(param: id, type: 'Integer or Nil') unless id.is_a?(Integer) || id.nil?
         raise_params_error(param: params, type: 'Array') unless params.is_a?(Array)
 
-        params.first[:id] = id.to_i if id
+        params = update_params(id: id, params: params)
         url = RESOURCE_URL
         Bigcommerce::V3::Response.from_response(response: put_request(url: url, body: params),
                                                 object_type: OBJECT_TYPE)
+      end
+
+      def update_params(id:, params:)
+        params.first[:id] = id.to_i if id
+        params
       end
 
       ##
