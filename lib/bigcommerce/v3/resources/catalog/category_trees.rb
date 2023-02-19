@@ -11,6 +11,7 @@ module Bigcommerce
     ##
     class CategoryTreesResource < Resource
       include Bigcommerce::V3::APIActions::List
+      include Bigcommerce::V3::APIActions::Retrieve
 
       RESOURCE_URL = 'catalog/trees'
       OBJECT_TYPE = Bigcommerce::V3::CategoryTree
@@ -21,15 +22,8 @@ module Bigcommerce
               object_type: OBJECT_TYPE)
       end
 
-      ##
-      # Retrieve Resource
-      ##
-      def retrieve(id:, params: {})
-        raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
-
-        url = "#{RESOURCE_URL}/#{id}/categories"
-        Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
-                                                object_type: OBJECT_TYPE)
+      def retrieve_url(id)
+        "#{RESOURCE_URL}/#{id}/categories"
       end
 
       ##

@@ -25,6 +25,10 @@ module Bigcommerce
               object_type: OBJECT_TYPE)
       end
 
+      def retrieve_url(id)
+        "#{RESOURCE_URL}/#{id}"
+      end
+
       ##
       # Get Default Template
       ##

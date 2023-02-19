@@ -26,9 +26,13 @@ module Bigcommerce
         raise_params_error(param: id, type: 'Integer') unless id.is_a?(Integer)
 
         params = { channel_id: id }
-        url = RESOURCE_URL
+        url = retrieve_url
         Bigcommerce::V3::Response.from_response(response: get_request(url: url, params: params),
                                                 object_type: OBJECT_TYPE)
+      end
+
+      def retrieve_url
+        RESOURCE_URL
       end
 
       ##
