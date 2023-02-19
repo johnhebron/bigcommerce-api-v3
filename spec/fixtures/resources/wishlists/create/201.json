@@ -1,0 +1,16 @@
+{
+  "data": {
+    "id": 1,
+    "customer_id": 84,
+    "name": "My Favorite List",
+    "is_public": true,
+    "token": "cf16d4a1-bf74-4cde-9139-92c5452c047d",
+    "items": [
+      {
+        "id": 1,
+        "product_id": 111
+      }
+    ]
+  },
+  "meta": {}
+}

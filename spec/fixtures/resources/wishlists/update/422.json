@@ -1,0 +1,8 @@
+{
+  "status": 422,
+  "title": "JSON data is missing or invalid",
+  "type": "https://developer.bigcommerce.com/api-docs/getting-started/api-status-codes",
+  "errors": {
+    "items": "error.path.missing"
+  }
+}

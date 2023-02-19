@@ -39,6 +39,10 @@ module Bigcommerce
         PagesResource.new(client: self)
       end
 
+      def wishlists
+        WishlistsResource.new(client: self)
+      end
+
       private
 
       def validate_params(store_hash:, access_token:)
