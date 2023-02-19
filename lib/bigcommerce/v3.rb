@@ -30,6 +30,7 @@ module Bigcommerce
     autoload :CategoryTree, 'bigcommerce/v3/objects/catalog/category_tree'
     autoload :Customer, 'bigcommerce/v3/objects/customer'
     autoload :Page, 'bigcommerce/v3/objects/content/page'
+    autoload :Wishlist, 'bigcommerce/v3/objects/wishlist'
 
     # API Action Modules
     module APIActions
@@ -59,5 +60,6 @@ module Bigcommerce
     autoload :CategoryTreesResource, 'bigcommerce/v3/resources/catalog/category_trees'
     autoload :CustomersResource, 'bigcommerce/v3/resources/customers'
     autoload :PagesResource, 'bigcommerce/v3/resources/content/pages'
+    autoload :WishlistsResource, 'bigcommerce/v3/resources/wishlists'
   end
 end
