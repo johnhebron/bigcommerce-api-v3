@@ -21,9 +21,13 @@ describe 'Bigcommerce::V3::AbandonedCartEmailSettingsResource' do
   end
 
   describe '#retrieve' do
+    # Has unique behavior from other endpoints
+    # The returned record does not contain an ID and thus
+    # verifying is tricky
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:response) { resource.retrieve(id: id) }
     let(:resource_action) { 'retrieve' }
+    let(:retrieve_invalid_id_status) { 422 }
 
     context 'when retrieving a valid id' do
       let(:fixture_file) { status.to_s }

@@ -25,6 +25,10 @@ module Bigcommerce
         def params_for_retrieve(id:, params:)
           params
         end
+
+        def url_for_retrieve(id:)
+          "#{base_url}#{resource_url}/#{id}"
+        end
       end
     end
   end

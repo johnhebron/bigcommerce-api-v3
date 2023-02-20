@@ -8,6 +8,7 @@ require './spec/support/shared_examples/resources/base'
 
 # Resources
 require './spec/support/shared_examples/resources/list'
+require './spec/support/shared_examples/resources/retrieve'
 
 # Bulk Resources
 require './spec/support/shared_examples/resources/bulk/bulk_create'
