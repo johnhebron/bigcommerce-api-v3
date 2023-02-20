@@ -26,7 +26,8 @@ module Bigcommerce
       end
 
       def params_for_retrieve(id:, params:)
-        { channel_id: id }
+        params[:channel_id] = id
+        params
       end
 
       ##

@@ -26,15 +26,13 @@ describe 'Bigcommerce::V3::WishlistsResource' do
 
     it_behaves_like 'a .list endpoint'
   end
-  #
-  # describe '#retrieve' do
-  #   let(:status) { 200 }
-  #   let(:retrieve_no_records_status) { 200 }
-  #   let(:retrieve_invalid_id_status) { 422 }
-  #   let(:retrieve_optional_params) { { include: 'storecredit' } }
-  #
-  #   it_behaves_like 'a bulk .retrieve endpoint'
-  # end
+
+  describe '#retrieve' do
+    let(:retrieve_invalid_id_status) { 404 }
+    let(:retrieve_url) { "#{base_url}#{resource_url}/#{id}" }
+
+    it_behaves_like 'a .retrieve endpoint'
+  end
   #
   # describe '#create' do
   #   let(:single_record_params) do

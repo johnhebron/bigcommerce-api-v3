@@ -21,13 +21,14 @@ describe 'Bigcommerce::V3::CategoryTreesResource' do
   end
 
   describe '#list' do
-    let(:resource_action) { 'list' }
-    let(:status) { 200 }
-
     it_behaves_like 'a .list endpoint'
   end
 
   describe '#retrieve' do
+    # Has unique behavior from other endpoints
+    # The .retrieve endpoint is "#{base_url}#{resource_url}/#{id}/categories"
+    # and the returned record has a hash of all the categories in that tree,
+    # as opposed to a tree record
     subject(:response) { resource.retrieve(id: id) }
 
     let(:resource_action) { 'retrieve' }
@@ -35,6 +36,8 @@ describe 'Bigcommerce::V3::CategoryTreesResource' do
     let(:stubs) { stub_request(path: url, response: stubbed_response) }
     let(:status) { 200 }
     let(:id) { 1 }
+    let(:retrieve_invalid_id_status) { 404 }
+    let(:retrieve_url) { "#{base_url}#{resource_url}/#{id}/categories" }
 
     context 'when the record exists' do
       let(:status) { 200 }
@@ -44,10 +47,16 @@ describe 'Bigcommerce::V3::CategoryTreesResource' do
       it { is_expected.to be_success }
 
       it 'returns an array with the record' do
+        # Has unique behavior from other endpoints
+        # Returns all of the elements of the category tree
+        # instead of a single object
         expect(returned_records.count).to be > 0
       end
 
-      it 'returns an array of Bigcommerce::V3::AbandonedCartEmail records' do
+      it 'returns an array of records as objects' do
+        # Has unique behavior from other endpoints
+        # Returns all of the elements of the category tree
+        # instead of a single object
         expect(returned_records).to all(be_an(object_type))
       end
     end
